@@ -1,19 +1,25 @@
 import { ref } from 'vue'
 
+// ─── Module-level singleton state ─────────────────────────────────────────────
+const loading       = ref(true)
+const dokumentasi   = ref<any[]>([])
+
+const selectedEvent        = ref<any>(null)
+const isArticleModalOpen   = ref(false)
+
+const selectedPhotos       = ref<any[]>([])
+const selectedPhotoIndex   = ref(0)
+const isLightboxModalOpen  = ref(false)
+
+let _articleCloseTimer: ReturnType<typeof setTimeout> | null = null
+let _loaded = false
+
+// ─── Composable ───────────────────────────────────────────────────────────────
 export const useDokumentasi = () => {
   const { fetchDokumentasi } = useApi()
 
-  const loading = ref(true)
-  const dokumentasi = ref<any[]>([])
-  
-  const selectedEvent = ref<any>(null)
-  const isArticleModalOpen = ref(false)
-
-  const selectedPhotos = ref<any[]>([])
-  const selectedPhotoIndex = ref(0)
-  const isLightboxModalOpen = ref(false)
-
-  const loadDokumentasiData = async () => {
+  const loadDokumentasiData = async (force = false) => {
+    if (_loaded && !force) return
     loading.value = true
     try {
       const data = await fetchDokumentasi()
@@ -23,21 +29,35 @@ export const useDokumentasi = () => {
       dokumentasi.value = []
     } finally {
       loading.value = false
+      _loaded = true
     }
   }
 
+  // ── Article modal ───────────────────────────────────
   const openArticleModal = (event: any) => {
-    selectedEvent.value = event
-    isArticleModalOpen.value = true
+    // Cancel any pending clear from a previous close
+    if (_articleCloseTimer) {
+      clearTimeout(_articleCloseTimer)
+      _articleCloseTimer = null
+    }
+    selectedEvent.value       = event
+    isArticleModalOpen.value  = true
+    if (import.meta.client) document.body.style.overflow = 'hidden'
   }
 
   const closeArticleModal = () => {
     isArticleModalOpen.value = false
+    if (import.meta.client) document.body.style.overflow = ''
+    _articleCloseTimer = setTimeout(() => {
+      selectedEvent.value  = null
+      _articleCloseTimer   = null
+    }, 400)
   }
 
-  const openLightboxModal = (photos: any[], startIndex: number = 0) => {
-    selectedPhotos.value = photos
-    selectedPhotoIndex.value = startIndex
+  // ── Lightbox modal ──────────────────────────────────
+  const openLightboxModal = (photos: any[], startIndex = 0) => {
+    selectedPhotos.value      = photos
+    selectedPhotoIndex.value  = startIndex
     isLightboxModalOpen.value = true
   }
 
@@ -59,6 +79,6 @@ export const useDokumentasi = () => {
     selectedPhotoIndex,
     isLightboxModalOpen,
     openLightboxModal,
-    closeLightboxModal
+    closeLightboxModal,
   }
 }

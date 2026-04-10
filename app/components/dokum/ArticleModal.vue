@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import { computed } from 'vue'
 
 const {
   selectedEvent: event,
@@ -131,11 +131,7 @@ const formatRangeIndo = (sStr: string, eStr: string) => {
   return `${start} - ${end}`;
 }
 
-watch(isArticleModalOpen, (val) => {
-  if (import.meta.client) {
-    document.body.style.overflow = val ? 'hidden' : ''
-  }
-})
+// body overflow is managed in useDokumentasi open/close methods
 </script>
 
 <style>
