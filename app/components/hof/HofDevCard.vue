@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-bg-card rounded-[24px] p-[2.5rem_2rem] border border-indigo-500/15 shadow-sm max-w-[360px] w-full text-center relative overflow-hidden transition-all duration-350 hover:-translate-y-2 hover:border-indigo-500/30 hover:shadow-[0_24px_48px_rgba(99,102,241,0.15),0_0_0_1px_rgba(99,102,241,0.15)] dark:bg-gradient-to-br dark:from-[#0d1117] dark:to-[#111827] dark:border-indigo-500/12">
+  <div class="bg-bg-card rounded-[24px] p-[2.5rem_2rem] border border-indigo-500/15 shadow-sm max-w-[360px] w-full text-center relative overflow-hidden transition-all duration-350 hover:-translate-y-2 hover:border-indigo-500/30 hover:shadow-[0_24px_48px_rgba(99,102,241,0.15),0_0_0_1px_rgba(99,102,241,0.15)]">
     <!-- Glow Blob -->
     <div 
       class="absolute w-[220px] h-[220px] rounded-full blur-[40px] pointer-events-none -top-[80px] -right-[60px]"
@@ -7,7 +7,7 @@
     ></div>
 
     <div class="relative w-[96px] h-[96px] mx-auto mb-[1.4rem]">
-      <img :src="useImageUrl(dev.foto)" :alt="dev.nama" class="w-[96px] h-[96px] rounded-full object-cover block bg-bg-primary dark:bg-[#1e293b]" @error="(e) => (e.target as HTMLImageElement).src = useImageUrl('uploads/pp/default.webp')">
+      <img :src="useImageUrl(dev.foto)" :alt="dev.nama" class="w-[96px] h-[96px] rounded-full object-cover block bg-bg-primary" @error="(e) => (e.target as HTMLImageElement).src = useImageUrl('uploads/pp/default.webp')">
       
       <!-- Spinning Ring -->
       <div 
@@ -33,14 +33,14 @@
     </div>
 
     <h3 class="text-[1.2rem] font-[700] text-text-main mb-[0.8rem]">{{ dev.nama }}</h3>
-    <p class="text-[0.75rem] text-text-subtle dark:text-[#64748b] italic mb-1">Periode Dev {{ dev.periode_dev }}</p>
+    <p class="text-[0.75rem] text-text-subtle italic mb-1">Periode Dev {{ dev.periode_dev }}</p>
     <p class="text-[0.86rem] text-text-muted leading-[1.75] mb-[1.2rem]">{{ dev.deskripsi }}</p>
 
     <div class="flex gap-[0.5rem] flex-wrap justify-center mb-4">
       <span 
         v-for="(stack, i) in (dev.tech_stack || [])" 
         :key="i"
-        class="border text-[0.72rem] font-[600] px-[11px] py-[4px] rounded-[8px] bg-indigo-500/5 border-indigo-500/20 text-text-muted dark:bg-white/5 dark:border-white/10 dark:text-[#94a3b8]"
+        class="border text-[0.72rem] font-[600] px-[11px] py-[4px] rounded-[8px] bg-indigo-500/5 border-indigo-500/20 text-text-muted"
       >
         {{ stack }}
       </span>

@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="bg-bg-card rounded-[20px] p-[1.8rem_1.2rem_1.5rem] text-center border border-border shadow-sm transition-all duration-350 relative overflow-hidden cursor-pointer group hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.12),0_0_0_1px_rgba(245,158,11,0.12)] hover:border-[#f59e0b]/25 dark:bg-gradient-to-br dark:from-[#0d1117] dark:to-[#111827] dark:border-white/5 dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.5),0_0_0_1px_rgba(245,158,11,0.1)] focus:outline-none focus:ring-2 focus:ring-[#f59e0b]/50"
+    class="bg-bg-card rounded-[20px] p-[1.8rem_1.2rem_1.5rem] text-center border border-border shadow-sm transition-all duration-350 relative overflow-hidden cursor-pointer group hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.12),0_0_0_1px_rgba(245,158,11,0.12)] hover:border-[#f59e0b]/25 focus:outline-none focus:ring-2 focus:ring-[#f59e0b]/50"
     :class="{'!border-indigo-500/15 hover:!border-indigo-500/30 hover:!shadow-[0_20px_40px_rgba(99,102,241,0.15),0_0_0_1px_rgba(99,102,241,0.15)]': isCurrent}"
     @click="$emit('click')"
   >
@@ -8,11 +8,11 @@
     
     <template v-if="!isMore">
       <div class="relative w-[78px] h-[78px] mx-auto mb-[1rem]">
-        <img :src="useImageUrl(member?.foto)" :alt="member?.nama" class="w-[78px] h-[78px] rounded-full object-cover block bg-bg-primary dark:bg-[#1e293b]" @error="(e) => (e.target as HTMLImageElement).src = useImageUrl('uploads/pp/default.webp')">
+        <img :src="useImageUrl(member?.foto)" :alt="member?.nama" class="w-[78px] h-[78px] rounded-full object-cover block bg-bg-primary" @error="(e) => (e.target as HTMLImageElement).src = useImageUrl('uploads/pp/default.webp')">
         <div class="absolute -inset-[4px] rounded-full border-[2px] border-[#f59e0b]/30 transition-colors duration-300 group-hover:border-[#f59e0b]/70" :class="{'!border-indigo-500/35 group-hover:!border-indigo-500/80': isCurrent}"></div>
       </div>
       <div class="text-[0.68rem] font-[700] tracking-[1.5px] uppercase text-[#f59e0b] mb-[0.4rem]" :class="{'!text-[#818cf8]': isCurrent}">{{ member?.jabatan }}</div>
-      <h3 class="text-[0.88rem] font-[600] text-text-main dark:text-[#e2e8f0] leading-[1.4] m-0">{{ member?.nama }}</h3>
+      <h3 class="text-[0.88rem] font-[600] text-text-main leading-[1.4] m-0">{{ member?.nama }}</h3>
     </template>
     <template v-else>
       <div class="w-[78px] h-[78px] mx-auto mb-[1rem] flex items-center justify-center rounded-full bg-[#f59e0b]/10 text-[#f59e0b] transition-transform duration-300 group-hover:scale-110">
