@@ -29,11 +29,11 @@
     <main class="max-w-[1120px] mx-auto px-4 md:px-6 relative z-10">
       
       <!-- Stats Row -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-[1.5rem] mb-[6rem] -mt-[4rem] relative z-20 px-2 md:px-0">
-        <SponsorStatCard emoji="👥" :target="800" label="Siswa Aktif di Sekolah" />
-        <SponsorStatCard emoji="📅" :target="12" suffix="+" label="Program Kerja per Tahun" />
-        <SponsorStatCard emoji="🏆" :target="3" label="Event Besar per Semester" />
-        <SponsorStatCard emoji="🌐" :target="100" suffix="%" label="Aktivitas Terdokumentasi Digital" />
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-24 -mt-16 relative z-20 px-2 md:px-0">
+        <SponsorStatCard icon="material-symbols:group" :target="800" label="Siswa Aktif di Sekolah" />
+        <SponsorStatCard icon="material-symbols:calendar-month" :target="12" suffix="+" label="Program Kerja per Tahun" />
+        <SponsorStatCard icon="material-symbols:emoji-events" :target="3" label="Event Besar per Semester" />
+        <SponsorStatCard icon="material-symbols:public" :target="100" suffix="%" label="Aktivitas Terdokumentasi Digital" />
       </div>
 
       <div class="h-[1px] bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent my-[5rem]" id="sponsor-tiers"></div>
@@ -45,8 +45,9 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[1.5rem] mb-[6rem] items-start">
-        <SponsorTierCard 
+      <SponsorTierCard 
           colorTheme="amethyst"
+          icon="💜"
           label="Amethyst"
           title="Paket Dasar"
           price="Rp75.000"
@@ -55,6 +56,7 @@
         />
         <SponsorTierCard 
           colorTheme="topaz"
+          icon="🧡"
           label="Topaz"
           title="Paket Standar"
           price="Rp150.000"
@@ -63,6 +65,7 @@
         />
         <SponsorTierCard 
           colorTheme="sapphire"
+          icon="💎"
           label="Sapphire"
           title="Paket Eksklusif"
           price="Rp200.000"
@@ -72,6 +75,7 @@
         />
         <SponsorTierCard 
           colorTheme="alex"
+          icon="🌟"
           label="Alexandrite"
           title="Paket Premium"
           price="Rp350.000"

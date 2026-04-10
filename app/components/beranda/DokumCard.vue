@@ -1,0 +1,53 @@
+<template>
+  <div
+    class="bg-bg-card border border-border rounded-[18px] overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:border-accent hover:shadow-[0_16px_40px_rgba(99,102,241,0.18)] flex flex-col group"
+    :class="{ 'md:row-span-2': isFeatured }"
+    @click="$emit('click', ev)"
+  >
+    <!-- Thumbnail -->
+    <div class="relative overflow-hidden flex-shrink-0 bg-bg-card-2" :class="isFeatured ? 'h-[260px]' : 'h-[180px]'">
+      <img
+        :src="useImageUrl(ev.thumbnail)"
+        :alt="ev.title"
+        loading="lazy"
+        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+      <span class="absolute top-3 left-3 bg-accent/85 backdrop-blur-sm text-white text-[0.62rem] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full">
+        {{ ev.tag_text || 'Kegiatan' }}
+      </span>
+    </div>
+
+    <!-- Body -->
+    <div class="p-4 flex flex-col flex-1 gap-1.5">
+      <span class="text-[0.7rem] font-bold text-accent uppercase tracking-wider">{{ formatDate(ev.start_date) }}</span>
+      <h3
+        class="font-bold text-text-main leading-snug m-0"
+        :class="isFeatured ? 'text-[1.15rem] line-clamp-3' : 'text-[0.95rem] line-clamp-2'"
+      >{{ ev.title }}</h3>
+      <p v-if="ev.description" class="text-[0.8rem] text-text-muted leading-relaxed m-0 line-clamp-2 flex-1">{{ ev.description }}</p>
+      <span class="text-[0.78rem] font-bold text-accent mt-auto pt-2 flex items-center gap-1">
+        Baca Artikel
+        <Icon name="material-symbols:arrow-forward" class="text-[0.95rem] transition-transform duration-200 group-hover:translate-x-1" />
+      </span>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+defineProps<{
+  ev: any
+  isFeatured?: boolean
+}>()
+
+defineEmits(['click'])
+
+function formatDate(s: string) {
+  if (!s) return ''
+  try {
+    const d = new Date(s)
+    if (isNaN(d.getTime())) return s
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des']
+    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
+  } catch { return s }
+}
+</script>

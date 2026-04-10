@@ -32,8 +32,8 @@
     <!-- MAIN HOF AREA -->
     <main class="max-w-[1120px] mx-auto px-4 md:px-6 py-[4rem] md:py-[6rem]" id="demisioner">
       
-      <div v-if="loading" class="text-center py-[4rem] text-[#64748b]">
-        <Icon name="eos-icons:loading" size="48" class="animate-spin mb-4" />
+      <div v-if="loading" class="text-center py-16 text-slate-400">
+        <Icon name="material-symbols:refresh" size="48" class="animate-spin mb-4 opacity-60" />
         <p>Memuat prasasti...</p>
       </div>
 

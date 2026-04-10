@@ -6,10 +6,10 @@
       <p class="text-text-muted max-w-[540px] mx-auto mb-10 text-[0.95rem] md:text-[1.05rem] leading-[1.7]">Sebuah mercusuar digital yang mengintegrasikan gerak organisasi dan menampung titah aspirasi demi kemajuan sekolah.</p>
       <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
         <button 
-          class="inline-flex items-center justify-center gap-2 bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] text-white px-7 py-3 rounded-xl font-semibold text-[0.9rem] border-none cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(99,102,241,0.45)] w-full md:w-auto active:translate-y-0"
+          class="inline-flex items-center justify-center gap-2 bg-gradient-to-br from-accent to-purple-500 text-white px-7 py-3 rounded-xl font-semibold text-[0.9rem] border-none cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(99,102,241,0.45)] w-full md:w-auto active:translate-y-0"
           @click="scrollToFilosofi"
         >
-          Filosofi Kami
+          Filosofi Kami <Icon name="material-symbols:arrow-downward" size="18" />
         </button>
       </div>
     </div>

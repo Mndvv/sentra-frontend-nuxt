@@ -19,7 +19,7 @@
       <div v-for="i in 9" :key="i" class="h-[174px] rounded-2xl bg-gradient-to-r from-[var(--bg-card)] via-[var(--bg-card-2)] to-[var(--bg-card)] bg-[length:800px_100%] animate-[skeletonShimmer_1.5s_infinite_linear] border border-border"></div>
     </div>
     <div v-else-if="filteredPrograms.length === 0" class="col-span-full text-center py-12 px-4 text-text-muted font-medium flex flex-col items-center gap-3 w-full">
-      <span class="text-[2rem]">🔍</span>
+      <Icon name="material-symbols:search-off" class="text-4xl opacity-40" />
       <p>Tidak ada program dengan status ini.</p>
     </div>
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

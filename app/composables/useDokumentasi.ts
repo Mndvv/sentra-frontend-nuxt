@@ -14,8 +14,9 @@ const isLightboxModalOpen  = ref(false)
 let _articleCloseTimer: ReturnType<typeof setTimeout> | null = null
 let _loaded = false
 
-// ─── Composable ───────────────────────────────────────────────────────────────
-export const useDokumentasi = () => {
+// ─── Composable (auto-imported by Nuxt) ──────────────────────────────────────
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useDokumentasi() {
   const { fetchDokumentasi } = useApi()
 
   const loadDokumentasiData = async (force = false) => {

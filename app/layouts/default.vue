@@ -2,6 +2,7 @@
   <div>
     <AppNavbar />
     <slot />
+    <AppFooter />
     <AppMiniPlayer />
     <AppAuroraModal />
   </div>

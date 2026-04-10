@@ -1,20 +1,23 @@
 import { ref } from 'vue'
 
-export const useAgenda = () => {
-  const loading = ref(true)
-  const agendas = ref<any[]>([])
+// ─── Module-level singleton ────────────────────────────────────────────────────
+const loading = ref(true)
+const agendas = ref<any[]>([])
+let _loaded = false
 
+// ─── Composable ───────────────────────────────────────────────────────────────
+export const useAgenda = () => {
   const { fetchAgenda } = useApi()
 
-  const loadAgendas = async () => {
+  const loadAgendas = async (force = false) => {
+    if (_loaded && !force) return
     loading.value = true
     const res = await fetchAgenda()
     agendas.value = res || []
     loading.value = false
+    _loaded = true
   }
 
-  // Format datetimes logic can also reside here for components if needed,
-  // but often best left to component or another util.
   const formatDate = (isoString: string) => {
     if (!isoString) return ''
     const d = new Date(isoString)
@@ -22,16 +25,8 @@ export const useAgenda = () => {
       year: 'numeric',
       month: 'short',
       day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false
-    }).format(d).replace(',', ' •')
+    }).format(d)
   }
 
-  return {
-    loading,
-    agendas,
-    loadAgendas,
-    formatDate
-  }
+  return { loading, agendas, loadAgendas, formatDate }
 }
