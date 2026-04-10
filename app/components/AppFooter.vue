@@ -13,7 +13,7 @@
             SENTRA<span class="text-accent">.</span>
           </NuxtLink>
           <p class="text-text-muted text-[0.82rem] leading-relaxed -mt-2">
-            Sistem Elektronik &amp; Terpadu<br>
+            Sistem Elektronik Terpadu<br>
             Nawasena (OSIS/MPK)<br>
             SMAN 2 Jonggol
           </p>
@@ -91,7 +91,7 @@
 
       <!-- Bottom bar -->
       <div class="max-w-[1120px] mx-auto px-4 md:px-6 py-4 border-t border-border flex flex-wrap items-center justify-between gap-2 text-[0.73rem] text-text-subtle">
-        <span>© {{ year }} SENTRA · OSIS Nawasena SMAN 2 Jonggol</span>
+        <span>© {{ year }} SENTRA · Nawasena SMAN 2 Jonggol</span>
         <span class="flex items-center gap-1">
           <Icon name="material-symbols:favorite" class="text-sm text-accent" />
           Tim Developer Nawasena

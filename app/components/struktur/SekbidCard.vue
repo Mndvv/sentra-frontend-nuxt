@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative overflow-hidden bg-bg-card border border-border rounded-[18px] p-4 cursor-pointer min-h-[120px] flex flex-col transition-all duration-200 hover:-translate-y-1 hover:shadow-md hover:border-accent group"
+    class="relative overflow-hidden bg-bg-card border border-border rounded-[20px] p-5 cursor-pointer min-h-[125px] flex flex-col transition-[transform,box-shadow,border-color] duration-300 ease-out shadow-sm hover:-translate-y-1.5 hover:shadow-[0_16px_40px_-12px_rgba(99,102,241,0.25)] hover:border-accent group"
     @click="$emit('click')"
   >
     <!-- Index badge -->
