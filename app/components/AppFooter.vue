@@ -13,8 +13,8 @@
             SENTRA<span class="text-accent">.</span>
           </NuxtLink>
           <p class="text-text-muted text-[0.82rem] leading-relaxed -mt-2">
-            Sistem Eksekutif &amp; Navigasi<br>
-            Terpadu OSIS Nawasena<br>
+            Sistem Elektronik &amp; Terpadu<br>
+            Nawasena (OSIS/MPK)<br>
             SMAN 2 Jonggol
           </p>
           <p class="text-text-subtle text-[0.72rem] font-semibold tracking-wider uppercase">
