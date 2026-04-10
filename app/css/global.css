@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+    --font-sans: "Inter", sans-serif;
+
+    --color-accent: var(--accent);
+    --color-accent-hover: var(--accent-hover);
+    --color-accent-soft: var(--accent-soft);
+    --color-accent-glow: var(--accent-glow);
+    --color-bg-primary: var(--bg-primary);
+    --color-bg-card: var(--bg-card);
+    --color-bg-card-2: var(--bg-card-2);
+    --color-text-main: var(--text-main);
+    --color-text-muted: var(--text-muted);
+    --color-text-subtle: var(--text-subtle);
+
+    --color-nav-bg: var(--nav-bg);
+    --color-nav-border: var(--nav-border);
+    --color-border: var(--border);
+
+    --shadow: var(--shadow);
+    --shadow-md: var(--shadow-md);
+    --shadow-lg: var(--shadow-lg);
+
+    --radius: var(--radius);
+    --radius-sm: var(--radius-sm);
+    --radius-lg: var(--radius-lg);
+}
+
+@layer base {
+    :root {
+        --bg-primary: #f1f5f9;
+        --bg-card: #ffffff;
+        --bg-card-2: #f8fafc;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --text-subtle: #94a3b8;
+        --accent: #6366f1;
+        --accent-hover: #4f46e5;
+        --accent-soft: rgba(99, 102, 241, 0.1);
+        --accent-glow: rgba(99, 102, 241, 0.25);
+        --nav-bg: rgba(255, 255, 255, 0.85);
+        --nav-border: rgba(0, 0, 0, 0.07);
+        --radius: 16px;
+        --radius-sm: 10px;
+        --radius-lg: 24px;
+        --shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04);
+        --shadow-md: 0 8px 30px -6px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 20px 50px -12px rgba(0, 0, 0, 0.15);
+        --border: rgba(0, 0, 0, 0.06);
+
+        /* Badges */
+        --badge-ongoing-bg: #fef3c7;
+        --badge-ongoing-text: #d97706;
+        --badge-done-bg: #dcfce7;
+        --badge-done-text: #166534;
+        --badge-plan-bg: #e2e8f0;
+        --badge-plan-text: #475569;
+
+        --bento-featured-gradient-end: #eef2ff;
+    }
+
+    body.dark-theme,
+    .dark {
+        --bg-primary: #060b14;
+        --bg-card: #0f172a;
+        --bg-card-2: #131f35;
+        --text-main: #f1f5f9;
+        --text-muted: #94a3b8;
+        --text-subtle: #64748b;
+        --nav-bg: rgba(6, 11, 20, 0.9);
+        --nav-border: rgba(255, 255, 255, 0.07);
+        --border: rgba(255, 255, 255, 0.07);
+        --shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2);
+        --shadow-md: 0 8px 30px -6px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.2);
+
+        /* Status badge overrides for dark mode */
+        --badge-ongoing-bg: rgba(254, 243, 199, 0.12);
+        --badge-ongoing-text: #fbbf24;
+        --badge-done-bg: rgba(220, 252, 231, 0.12);
+        --badge-done-text: #4ade80;
+        --badge-plan-bg: rgba(226, 232, 240, 0.1);
+        --badge-plan-text: #94a3b8;
+
+        /* Featured bento gradient end color */
+        --bento-featured-gradient-end: #1e2642;
+    }
+
+    body {
+        @apply bg-bg-primary text-text-main transition-colors duration-300 font-sans;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
