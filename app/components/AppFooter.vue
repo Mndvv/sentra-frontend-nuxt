@@ -61,8 +61,8 @@
           <h4 class="text-text-subtle text-[0.7rem] font-extrabold tracking-[0.1em] uppercase mb-4">Lokasi Kantor</h4>
           <p class="text-text-muted text-[0.78rem] leading-relaxed mb-3">
             SMAN 2 Jonggol<br>
-            Jl. Raya Jonggol No.1, Jonggol,<br>
-            Bogor, Jawa Barat 16830
+            Jl. Irigasi, Bengkok RT 002/009, Jonggol, Kec. Jonggol<br>
+            Kab. Bogor, Jawa Barat
           </p>
           <!-- Maps embed -->
           <a
@@ -71,7 +71,7 @@
             class="block relative rounded-xl overflow-hidden border border-border hover:border-accent transition-colors group no-underline"
           >
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.9!2d107.0726!3d-6.5218!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69800d3e6c5a4f%3A0xb7c2d2e00f3e4c!2sSMAN%202%20Jonggol!5e0!3m2!1sen!2sid!4v1699000000000!5m2!1sen!2sid"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1023.3635754987805!2d107.07369495398737!3d-6.470356125118149!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69bde40dcf76a9%3A0xc4a6711770c8838!2sSMAN%202%20JONGGOL!5e1!3m2!1sid!2sid!4v1775863581798!5m2!1sid!2sid"
               width="100%" height="110"
               style="border:0;pointer-events:none;display:block;"
               loading="lazy"
