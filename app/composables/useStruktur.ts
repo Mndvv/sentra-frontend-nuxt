@@ -1,18 +1,22 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
-// ─── Singleton state (shared across all component instances) ──────────────────
-const loading = ref(true)
-const pengurusRaw = ref<any[]>([])   // all from API (excluding DEV-1, done server-side)
-const sekbid = ref<any[]>([])
+// ─── Module-level singleton state ─────────────────────────────────────────────
+const loading       = ref(true)
+const pengurusRaw   = ref<any[]>([])
+const sekbid        = ref<any[]>([])
 
-// Filter: pengurus INTI = those WITHOUT a sekbid_number
+// Only BPH pengurus (no sekbid_number) shown in the main grid
 const pengurus = computed(() => pengurusRaw.value.filter(p => !p.sekbid_number))
 
-const selectedPengurus = ref<any>(null)
+const selectedPengurus   = ref<any>(null)
 const isPengurusModalOpen = ref(false)
 
-const selectedSekbid = ref<any>(null)
+const selectedSekbid    = ref<any>(null)
 const isSekbidModalOpen = ref(false)
+
+// Track pending close-timers so we can cancel them when re-opening fast
+let _pengurusCloseTimer: ReturnType<typeof setTimeout> | null = null
+let _sekbidCloseTimer:   ReturnType<typeof setTimeout> | null = null
 
 let _loaded = false
 
@@ -25,33 +29,51 @@ export const useStruktur = () => {
     loading.value = true
     const [p, s] = await Promise.all([fetchPengurus(), fetchSekbid()])
     pengurusRaw.value = p || []
-    sekbid.value = s || []
-    loading.value = false
-    _loaded = true
+    sekbid.value      = s || []
+    loading.value     = false
+    _loaded           = true
   }
 
+  // ── Pengurus modal ──────────────────────────────────
   const openPengurusModal = (data: any) => {
-    selectedPengurus.value = data
+    // Cancel any pending clear from a previous close
+    if (_pengurusCloseTimer) {
+      clearTimeout(_pengurusCloseTimer)
+      _pengurusCloseTimer = null
+    }
+    selectedPengurus.value   = data
     isPengurusModalOpen.value = true
     if (import.meta.client) document.body.style.overflow = 'hidden'
   }
 
   const closePengurusModal = () => {
     isPengurusModalOpen.value = false
-    setTimeout(() => { selectedPengurus.value = null }, 300)
     if (import.meta.client) document.body.style.overflow = ''
+    _pengurusCloseTimer = setTimeout(() => {
+      selectedPengurus.value  = null
+      _pengurusCloseTimer     = null
+    }, 350)
   }
 
+  // ── Sekbid modal ────────────────────────────────────
   const openSekbidModal = (data: any) => {
-    selectedSekbid.value = data
+    // Cancel any pending clear from a previous close
+    if (_sekbidCloseTimer) {
+      clearTimeout(_sekbidCloseTimer)
+      _sekbidCloseTimer = null
+    }
+    selectedSekbid.value   = data
     isSekbidModalOpen.value = true
     if (import.meta.client) document.body.style.overflow = 'hidden'
   }
 
   const closeSekbidModal = () => {
     isSekbidModalOpen.value = false
-    setTimeout(() => { selectedSekbid.value = null }, 300)
     if (import.meta.client) document.body.style.overflow = ''
+    _sekbidCloseTimer = setTimeout(() => {
+      selectedSekbid.value = null
+      _sekbidCloseTimer    = null
+    }, 350)
   }
 
   return {
@@ -66,6 +88,6 @@ export const useStruktur = () => {
     openPengurusModal,
     closePengurusModal,
     openSekbidModal,
-    closeSekbidModal
+    closeSekbidModal,
   }
 }

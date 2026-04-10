@@ -74,8 +74,9 @@ const { loading, pengurus, sekbid, loadStrukturData, openPengurusModal, openSekb
 
 useHead({ title: 'Struktur Organisasi — OSIS Nawasena' })
 
+// Only Ketua Umum gets the large featured card (span 2, bigger avatar, motto shown)
 const isFeatured = (jabatan: string) =>
-  ['Ketua', 'Wakil Ketua', 'Sekretaris Umum', 'Bendahara Umum'].some(r => jabatan?.includes(r))
+  !!jabatan && /ketua umum/i.test(jabatan)
 
 onMounted(() => loadStrukturData())
 </script>

@@ -32,7 +32,7 @@ export const useImageUrl = (path: string | undefined | null, name?: string): str
 
 /** Generate an inline SVG data-URI circle avatar with the given initial.  */
 function makeInitialAvatar(initial: string): string {
-  const colors = [
+  const colors: [string, string][] = [
     ['#6366f1', '#eef2ff'],  // indigo
     ['#8b5cf6', '#f5f3ff'],  // violet
     ['#ec4899', '#fdf2f8'],  // pink
@@ -42,7 +42,7 @@ function makeInitialAvatar(initial: string): string {
   ]
   // Pick a color deterministically based on char code
   const idx = (initial.charCodeAt(0) || 0) % colors.length
-  const [fg, bg] = colors[idx]
+  const [fg, bg] = colors[idx]!
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
     <circle cx="50" cy="50" r="50" fill="${bg}"/>
     <text x="50" y="50" text-anchor="middle" dominant-baseline="central"

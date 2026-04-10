@@ -17,6 +17,7 @@
     <div class="member-info">
       <span class="role-badge">{{ pengurus.jabatan }}</span>
       <h3>{{ pengurus.nama }}</h3>
+      <!-- Motto: only shown on the featured (Ketua Umum) card -->
       <p v-if="isFeatured && pengurus.motto" class="motto">"{{ pengurus.motto }}"</p>
     </div>
   </div>
@@ -31,52 +32,53 @@ defineProps<{
 defineEmits(['click'])
 
 function onImgError(e: Event) {
-  // If remote image fails, swap to initial avatar
   const img = e.target as HTMLImageElement
-  const alt = img.alt || '?'
-  img.src = useImageUrl('', alt)
+  img.src = useImageUrl('', img.alt)
   img.onerror = null
 }
 </script>
 
 <style scoped>
+/* ── Base card — uniform for ALL non-featured ── */
 .bento-item {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 1.75rem 1.25rem 1.5rem;
+  padding: 1.4rem 1rem 1.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
   box-shadow: var(--shadow);
-  position: relative;
-  overflow: hidden;
 }
 .bento-item:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
   border-color: var(--accent);
 }
+
+/* ── Featured = Ketua Umum ONLY: bigger, spans 2 cols ── */
 .bento-item.featured {
   background: linear-gradient(135deg, var(--bg-card) 0%, var(--bento-featured-gradient-end) 100%);
   border-color: rgba(99, 102, 241, 0.25);
   grid-column: span 2;
+  padding: 2rem 1.5rem 1.75rem;
 }
 
 /* ── Photo ── */
 .member-photo {
-  width: 88px;
-  height: 88px;
-  margin-bottom: 1rem;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 0.85rem;
   flex-shrink: 0;
 }
+/* Featured card gets a larger avatar */
 .featured .member-photo {
-  width: 108px;
-  height: 108px;
+  width: 110px;
+  height: 110px;
 }
 .photo-img {
   width: 100%;
@@ -84,7 +86,7 @@ function onImgError(e: Event) {
   object-fit: cover;
   border-radius: 50%;
   border: 3px solid transparent;
-  transition: border-color 0.25s;
+  transition: border-color 0.22s;
   background: var(--bg-card-2);
 }
 .bento-item:hover .photo-img {
@@ -96,7 +98,6 @@ function onImgError(e: Event) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0;
 }
 .role-badge {
   display: inline-block;
@@ -104,31 +105,32 @@ function onImgError(e: Event) {
   color: var(--accent);
   padding: 3px 10px;
   border-radius: 6px;
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.4rem;
 }
 h3 {
-  margin: 0 0 0.25rem;
-  font-size: 1rem;
+  margin: 0 0 0.2rem;
+  font-size: 0.92rem;      /* uniform size for all */
   font-weight: 700;
   color: var(--text-main);
   line-height: 1.3;
   transition: color 0.2s;
 }
-.bento-item:hover h3 {
-  color: var(--accent);
-}
+/* Featured card gets a slightly larger name */
 .featured h3 {
   font-size: 1.15rem;
 }
+.bento-item:hover h3 {
+  color: var(--accent);
+}
 .motto {
-  margin: 0;
-  font-size: 0.8rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
   color: var(--text-muted);
   font-style: italic;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 </style>
