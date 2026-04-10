@@ -2,17 +2,20 @@ export const useApi = () => {
   const config = useRuntimeConfig()
   const baseURL = config.public.apiBase
 
-  const fetchPengurus = () => $fetch(`${baseURL}/pengurus`).catch(() => [])
-  const fetchSekbid = () => $fetch(`${baseURL}/sekbid`).catch(() => [])
-  const fetchProgramKerja = () => $fetch(`${baseURL}/program-kerja`).catch(() => [])
-  const fetchAgenda = () => $fetch(`${baseURL}/agenda`).catch(() => [])
-  const fetchDokumentasi = () => $fetch(`${baseURL}/dokumentasi`).catch(() => [])
-  const fetchHof = () => $fetch(`${baseURL}/hof`).catch(() => null)
-  const fetchRadio = () => $fetch(`${baseURL}/radio`).catch(() => [])
+  // All backend routes are under /api prefix
+  const api = `${baseURL}/api`
+
+  const fetchPengurus = () => $fetch(`${api}/pengurus`).catch(() => [])
+  const fetchSekbid = () => $fetch(`${api}/sekbid`).catch(() => [])
+  const fetchProgramKerja = () => $fetch(`${api}/program-kerja`).catch(() => [])
+  const fetchAgenda = () => $fetch(`${api}/agenda`).catch(() => [])
+  const fetchDokumentasi = () => $fetch(`${api}/dokumentasi`).catch(() => [])
+  const fetchHof = () => $fetch(`${api}/hof`).catch(() => null)
+  const fetchRadio = () => $fetch(`${api}/radio`).catch(() => [])
 
   const submitKotakSaran = async (data: any) => {
     try {
-      const res = await $fetch(`${baseURL}/kotak-saran`, {
+      const res = await $fetch(`${api}/kotak-saran`, {
         method: 'POST',
         body: data
       })

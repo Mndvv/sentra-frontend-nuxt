@@ -37,12 +37,25 @@ export const useMusicPlayer = () => {
     }
   }
 
+  const getTrackUrl = (track: any): string => {
+    if (!track) return ''
+    // track.file is just the filename, e.g. "track-12345.mp3"
+    // track.url would be the full path e.g. "/uploads/radio/track-12345.mp3" (if stored that way)
+    const config = useRuntimeConfig()
+    const base = config.public.apiBase as string
+    const fileOrUrl = track.url || track.file || ''
+    if (fileOrUrl.startsWith('http')) return fileOrUrl
+    if (fileOrUrl.startsWith('/uploads/')) return `${base}${fileOrUrl}`
+    // plain filename
+    return `${base}/uploads/radio/${fileOrUrl}`
+  }
+
   const playTrack = (index: number) => {
     if (playlist.value.length === 0) return
     if (index >= 0 && index < playlist.value.length) {
       currentTrackIndex.value = index
       if (import.meta.client && audio.value) {
-        audio.value.src = useImageUrl(playlist.value[index].url)
+        audio.value.src = getTrackUrl(playlist.value[index])
         audio.value.play().then(() => {
           isPlaying.value = true
         }).catch(e => {
@@ -52,6 +65,7 @@ export const useMusicPlayer = () => {
       }
     }
   }
+
 
   const togglePlay = () => {
     if (!audio.value) return
