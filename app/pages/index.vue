@@ -6,85 +6,135 @@
 
       <!-- ── Filosofi ─────────────────────────────────────── -->
       <section id="nawasena-section" class="py-12 md:py-16 border-t border-border first:border-t-0">
-        <div class="mb-7">
-          <h2 class="text-[1.5rem] md:text-[1.9rem] font-extrabold tracking-tight mb-1 text-text-main">Filosofi</h2>
-          <p class="text-text-muted text-sm">Mengenal makna dibalik nama Nawasena.</p>
-        </div>
-        <div class="bg-bg-card border border-border rounded-2xl px-5 py-5 md:px-8 md:py-6 shadow relative overflow-hidden">
-          <div class="absolute left-0 inset-y-0 w-1 bg-gradient-to-b from-accent to-purple-500 rounded-l-2xl" />
-          <p class="leading-relaxed text-[0.95rem] text-text-main">
-            Nama <strong>Nawasena</strong> yang diambil dari bahasa Sanskerta secara ontologis menempatkan
-            organisasi ini pada posisi kompas moral yang mengarahkan pandangan jauh ke cakrawala.
-            <em>Masa depan yang cerah</em> bukan sekadar angan, namun menjadi jangkar bagi setiap tindakan
-            yang diambil oleh para pengurusnya. Di sini, Nawasena berperan sebagai payung besar atau
-            <em>oikos</em> yang menaungi OSIS dan MPK dalam satu napas perjuangan yang harmonis.
-          </p>
-        </div>
+        <BerandaSectionHeader
+          title="Filosofi"
+          subtitle="Mengenal makna dibalik nama Nawasena."
+          label="Tentang Kami"
+          icon="material-symbols:info-rounded"
+        />
+        <BerandaFilosofiSection />
       </section>
 
-      <!-- ── Agenda ────────────────────────────────────────── -->
+      <!-- ── Radio + Agenda (side by side on desktop) ─────── -->
       <section id="agenda" class="py-12 md:py-16 border-t border-border">
-        <div class="mb-7">
-          <h2 class="text-[1.5rem] md:text-[1.9rem] font-extrabold tracking-tight mb-1 text-text-main">Agenda Mendatang</h2>
-          <p class="text-text-muted text-sm">Kegiatan dan acara yang sudah direncanakan.</p>
-        </div>
-        <div v-if="agendaLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div v-for="i in 3" :key="i" class="h-[140px] rounded-2xl bg-gradient-to-r from-bg-card via-bg-card-2 to-bg-card animate-pulse border border-border" />
-        </div>
-        <div v-else-if="agendas.length === 0" class="flex flex-col items-center gap-3 py-12 bg-bg-card border border-dashed border-border rounded-2xl text-text-muted">
-          <Icon name="material-symbols:calendar-today" class="text-4xl opacity-40" />
-          <p class="text-sm">Belum ada agenda mendatang.</p>
-        </div>
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <BerandaAgendaCard v-for="ag in agendas" :key="ag.id" :agenda="ag" />
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-6 lg:gap-8 items-start">
+          <!-- Agenda Column -->
+          <div>
+            <BerandaSectionHeader
+              title="Agenda Mendatang"
+              subtitle="Kegiatan dan acara yang sudah direncanakan."
+              label="Agenda"
+              icon="material-symbols:event-rounded"
+            />
+            <div v-if="agendaLoading" class="flex flex-col gap-3">
+              <div
+                v-for="i in 3"
+                :key="i"
+                class="h-[110px] rounded-2xl bg-gradient-to-r from-bg-card via-bg-card-2 to-bg-card animate-pulse border border-border"
+              />
+            </div>
+            <div
+              v-else-if="agendas.length === 0"
+              class="flex flex-col items-center gap-3 py-12 bg-bg-card border border-dashed border-border rounded-2xl text-text-muted"
+            >
+              <Icon name="material-symbols:calendar-today-rounded" class="text-4xl opacity-40" />
+              <p class="text-sm">Belum ada agenda mendatang.</p>
+            </div>
+            <div v-else class="flex flex-col gap-3">
+              <BerandaAgendaCard
+                v-for="(ag, idx) in agendas"
+                :key="ag.id"
+                :agenda="ag"
+                :delay="idx * 80"
+              />
+            </div>
+          </div>
+
+          <!-- Radio Column -->
+          <div class="lg:sticky lg:top-24">
+            <BerandaSectionHeader
+              title="Radio Nawasena"
+              subtitle="Putar musik favorit sekolah."
+              label="Live Radio"
+              icon="material-symbols:radio"
+            />
+            <BerandaRadioSection />
+          </div>
         </div>
       </section>
 
       <!-- ── Program Kerja Preview ──────────────────────────── -->
       <section id="proker-preview" class="py-12 md:py-16 border-t border-border">
-        <div class="flex items-end justify-between flex-wrap gap-3 mb-7">
-          <div>
-            <h2 class="text-[1.5rem] md:text-[1.9rem] font-extrabold tracking-tight mb-1 text-text-main">Program Kerja</h2>
-            <p class="text-text-muted text-sm">Inisiatif nyata demi kemajuan bersama.</p>
-          </div>
-          <NuxtLink
-            to="/program"
-            class="flex items-center gap-1.5 text-sm font-bold text-accent px-3 py-1.5 rounded-lg border border-accent-soft bg-accent-soft hover:bg-accent/15 transition-colors no-underline"
-          >
-            Lihat semua <Icon name="material-symbols:arrow-forward" class="text-base" />
-          </NuxtLink>
-        </div>
+        <BerandaSectionHeader
+          title="Program Kerja"
+          subtitle="Inisiatif nyata demi kemajuan bersama."
+          label="Proker"
+          icon="material-symbols:assignment-rounded"
+        >
+          <template #action>
+            <NuxtLink
+              to="/program"
+              class="flex items-center gap-1.5 text-sm font-bold text-accent px-3 py-1.5 rounded-lg border border-accent-soft bg-accent-soft hover:bg-accent/15 transition-colors no-underline"
+            >
+              Lihat semua <Icon name="material-symbols:arrow-forward" class="text-base" />
+            </NuxtLink>
+          </template>
+        </BerandaSectionHeader>
+
         <div v-if="prokerLoading" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div v-for="i in 4" :key="i" class="h-[120px] rounded-2xl bg-gradient-to-r from-bg-card via-bg-card-2 to-bg-card animate-pulse border border-border" />
+          <div
+            v-for="i in 4"
+            :key="i"
+            class="h-[120px] rounded-2xl bg-gradient-to-r from-bg-card via-bg-card-2 to-bg-card animate-pulse border border-border"
+          />
         </div>
-        <div v-else-if="programHighlights.length === 0" class="flex flex-col items-center gap-3 py-12 bg-bg-card border border-dashed border-border rounded-2xl text-text-muted">
-          <Icon name="material-symbols:assignment" class="text-4xl opacity-40" />
+        <div
+          v-else-if="programHighlights.length === 0"
+          class="flex flex-col items-center gap-3 py-12 bg-bg-card border border-dashed border-border rounded-2xl text-text-muted"
+        >
+          <Icon name="material-symbols:assignment-rounded" class="text-4xl opacity-40" />
           <p class="text-sm">Belum ada program kerja.</p>
         </div>
         <div v-else class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <BerandaProkerCard v-for="p in programHighlights" :key="p.id" :program="p" />
+          <BerandaProkerCard
+            v-for="(p, idx) in programHighlights"
+            :key="p.id"
+            :program="p"
+            :delay="idx * 70"
+          />
         </div>
       </section>
 
       <!-- ── Dokumentasi Preview ───────────────────────────── -->
       <section id="dokum-preview" class="py-12 md:py-16 border-t border-border">
-        <div class="flex items-end justify-between flex-wrap gap-3 mb-7">
-          <div>
-            <h2 class="text-[1.5rem] md:text-[1.9rem] font-extrabold tracking-tight mb-1 text-text-main">Dokumentasi Terbaru</h2>
-            <p class="text-text-muted text-sm">Rekam jejak dan memori perjalanan Nawasena.</p>
-          </div>
-          <NuxtLink
-            to="/dokumentasi"
-            class="flex items-center gap-1.5 text-sm font-bold text-accent px-3 py-1.5 rounded-lg border border-accent-soft bg-accent-soft hover:bg-accent/15 transition-colors no-underline"
-          >
-            Lihat semua <Icon name="material-symbols:arrow-forward" class="text-base" />
-          </NuxtLink>
-        </div>
+        <BerandaSectionHeader
+          title="Dokumentasi Terbaru"
+          subtitle="Rekam jejak dan memori perjalanan Nawasena."
+          label="Dokumentasi"
+          icon="material-symbols:photo-library-rounded"
+        >
+          <template #action>
+            <NuxtLink
+              to="/dokumentasi"
+              class="flex items-center gap-1.5 text-sm font-bold text-accent px-3 py-1.5 rounded-lg border border-accent-soft bg-accent-soft hover:bg-accent/15 transition-colors no-underline"
+            >
+              Lihat semua <Icon name="material-symbols:arrow-forward" class="text-base" />
+            </NuxtLink>
+          </template>
+        </BerandaSectionHeader>
+
         <div v-if="dokumLoading" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div v-for="i in 3" :key="i" class="h-[260px] rounded-2xl bg-gradient-to-r from-bg-card via-bg-card-2 to-bg-card animate-pulse border border-border" />
+          <div
+            v-for="i in 3"
+            :key="i"
+            class="h-[260px] rounded-2xl bg-gradient-to-r from-bg-card via-bg-card-2 to-bg-card animate-pulse border border-border"
+          />
         </div>
-        <div v-else-if="dokumHighlights.length === 0" class="flex flex-col items-center gap-3 py-12 bg-bg-card border border-dashed border-border rounded-2xl text-text-muted">
-          <Icon name="material-symbols:folder-open" class="text-4xl opacity-40" />
+        <div
+          v-else-if="dokumHighlights.length === 0"
+          class="flex flex-col items-center gap-3 py-12 bg-bg-card border border-dashed border-border rounded-2xl text-text-muted"
+        >
+          <Icon name="material-symbols:folder-open-rounded" class="text-4xl opacity-40" />
           <p class="text-sm">Belum ada dokumentasi yang dipublikasikan.</p>
         </div>
         <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-min">
@@ -93,14 +143,20 @@
             :key="ev.id"
             :ev="ev"
             :is-featured="idx === 0"
+            :delay="idx * 80"
             @click="openArticleModal"
           />
         </div>
       </section>
 
+      <!-- ── Kotak Saran CTA ───────────────────────────────── -->
+      <section class="py-12 md:py-16 border-t border-border">
+        <BerandaKotakSaranCta />
+      </section>
+
     </main>
 
-    <!-- Modals (artikel + lightbox) -->
+    <!-- Modals -->
     <DokumArticleModal />
     <DokumLightboxModal />
   </div>

@@ -94,3 +94,33 @@
         -moz-osx-font-smoothing: grayscale;
     }
 }
+
+/* ── Global Keyframe Animations ─────────────────────────────── */
+@keyframes float {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(-22px) scale(1.04); }
+}
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-18px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes eq1 {
+    0%, 100% { height: 4px; }
+    50% { height: 14px; }
+}
+@keyframes eq2 {
+    0%, 100% { height: 10px; }
+    50% { height: 4px; }
+}
+@keyframes eq3 {
+    0%, 100% { height: 6px; }
+    50% { height: 14px; }
+}

@@ -135,6 +135,7 @@ export const useMusicPlayer = () => {
     playTrack,
     nextTrack,
     prevTrack,
+    loadPlaylist,
     currentTrack: () => playlist.value.length > 0 ? playlist.value[currentTrackIndex.value] : null
   }
 }
