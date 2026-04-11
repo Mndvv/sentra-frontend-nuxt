@@ -139,12 +139,9 @@ const toggleRadio = async () => {
   }
   if (player.playlist.value.length === 0) return
 
-  if (!player.isPlaying.value) {
-    player.isCollapsed.value = false
-    player.playTrack(0)
-  } else {
-    player.togglePlay()
-  }
+  // Always route through togglePlay — uses the singleton _audio internally.
+  // togglePlay will call playTrack(currentTrackIndex) when src is invalid/empty.
+  player.togglePlay()
 }
 </script>
 

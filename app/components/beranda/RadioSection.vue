@@ -168,12 +168,8 @@ const handlePlayPause = async () => {
   }
   if (player.playlist.value.length === 0) return
 
-  if (!player.isPlaying.value && player.playlist.value.length > 0) {
-    player.isCollapsed.value = false
-    player.playTrack(player.currentTrackIndex.value)
-  } else {
-    player.togglePlay()
-  }
+  // Always go through togglePlay — it uses the singleton _audio from useMusicPlayer
+  player.togglePlay()
 }
 </script>
 
