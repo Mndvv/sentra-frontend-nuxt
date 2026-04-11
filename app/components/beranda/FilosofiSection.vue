@@ -52,19 +52,19 @@ const { el, isVisible } = useScrollReveal()
 const chips = [
   {
     word: 'Nawa',
-    meaning: 'Sembilan / Baru',
+    meaning: 'Baru',
     icon: 'material-symbols:brightness-9-rounded',
     class: 'bg-accent-soft text-accent border-accent/20',
   },
   {
     word: 'Sena',
-    meaning: 'Cakrawala / Tentara',
+    meaning: 'Kekuatan / Pasukan',
     icon: 'material-symbols:public-rounded',
     class: 'bg-purple-500/10 text-purple-500 border-purple-500/20',
   },
   {
     word: 'Nawasena',
-    meaning: 'Mercusuar masa depan',
+    meaning: 'Pasukan Pembawa Perubahan Dengan Masa Depan Yang Cerah',
     icon: 'material-symbols:lightbulb-rounded',
     class: 'bg-pink-500/10 text-pink-500 border-pink-500/20',
   },
