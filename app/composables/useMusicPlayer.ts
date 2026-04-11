@@ -1,22 +1,23 @@
 import { watch, onMounted } from 'vue'
 
-// ─── Module-level singletons ───────────────────────────────────────────────────
-// Audio element & init flag as true module-level singletons so every component
-// calling useMusicPlayer() shares the exact same HTMLAudioElement instance.
-// This prevents duplicate playback when multiple components (HeroSection,
-// RadioSection, AppMiniPlayer) all call this composable.
-let _audio: HTMLAudioElement | null = null
-let _audioInitialized = false
-let _watcherRegistered = false
-
 // ─── Composable ────────────────────────────────────────────────────────────────
+// Audio element is stored on the Nuxt app instance (useNuxtApp()) so it is a
+// TRUE singleton — survives HMR, module re-evaluation, and multiple component mounts.
+// Module-level variables would be reset on HMR; app-instance properties are not.
 export const useMusicPlayer = () => {
-  // Shared reactive state via Nuxt useState (already singleton by key)
+  // Shared reactive state (Nuxt useState is key-based singleton)
   const isPlaying = useState<boolean>('mp-isPlaying', () => false)
   const isCollapsed = useState<boolean>('mp-isCollapsed', () => true)
   const currentTrackIndex = useState<number>('mp-currentTrackIndex', () => 0)
   const playlist = useState<any[]>('mp-playlist', () => [])
   const showPlaylist = useState<boolean>('mp-showPlaylist', () => false)
+
+  // ── Get the singleton HTMLAudioElement from the Nuxt app instance ─────────────
+  const getAudio = (): HTMLAudioElement | null => {
+    if (!import.meta.client) return null
+    const app = useNuxtApp() as any
+    return (app._mpAudio as HTMLAudioElement) ?? null
+  }
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -34,11 +35,12 @@ export const useMusicPlayer = () => {
     const { fetchRadio } = useApi()
     const tracks = await fetchRadio()
     if (tracks && tracks.length > 0) {
-      playlist.value = tracks
+      playlist.value = tracks as any[]
       if (import.meta.client) {
         const savedIndex = localStorage.getItem('mp_track_index')
         if (savedIndex !== null) {
-          currentTrackIndex.value = parseInt(savedIndex)
+          const idx = parseInt(savedIndex)
+          if (!isNaN(idx) && idx < (tracks as any[]).length) currentTrackIndex.value = idx
         }
       }
     }
@@ -54,48 +56,51 @@ export const useMusicPlayer = () => {
     return `${base}/uploads/radio/${fileOrUrl}`
   }
 
-  // ── Playback controls (all reference singleton _audio) ────────────────────────
+  // ── Playback (all through the singleton audio element) ────────────────────────
 
   const playTrack = (index: number) => {
-    if (!import.meta.client || !_audio) return
-    if (playlist.value.length === 0) return
+    const audio = getAudio()
+    if (!audio || playlist.value.length === 0) return
     if (index < 0 || index >= playlist.value.length) return
 
-    // Stop whatever is currently playing first
-    _audio.pause()
+    // Explicitly stop anything already playing before switching
+    audio.pause()
+    audio.currentTime = 0
     isPlaying.value = false
 
     currentTrackIndex.value = index
-    _audio.src = getTrackUrl(playlist.value[index])
-    _audio.play().then(() => {
+    audio.src = getTrackUrl(playlist.value[index])
+    audio.load()
+    audio.play().then(() => {
       isPlaying.value = true
     }).catch(e => {
-      console.error('Audio play error:', e)
+      console.error('[MusicPlayer] play error:', e)
     })
     localStorage.setItem('mp_track_index', index.toString())
   }
 
   const togglePlay = () => {
-    if (!import.meta.client || !_audio) return
-    if (playlist.value.length === 0) return
+    const audio = getAudio()
+    if (!audio || playlist.value.length === 0) return
 
     if (isPlaying.value) {
-      _audio.pause()
+      audio.pause()
       isPlaying.value = false
     } else {
-      const src = _audio.src || ''
-      const isInvalidSrc = !src
-        || src.endsWith('undefined')
-        || src.endsWith('null')
-        || src === window.location.href
+      const src = audio.src || ''
+      const isInvalidSrc =
+        !src ||
+        src.endsWith('undefined') ||
+        src.endsWith('null') ||
+        src === window.location.href
 
       if (isInvalidSrc) {
         playTrack(currentTrackIndex.value)
       } else {
-        _audio.play().then(() => {
+        audio.play().then(() => {
           isPlaying.value = true
         }).catch(e => {
-          console.error('Audio play error:', e)
+          console.error('[MusicPlayer] resume error:', e)
         })
       }
     }
@@ -103,28 +108,32 @@ export const useMusicPlayer = () => {
 
   const nextTrack = () => {
     if (playlist.value.length === 0) return
-    const nextIndex = (currentTrackIndex.value + 1) % playlist.value.length
-    playTrack(nextIndex)
+    playTrack((currentTrackIndex.value + 1) % playlist.value.length)
   }
 
   const prevTrack = () => {
     if (playlist.value.length === 0) return
-    const prevIndex = (currentTrackIndex.value - 1 + playlist.value.length) % playlist.value.length
-    playTrack(prevIndex)
+    playTrack((currentTrackIndex.value - 1 + playlist.value.length) % playlist.value.length)
   }
 
-  // ── One-time initialization guard ─────────────────────────────────────────────
-  // onMounted can run multiple times (once per component), but we only want to
-  // create the HTMLAudioElement and attach listeners exactly once.
-
+  // ── One-time initialization — guarded by flags on the Nuxt app instance ───────
+  // This survives HMR because Nuxt app instance is NOT recreated on module reload.
   onMounted(() => {
     if (!import.meta.client) return
+    const app = useNuxtApp() as any
 
-    if (!_audioInitialized) {
-      _audioInitialized = true
-      _audio = new Audio()
-      // Use a stable reference so the event listener doesn't capture a stale closure
-      _audio.addEventListener('ended', () => nextTrack())
+    // Create the HTMLAudioElement exactly once
+    if (!app._mpAudio) {
+      const audio = new Audio()
+      app._mpAudio = audio
+
+      // 'ended' fires when track finishes — advance to next
+      audio.addEventListener('ended', () => {
+        // Read latest state directly (closure would be stale after HMR)
+        const idx = (useNuxtApp() as any)._mpCurrentIndex ?? 0
+        const len = (useNuxtApp() as any)._mpPlaylistLen ?? 0
+        if (len > 0) playTrack((idx + 1) % len)
+      })
 
       const savedCollapsed = localStorage.getItem('mp_collapsed')
       if (savedCollapsed === 'false') isCollapsed.value = false
@@ -132,12 +141,18 @@ export const useMusicPlayer = () => {
       loadPlaylist()
     }
 
-    // Register the watcher only once regardless of how many components mount
-    if (!_watcherRegistered) {
-      _watcherRegistered = true
-      watch(isCollapsed, (val) => {
-        localStorage.setItem('mp_collapsed', val.toString())
-      })
+    // Sync playlist length + current index onto app so the 'ended' listener can read them
+    // Use flags so they're only registered once across all component mounts
+    if (!app._mpIdxWatcher) {
+      app._mpIdxWatcher = true
+      watch(currentTrackIndex, (val) => { (useNuxtApp() as any)._mpCurrentIndex = val }, { immediate: true })
+      watch(playlist, (val) => { (useNuxtApp() as any)._mpPlaylistLen = val.length }, { immediate: true })
+    }
+
+    // Persist collapsed state — register watcher once
+    if (!app._mpWatcher) {
+      app._mpWatcher = true
+      watch(isCollapsed, (val) => localStorage.setItem('mp_collapsed', val.toString()))
     }
   })
 

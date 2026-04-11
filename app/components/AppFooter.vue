@@ -117,7 +117,7 @@ const navLinks = [
 
 const socialLinks = [
   { href: 'https://www.instagram.com/ofc.osissmandjo/', icon: 'mdi:instagram', label: '@ofc.osissmandjo', external: true },
-  { href: 'https://www.youtube.com/@OsisSmandjo', icon: 'mdi:youtube', label: 'OSIS Smandjo', external: true },
+  { href: 'https://www.youtube.com/@OSISNAWASENA', icon: 'mdi:youtube', label: 'OSIS Smandjo', external: true },
   { href: 'https://wa.me/6282299234269', icon: 'mdi:whatsapp', label: 'WhatsApp Sekretariat', external: true },
   { href: 'mailto:osissmanduajonggol@gmail.com', icon: 'material-symbols:mail', label: 'osissmanduajonggol@gmail.com', external: false },
 ]

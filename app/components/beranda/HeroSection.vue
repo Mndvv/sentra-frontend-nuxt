@@ -24,7 +24,7 @@
       />
     </div>
 
-    <div class="relative z-10 w-full max-w-4xl mx-auto">
+    <div class="relative z-10 w-full max-w-4xl mx-auto pb-16 md:pb-0">
       <!-- Badge -->
       <div
         class="flex justify-center mb-7 animate-[fadeInDown_0.6s_ease_both]"
@@ -91,26 +91,33 @@
         </button>
       </div>
 
-      <!-- Now playing ticker -->
+      <!-- Now playing ticker — inside flow so it pushes content, not overlap -->
       <Transition name="slide-up">
         <div
           v-if="player.isPlaying.value && player.currentTrack()"
-          class="mt-6 inline-flex items-center gap-2.5 bg-bg-card/70 backdrop-blur-md border border-accent/20 rounded-full px-4 py-2 text-[0.75rem] text-text-muted animate-[fadeInUp_0.4s_ease_both]"
+          class="mt-5 flex justify-center"
         >
-          <!-- Equalizer bars -->
-          <span class="flex items-end gap-[3px] h-3">
-            <span class="w-[3px] bg-accent rounded-full animate-[eq1_0.8s_ease-in-out_infinite]" />
-            <span class="w-[3px] bg-accent rounded-full animate-[eq2_0.8s_ease-in-out_0.15s_infinite]" />
-            <span class="w-[3px] bg-accent rounded-full animate-[eq3_0.8s_ease-in-out_0.3s_infinite]" />
-          </span>
-          <span class="text-accent font-semibold">Sedang Diputar:</span>
-          <span class="max-w-[200px] truncate">{{ player.currentTrack()?.judul || player.currentTrack()?.title }}</span>
+          <div
+            class="inline-flex items-center gap-2.5 bg-bg-card/70 backdrop-blur-md border border-accent/20 rounded-full px-4 py-2 text-[0.75rem] text-text-muted"
+          >
+            <!-- Equalizer bars -->
+            <span class="flex items-end gap-[3px] h-3">
+              <span class="w-[3px] bg-accent rounded-full animate-[eq1_0.8s_ease-in-out_infinite]" />
+              <span class="w-[3px] bg-accent rounded-full animate-[eq2_0.8s_ease-in-out_0.15s_infinite]" />
+              <span class="w-[3px] bg-accent rounded-full animate-[eq3_0.8s_ease-in-out_0.3s_infinite]" />
+            </span>
+            <span class="text-accent font-semibold">Sedang Diputar:</span>
+            <span class="max-w-[180px] truncate">{{ player.currentTrack()?.judul || player.currentTrack()?.title }}</span>
+          </div>
         </div>
       </Transition>
     </div>
 
-    <!-- Scroll indicator -->
-    <div class="absolute bottom-8 left-0 right-0 flex justify-center animate-[fadeIn_1s_ease_1s_both]">
+    <!-- Scroll indicator — hidden on mobile when ticker is visible to avoid overlap -->
+    <div
+      class="absolute bottom-5 left-0 right-0 flex justify-center animate-[fadeIn_1s_ease_1s_both]"
+      :class="player.isPlaying.value ? 'hidden sm:flex' : 'flex'"
+    >
       <button
         class="flex flex-col items-center gap-1 text-text-muted hover:text-accent transition-colors cursor-pointer bg-transparent border-none"
         @click="scrollToContent"
