@@ -33,15 +33,13 @@
         </div>
 
         <div class="shrink-0 relative z-10">
-          <a
-            href="https://forms.gle/example"
-            target="_blank"
-            rel="noopener"
-            class="inline-flex items-center gap-2 bg-gradient-to-br from-accent to-purple-500 text-white px-5 py-2.5 rounded-xl font-bold text-[0.9rem] no-underline transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(99,102,241,0.45)] active:scale-95"
+          <button
+          class="inline-flex items-center gap-2 bg-gradient-to-br from-accent to-purple-500 text-white px-5 py-2.5 rounded-xl font-bold text-[0.9rem] no-underline transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(99,102,241,0.45)] active:scale-95"
+          @click="openAurora"
           >
             <Icon name="material-symbols:edit-rounded" size="18" />
             Isi Sekarang
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -50,4 +48,6 @@
 
 <script setup lang="ts">
 const { el, isVisible } = useScrollReveal()
+const isAuroraOpen = useState('isAuroraOpen', () => false)
+const openAurora = () => { isAuroraOpen.value = true }
 </script>
