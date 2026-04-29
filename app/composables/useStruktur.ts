@@ -7,29 +7,41 @@ export type Organisasi = 'osis' | 'mpk'
 const loading       = ref(true)
 const pengurusRaw   = ref<any[]>([])
 const sekbidRaw     = ref<any[]>([])
+const komisiRaw     = ref<any[]>([])
 
-/**
- * Currently active organisation tab. Defaults to OSIS.
- * Backend can later add an `organisasi: 'osis' | 'mpk'` field on pengurus and
- * sekbid records — anything missing falls back to `'osis'`, so the existing
- * Nawasena OSIS data renders unchanged until MPK records are added.
- */
 const activeOrg = ref<Organisasi>('osis')
 
 const _matchesOrg = (item: any) => {
-  const org = String(item?.organisasi ?? item?.org ?? 'osis').toLowerCase()
+  // Backend now sends `org: 'OSIS' | 'MPK' | 'SYSTEM'` on every pengurus record.
+  // Fallback: legacy `organisasi` field.
+  const org = String(item?.org ?? item?.organisasi ?? 'osis').toLowerCase()
   return org === activeOrg.value
 }
 
-// Only BPH pengurus (no sekbid_number) shown in the main grid, filtered by org.
+// BPH = pengurus inti tanpa division (sekbid_number untuk OSIS, komisi untuk MPK)
 const pengurus = computed(() =>
-  pengurusRaw.value.filter(p => !p.sekbid_number && _matchesOrg(p)),
+  pengurusRaw.value.filter(p => {
+    if (!_matchesOrg(p)) return false
+    if (activeOrg.value === 'osis') return !p.sekbid_number
+    if (activeOrg.value === 'mpk')  return !p.komisi
+    return false
+  })
 )
 
-// Sekbid filtered by org.
-const sekbid = computed(() => sekbidRaw.value.filter(_matchesOrg))
+// Untuk OSIS: sekbid. Untuk MPK: komisi (mapped jadi struktur sekbid-like supaya UI sama).
+const sekbid = computed(() => {
+  if (activeOrg.value === 'osis') return sekbidRaw.value
+  // Map komisi → sekbid-like shape: {number, name, members, programs?}
+  return komisiRaw.value.map((k: any) => ({
+    number:   k.letter,        // 'A','B','C','D','E'
+    name:     k.name,
+    members:  k.members,
+    programs: [],              // MPK proker per komisi belum ada di skema saat ini
+    _isKomisi: true,           // flag untuk komponen yang perlu nge-handle MPK secara khusus
+  }))
+})
 
-// Total members across the active organisation (BPH + sekbid members).
+// Total anggota di organisasi aktif
 const totalAnggotaCount = computed(() =>
   pengurusRaw.value.filter(_matchesOrg).length,
 )
@@ -40,7 +52,6 @@ const isPengurusModalOpen = ref(false)
 const selectedSekbid    = ref<any>(null)
 const isSekbidModalOpen = ref(false)
 
-// Track pending close-timers so we can cancel them when re-opening fast
 let _pengurusCloseTimer: ReturnType<typeof setTimeout> | null = null
 let _sekbidCloseTimer:   ReturnType<typeof setTimeout> | null = null
 
@@ -48,14 +59,15 @@ let _loaded = false
 
 // ─── Composable ───────────────────────────────────────────────────────────────
 export const useStruktur = () => {
-  const { fetchPengurus, fetchSekbid } = useApi()
+  const { fetchPengurus, fetchSekbid, fetchKomisi } = useApi()
 
   const loadStrukturData = async (force = false) => {
     if (_loaded && !force) return
     loading.value = true
-    const [p, s] = await Promise.all([fetchPengurus(), fetchSekbid()])
-    pengurusRaw.value = p || []
-    sekbidRaw.value   = s || []
+    const [p, s, k] = await Promise.all([fetchPengurus(), fetchSekbid(), fetchKomisi()])
+    pengurusRaw.value = (p as any[]) || []
+    sekbidRaw.value   = (s as any[]) || []
+    komisiRaw.value   = (k as any[]) || []
     loading.value     = false
     _loaded           = true
   }
@@ -65,33 +77,41 @@ export const useStruktur = () => {
     activeOrg.value = org
   }
 
-  // ── Sekbid → Pengurus lookups ───────────────────────
+  // ── Sekbid/Komisi → Pengurus lookups ────────────────
   /**
-   * Find a pengurus record matching a sekbid member entry from /sekbid.
-   * Sekbid `members` only contain { name, role, foto } so we resolve to the
-   * full pengurus profile (biodata, motto, programKerja, …) by matching on
-   * sekbid_number + nama.
+   * Find a pengurus record matching a sekbid/komisi member entry.
+   * For OSIS: match by sekbid_number + nama.
+   * For MPK: match by komisi (letter) + nama.
    */
-  const findPengurusForSekbidMember = (sekbidNumber: number, memberName: string) => {
+  const findPengurusForSekbidMember = (sekbidNumber: number | string, memberName: string) => {
+    if (activeOrg.value === 'mpk') {
+      return pengurusRaw.value.find(
+        p => p.komisi === sekbidNumber && p.nama === memberName,
+      )
+    }
     return pengurusRaw.value.find(
       p => p.sekbid_number === sekbidNumber && p.nama === memberName,
     )
   }
 
-  /** Find the coordinator (Koordinator) pengurus record for a given sekbid. */
-  const findKoordinatorForSekbid = (sekbidNumber: number) => {
+  /** Find the coordinator (Koordinator) pengurus record for a given sekbid/komisi. */
+  const findKoordinatorForSekbid = (sekbidNumber: number | string) => {
+    if (activeOrg.value === 'mpk') {
+      return pengurusRaw.value.find(
+        p => p.komisi === sekbidNumber && /koordinator/i.test(p.sekbid_role || ''),
+      )
+    }
     return pengurusRaw.value.find(
       p => p.sekbid_number === sekbidNumber && /koordinator/i.test(p.sekbid_role || ''),
     )
   }
 
   /**
-   * Resolve the program kerja of a sekbid.
+   * Resolve the program kerja of a sekbid/komisi.
    *
-   * The user spec is "the sekbid's program kerja IS the coordinator's program
-   * kerja". We honour that as the primary source, then merge in the legacy
-   * SEKBID-scoped programs (`sekbid.programs`) so we never drop existing data.
-   * Programs are deduplicated by id.
+   * Primary source: the coordinator's personal `programKerja` (BPH-scope).
+   * Plus legacy SEKBID-scoped programs (`sekbid.programs`) merged in,
+   * deduplicated by id.
    */
   const resolveSekbidPrograms = (sekbid: any): any[] => {
     if (!sekbid) return []

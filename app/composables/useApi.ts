@@ -5,8 +5,10 @@ export const useApi = () => {
   // All backend routes are under /api prefix
   const api = `${baseURL}/api`
 
-  const fetchPengurus = () => $fetch(`${api}/pengurus`).catch(() => [])
+  const fetchPengurus = (org?: string) =>
+    $fetch(`${api}/pengurus${org ? `?org=${org}` : ''}`).catch(() => [])
   const fetchSekbid = () => $fetch(`${api}/sekbid`).catch(() => [])
+  const fetchKomisi = () => $fetch(`${api}/komisi`).catch(() => [])
   const fetchProgramKerja = () => $fetch(`${api}/program-kerja`).catch(() => [])
   const fetchAgenda = () => $fetch(`${api}/agenda`).catch(() => [])
   const fetchDokumentasi = () => $fetch(`${api}/dokumentasi`).catch(() => [])
@@ -28,6 +30,7 @@ export const useApi = () => {
   return {
     fetchPengurus,
     fetchSekbid,
+    fetchKomisi,
     fetchProgramKerja,
     fetchAgenda,
     fetchDokumentasi,

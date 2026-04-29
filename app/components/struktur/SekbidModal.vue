@@ -33,7 +33,7 @@
 
               <div class="flex-1 min-w-0 pr-8">
                 <span class="inline-flex items-center gap-1.5 bg-bg-card border border-border text-[0.6rem] font-extrabold tracking-[0.12em] uppercase px-2 py-[3px] rounded-md mb-2 text-text-subtle leading-none">
-                  Sekbid {{ sekbid.number }}
+                  {{ chipLabel }}
                 </span>
                 <h2 class="sekbid-hero-title text-[1.2rem] md:text-[1.45rem] font-extrabold m-0 leading-tight">
                   {{ sekbid.name }}
@@ -48,7 +48,7 @@
             <section>
               <h4 class="sekbid-section-h flex items-center gap-1.5 text-[0.74rem] font-bold uppercase tracking-[0.08em] pb-2.5 mb-4 border-b border-border">
                 <Icon name="material-symbols:group-rounded" class="text-base" />
-                Anggota Sekbid
+                {{ isKomisi ? 'Anggota Komisi' : 'Anggota Sekbid' }}
                 <span class="ml-auto text-text-subtle font-semibold tracking-normal normal-case">{{ members.length }}</span>
               </h4>
 
@@ -165,6 +165,14 @@ const sekbid  = computed(() => selectedSekbid.value)
 const meta    = computed(() => useSekbidMeta(sekbid.value?.number))
 const members = computed(() => sekbid.value?.members || [])
 
+const isKomisi = computed(() =>
+  !!sekbid.value?._isKomisi ||
+  (typeof sekbid.value?.number === 'string' && /^[A-E]$/i.test(sekbid.value.number))
+)
+const chipLabel = computed(() =>
+  isKomisi.value ? `Komisi ${sekbid.value?.number}` : `Sekbid ${sekbid.value?.number}`
+)
+
 // Sekbid PK = koordinator's PK (legacy SEKBID-scope used as fallback)
 const programs    = computed(() => resolveSekbidPrograms(sekbid.value))
 const koordinator = computed(() => sekbid.value?.number ? findKoordinatorForSekbid(sekbid.value.number) : null)
@@ -187,12 +195,17 @@ function openMemberProfile(member: { name: string; role?: string; foto?: string 
   const num = sekbid.value?.number
   if (!num) return
 
+  const fallbackJabatan = isKomisi.value
+    ? (member.role === 'Koordinator' ? `Koordinator Komisi ${num}` : `Komisi ${num}`)
+    : (member.role || `Anggota Sekbid ${num}`)
   const full = findPengurusForSekbidMember(num, member.name) ?? {
     nama:          member.name,
-    jabatan:       member.role || `Anggota Sekbid ${num}`,
+    jabatan:       fallbackJabatan,
     foto:          member.foto,
-    sekbid_number: num,
+    sekbid_number: isKomisi.value ? null : num,
     sekbid_role:   member.role,
+    komisi:        isKomisi.value ? num : null,
+    org:           isKomisi.value ? 'MPK' : 'OSIS',
   }
 
   closeSekbidModal()

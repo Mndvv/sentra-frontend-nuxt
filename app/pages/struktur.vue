@@ -25,7 +25,7 @@
           </span>
           <span class="inline-flex items-center gap-1.5 bg-bg-card border border-border text-[0.78rem] font-semibold text-text-main px-3 py-1.5 rounded-full">
             <Icon name="material-symbols:dashboard-rounded" class="text-base text-accent" />
-            {{ sekbid.length }} Seksi Bidang
+            {{ sekbid.length }} {{ divisionLabel }}
           </span>
           <span class="inline-flex items-center gap-1.5 bg-bg-card border border-border text-[0.78rem] font-semibold text-text-main px-3 py-1.5 rounded-full">
             <Icon name="material-symbols:badge-rounded" class="text-base text-accent" />
@@ -108,15 +108,15 @@
           <p v-else class="text-[0.9rem] text-text-muted text-center py-6">Belum ada pengurus inti.</p>
         </section>
 
-        <!-- ── Seksi Bidang ────────────────────────────── -->
+        <!-- ── Sekbid (OSIS) / Komisi (MPK) ────────────── -->
         <section class="mt-14 md:mt-16">
           <div class="flex items-end justify-between mb-5 md:mb-6">
             <div>
-              <h2 class="text-[1.1rem] md:text-[1.25rem] font-extrabold text-text-main m-0 leading-tight">Seksi Bidang</h2>
-              <p class="text-[0.78rem] text-text-muted m-0 mt-0.5">10 sekbid yang merancang & menjalankan program kerja Nawasena.</p>
+              <h2 class="text-[1.1rem] md:text-[1.25rem] font-extrabold text-text-main m-0 leading-tight">{{ divisionLabel }}</h2>
+              <p class="text-[0.78rem] text-text-muted m-0 mt-0.5">{{ divisionTagline }}</p>
             </div>
             <span v-if="!loading" class="text-[0.74rem] text-text-subtle font-semibold uppercase tracking-wider whitespace-nowrap">
-              {{ sekbid.length }} sekbid
+              {{ sekbid.length }} {{ activeOrg === 'mpk' ? 'komisi' : 'sekbid' }}
             </span>
           </div>
 
@@ -159,7 +159,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import type { Organisasi } from '~/composables/useStruktur'
 
 const {
@@ -173,6 +173,16 @@ const {
   openPengurusModal,
   openSekbidModal,
 } = useStruktur()
+
+// Label dinamis OSIS Sekbid vs MPK Komisi
+const divisionLabel = computed(() =>
+  activeOrg.value === 'mpk' ? 'Komisi' : 'Seksi Bidang',
+)
+const divisionTagline = computed(() =>
+  activeOrg.value === 'mpk'
+    ? '5 komisi yang membersamai aspirasi siswa di tiap sektor.'
+    : '10 sekbid yang merancang & menjalankan program kerja Nawasena.',
+)
 
 useSeoMeta({
   title: 'Struktur Organisasi',
@@ -194,7 +204,7 @@ interface OrgTab {
 
 const orgTabs: OrgTab[] = [
   { id: 'osis', label: 'OSIS', icon: 'material-symbols:school-rounded', disabled: false },
-  { id: 'mpk',  label: 'MPK',  icon: 'material-symbols:groups-rounded', disabled: true  },
+  { id: 'mpk',  label: 'MPK',  icon: 'material-symbols:groups-rounded', disabled: false },
 ]
 
 onMounted(() => loadStrukturData())

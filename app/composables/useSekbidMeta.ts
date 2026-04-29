@@ -40,7 +40,19 @@ const _fallback: SekbidMeta = {
   short: 'Sekbid',
 }
 
-export const useSekbidMeta = (number?: number | null): SekbidMeta => {
-  if (!number) return _fallback
-  return _meta[number] ?? _fallback
+// Visual meta untuk MPK Komisi (A–E)
+const _komisiMeta: Record<string, SekbidMeta> = {
+  A: { icon: 'material-symbols:gavel-rounded',     color: '#0ea5e9', glow: 'rgba( 14, 165, 233, 0.14)', short: 'Komisi A' },
+  B: { icon: 'material-symbols:campaign-rounded',  color: '#f59e0b', glow: 'rgba(245, 158,  11, 0.14)', short: 'Komisi B' },
+  C: { icon: 'material-symbols:assessment-rounded',color: '#10b981', glow: 'rgba( 16, 185, 129, 0.14)', short: 'Komisi C' },
+  D: { icon: 'material-symbols:shield-rounded',    color: '#8b5cf6', glow: 'rgba(139,  92, 246, 0.14)', short: 'Komisi D' },
+  E: { icon: 'material-symbols:public-rounded',    color: '#ec4899', glow: 'rgba(236,  72, 153, 0.14)', short: 'Komisi E' },
+}
+
+export const useSekbidMeta = (key?: number | string | null): SekbidMeta => {
+  if (!key) return _fallback
+  if (typeof key === 'string' && _komisiMeta[key.toUpperCase()]) {
+    return _komisiMeta[key.toUpperCase()]!
+  }
+  return _meta[Number(key)] ?? _fallback
 }

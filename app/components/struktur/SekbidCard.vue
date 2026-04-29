@@ -12,7 +12,7 @@
         <Icon :name="meta.icon" size="26" />
       </div>
       <span class="text-[0.58rem] font-extrabold uppercase tracking-[0.12em] px-2 py-[3px] rounded-md bg-bg-card-2 border border-border text-text-subtle leading-none">
-        Sekbid {{ index }}
+        {{ chipLabel }}
       </span>
     </div>
 
@@ -44,12 +44,21 @@ import { computed } from 'vue'
 
 const props = defineProps<{
   sekbid: any
-  index: number
+  index: number | string
 }>()
 
 defineEmits(['click'])
 
 const meta = computed(() => useSekbidMeta(props.sekbid?.number ?? props.index))
+
+const isKomisi = computed(() =>
+  !!props.sekbid?._isKomisi ||
+  (typeof props.sekbid?.number === 'string' && /^[A-E]$/i.test(props.sekbid.number)),
+)
+
+const chipLabel = computed(() =>
+  isKomisi.value ? `Komisi ${props.sekbid?.number}` : `Sekbid ${props.index}`,
+)
 
 const memberCount  = computed(() => Array.isArray(props.sekbid?.members)  ? props.sekbid.members.length  : 0)
 const programCount = computed(() => Array.isArray(props.sekbid?.programs) ? props.sekbid.programs.length : 0)
