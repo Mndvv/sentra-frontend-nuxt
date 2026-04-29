@@ -183,7 +183,8 @@ const {
   isPengurusModalOpen,
   selectedPengurus,
   closePengurusModal,
-  findKoordinatorForSekbid,
+  sekbid: sekbidList,
+  resolveSekbidPrograms,
 } = useStruktur()
 const p = computed(() => selectedPengurus.value)
 
@@ -195,10 +196,25 @@ const orgIcon = computed(() => orgKey.value === 'mpk' ? 'material-symbols:groups
 // ── Program Kerja (merged for sekbid members) ────────────────────────────────
 // For BPH pengurus: just their own programKerja.
 // For sekbid members (Koordinator/Anggota): their personal programKerja PLUS
-// the sekbid's program kerja (= the koordinator's programKerja). Deduped by id.
+// the sekbid's program kerja. Sekbid PK = koordinator's BPH-scoped programKerja
+// merged with the legacy `sekbid.programs` (scope='SEKBID'), deduped by id.
 // Each program is tagged with `_source` so the UI can show a "Sekbid" badge.
 const isSekbidMember = computed(() => !!p.value?.sekbid_number)
 const sekbidMeta = computed(() => useSekbidMeta(p.value?.sekbid_number))
+
+/** Sekbid programs in PengurusModal (`nama`/`deskripsi`) shape. */
+const sekbidPrograms = computed<any[]>(() => {
+  if (!isSekbidMember.value) return []
+  const sekbidObj = sekbidList.value.find((s: any) => s.number === p.value!.sekbid_number)
+  // resolveSekbidPrograms returns sekbid shape (`name`/`description`), normalize to BPH shape.
+  return resolveSekbidPrograms(sekbidObj).map((prog: any) => ({
+    id:        prog.id,
+    nama:      prog.nama ?? prog.name,
+    deskripsi: prog.deskripsi ?? prog.description,
+    target:    prog.target,
+    status:    prog.status,
+  }))
+})
 
 const programs = computed<any[]>(() => {
   if (!p.value) return []
@@ -208,23 +224,21 @@ const programs = computed<any[]>(() => {
     return personal.map((prog: any) => ({ ...prog, _source: 'personal' }))
   }
 
-  const koord = findKoordinatorForSekbid(p.value.sekbid_number)
-  const isKoordinator = koord && koord.id === p.value.id
-
-  // Koordinator's personal PK is *defined as* the sekbid PK, so we tag it as such.
-  if (isKoordinator) {
-    return personal.map((prog: any) => ({ ...prog, _source: 'sekbid' }))
-  }
-
-  // Anggota: personal PK first, then merge in sekbid PK from the koordinator.
+  // Personal first, then sekbid PK (deduped against personal).
   const seen = new Set<number | string>(personal.map((prog: any) => prog.id))
-  const sekbidPrograms = (koord?.programKerja || [])
+  const sekbidTagged = sekbidPrograms.value
     .filter((prog: any) => !seen.has(prog.id))
     .map((prog: any) => ({ ...prog, _source: 'sekbid' }))
 
+  // For the koordinator, their personal PK is — by definition — the sekbid PK,
+  // so flip the tag on the personal entries to keep the labelling honest.
+  const personalTag = p.value.sekbid_role && /koordinator/i.test(p.value.sekbid_role)
+    ? 'sekbid'
+    : 'personal'
+
   return [
-    ...personal.map((prog: any) => ({ ...prog, _source: 'personal' })),
-    ...sekbidPrograms,
+    ...personal.map((prog: any) => ({ ...prog, _source: personalTag })),
+    ...sekbidTagged,
   ]
 })
 
