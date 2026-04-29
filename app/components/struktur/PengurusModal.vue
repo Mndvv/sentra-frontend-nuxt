@@ -46,10 +46,16 @@
                 />
               </div>
 
-              <!-- Jabatan badge -->
-              <span class="inline-block bg-accent-soft text-accent text-[0.62rem] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-md">
-                {{ p.jabatan }}
-              </span>
+              <!-- Org + Jabatan badges -->
+              <div class="flex flex-wrap gap-1.5 justify-center md:justify-start">
+                <span class="inline-flex items-center gap-1 bg-bg-card border border-border text-text-subtle text-[0.58rem] font-extrabold tracking-[0.12em] uppercase px-2 py-[3px] rounded-md leading-none">
+                  <Icon :name="orgIcon" class="text-[0.85rem]" />
+                  {{ orgLabel }}
+                </span>
+                <span class="inline-block bg-accent-soft text-accent text-[0.62rem] font-bold tracking-wider uppercase px-2.5 py-0.5 rounded-md">
+                  {{ p.jabatan }}
+                </span>
+              </div>
 
               <!-- Nama -->
               <h3 class="text-[1.2rem] font-extrabold text-text-main m-0 leading-tight text-center md:text-left">
@@ -155,6 +161,11 @@ import { computed } from 'vue'
 
 const { isPengurusModalOpen, selectedPengurus, closePengurusModal } = useStruktur()
 const p = computed(() => selectedPengurus.value)
+
+// Organisation label — defaults to OSIS for legacy data
+const orgKey = computed(() => String(p.value?.organisasi ?? p.value?.org ?? 'osis').toLowerCase())
+const orgLabel = computed(() => orgKey.value === 'mpk' ? 'MPK' : 'OSIS')
+const orgIcon = computed(() => orgKey.value === 'mpk' ? 'material-symbols:groups-rounded' : 'material-symbols:school-rounded')
 
 const hasVisiMisi = computed(() => {
   if (!p.value) return false

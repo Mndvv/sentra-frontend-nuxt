@@ -1,14 +1,40 @@
 import { ref, computed } from 'vue'
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+export type Organisasi = 'osis' | 'mpk'
+
 // ─── Module-level singleton state ─────────────────────────────────────────────
 const loading       = ref(true)
 const pengurusRaw   = ref<any[]>([])
-const sekbid        = ref<any[]>([])
+const sekbidRaw     = ref<any[]>([])
 
-// Only BPH pengurus (no sekbid_number) shown in the main grid
-const pengurus = computed(() => pengurusRaw.value.filter(p => !p.sekbid_number))
+/**
+ * Currently active organisation tab. Defaults to OSIS.
+ * Backend can later add an `organisasi: 'osis' | 'mpk'` field on pengurus and
+ * sekbid records — anything missing falls back to `'osis'`, so the existing
+ * Nawasena OSIS data renders unchanged until MPK records are added.
+ */
+const activeOrg = ref<Organisasi>('osis')
 
-const selectedPengurus   = ref<any>(null)
+const _matchesOrg = (item: any) => {
+  const org = String(item?.organisasi ?? item?.org ?? 'osis').toLowerCase()
+  return org === activeOrg.value
+}
+
+// Only BPH pengurus (no sekbid_number) shown in the main grid, filtered by org.
+const pengurus = computed(() =>
+  pengurusRaw.value.filter(p => !p.sekbid_number && _matchesOrg(p)),
+)
+
+// Sekbid filtered by org.
+const sekbid = computed(() => sekbidRaw.value.filter(_matchesOrg))
+
+// Total members across the active organisation (BPH + sekbid members).
+const totalAnggotaCount = computed(() =>
+  pengurusRaw.value.filter(_matchesOrg).length,
+)
+
+const selectedPengurus    = ref<any>(null)
 const isPengurusModalOpen = ref(false)
 
 const selectedSekbid    = ref<any>(null)
@@ -29,19 +55,23 @@ export const useStruktur = () => {
     loading.value = true
     const [p, s] = await Promise.all([fetchPengurus(), fetchSekbid()])
     pengurusRaw.value = p || []
-    sekbid.value      = s || []
+    sekbidRaw.value   = s || []
     loading.value     = false
     _loaded           = true
   }
 
+  // ── Org tabs ────────────────────────────────────────
+  const setActiveOrg = (org: Organisasi) => {
+    activeOrg.value = org
+  }
+
   // ── Pengurus modal ──────────────────────────────────
   const openPengurusModal = (data: any) => {
-    // Cancel any pending clear from a previous close
     if (_pengurusCloseTimer) {
       clearTimeout(_pengurusCloseTimer)
       _pengurusCloseTimer = null
     }
-    selectedPengurus.value   = data
+    selectedPengurus.value    = data
     isPengurusModalOpen.value = true
     if (import.meta.client) document.body.style.overflow = 'hidden'
   }
@@ -50,19 +80,18 @@ export const useStruktur = () => {
     isPengurusModalOpen.value = false
     if (import.meta.client) document.body.style.overflow = ''
     _pengurusCloseTimer = setTimeout(() => {
-      selectedPengurus.value  = null
-      _pengurusCloseTimer     = null
+      selectedPengurus.value = null
+      _pengurusCloseTimer    = null
     }, 350)
   }
 
   // ── Sekbid modal ────────────────────────────────────
   const openSekbidModal = (data: any) => {
-    // Cancel any pending clear from a previous close
     if (_sekbidCloseTimer) {
       clearTimeout(_sekbidCloseTimer)
       _sekbidCloseTimer = null
     }
-    selectedSekbid.value   = data
+    selectedSekbid.value    = data
     isSekbidModalOpen.value = true
     if (import.meta.client) document.body.style.overflow = 'hidden'
   }
@@ -80,6 +109,9 @@ export const useStruktur = () => {
     loading,
     pengurus,
     sekbid,
+    activeOrg,
+    setActiveOrg,
+    totalAnggotaCount,
     selectedPengurus,
     isPengurusModalOpen,
     selectedSekbid,
