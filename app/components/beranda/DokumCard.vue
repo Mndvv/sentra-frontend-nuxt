@@ -8,9 +8,9 @@
     ]"
     :style="{ transitionDelay: delay ? `${delay}ms` : '0ms' }"
   >
-    <div
-      class="bg-bg-card border border-border rounded-[18px] overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_16px_40px_rgba(99,102,241,0.18)] flex flex-col group h-full"
-      @click="$emit('click', ev)"
+    <NuxtLink
+      :to="`/dokumentasi/${articleSlug(ev)}`"
+      class="bg-bg-card border border-border rounded-[18px] overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_16px_40px_rgba(99,102,241,0.18)] flex flex-col group h-full no-underline text-text-main"
     >
       <!-- Thumbnail -->
       <div
@@ -63,18 +63,18 @@
           />
         </span>
       </div>
-    </div>
+    </NuxtLink>
   </div>
 </template>
 
 <script setup lang="ts">
+import { articleSlug } from '~/utils/articleSlug'
+
 defineProps<{
   ev: any
   isFeatured?: boolean
   delay?: number
 }>()
-
-defineEmits(['click'])
 
 const { el, isVisible } = useScrollReveal()
 

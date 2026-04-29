@@ -174,7 +174,12 @@ const {
   openSekbidModal,
 } = useStruktur()
 
-useHead({ title: 'Struktur Organisasi — OSIS Nawasena' })
+useSeoMeta({
+  title: 'Struktur Organisasi',
+  description: 'Susunan pengurus inti dan 10 seksi bidang Kabinet Nawasena 2025/2026 — siapa saja yang menggerakkan setiap program kerja OSIS.',
+  ogTitle: 'Struktur Organisasi — OSIS Nawasena',
+  ogDescription: 'Pengurus inti dan seksi bidang Kabinet Nawasena 2025/2026.',
+})
 
 // Only Ketua Umum gets the large featured card (span 2, bigger avatar, motto shown)
 const isFeatured = (jabatan: string) =>

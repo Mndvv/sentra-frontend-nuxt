@@ -1,11 +1,8 @@
 <template>
-  <div 
-    class="bg-bg-card rounded-[18px] overflow-hidden cursor-pointer border border-border shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_-12px_rgba(99,102,241,0.25)] hover:border-indigo-500/30 flex flex-col relative p-0 group h-full focus:outline-none focus:ring-2 focus:ring-accent"
+  <NuxtLink
+    :to="`/dokumentasi/${articleSlug(ev)}`"
+    class="bg-bg-card rounded-[18px] overflow-hidden border border-border shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_-12px_rgba(99,102,241,0.25)] hover:border-indigo-500/30 flex flex-col relative p-0 group h-full focus:outline-none focus:ring-2 focus:ring-accent no-underline text-text-main"
     :class="{ 'md:col-span-2 lg:col-span-3 flex-col lg:flex-row lg:max-h-[380px]': isFeatured }"
-    @click="$emit('click', ev)"
-    @keyup.enter="$emit('click', ev)"
-    tabindex="0"
-    role="button"
   >
     <div 
       class="relative overflow-hidden bg-[#0f172a] flex-shrink-0"
@@ -30,16 +27,16 @@
         Baca Artikel <Icon name="material-symbols:arrow-forward" size="16" class="text-[1rem]" />
       </div>
     </div>
-  </div>
+  </NuxtLink>
 </template>
 
 <script setup lang="ts">
+import { articleSlug } from '~/utils/articleSlug'
+
 defineProps<{
   ev: any
   isFeatured?: boolean
 }>()
-
-defineEmits(['click'])
 
 const formatRangeIndo = (sStr: string, eStr: string) => {
   const formatDateIndo = (dStr: string) => {

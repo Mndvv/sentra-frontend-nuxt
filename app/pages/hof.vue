@@ -109,8 +109,11 @@ import { onMounted } from 'vue'
 
 const { loading, error, topPeriods, otherPeriods, developers, loadHofData, openOlderPeriodsModal } = useHof()
 
-useHead({
-  title: 'Hall of Fame — OSIS Nawasena',
+useSeoMeta({
+  title: 'Hall of Fame',
+  description: 'Hall of Fame OSIS Nawasena — penghormatan untuk para pengurus periode-periode terdahulu yang telah menorehkan dedikasi dan kepemimpinan inspiratif.',
+  ogTitle: 'Hall of Fame — OSIS Nawasena',
+  ogDescription: 'Penghormatan untuk pengurus OSIS Nawasena dari periode-periode terdahulu.',
 })
 
 // Using color-mode logic directly in Tailwind classes handles the dark mode effectively.

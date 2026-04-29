@@ -101,7 +101,13 @@ function onError(event: Event) {
   pointer-events: none;
 }
 
-:where(.app-img-el) {
+/*
+  NOT inside :where() because we need specificity 0,1,0 to beat Tailwind's
+  preflight rule `img { height: auto; max-width: 100% }` (specificity 0,0,1).
+  Without this, landscape photos render shorter than the wrapper, exposing
+  the photo's bottom edge inside circular avatars.
+*/
+.app-img-el {
   display: block;
   width: 100%;
   height: 100%;

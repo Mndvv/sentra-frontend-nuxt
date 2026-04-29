@@ -21,22 +21,25 @@
         :key="ev.id" 
         :ev="ev" 
         :is-featured="index === 0"
-        @click="openArticleModal"
       />
     </div>
-
-    <DokumArticleModal />
-    <DokumLightboxModal />
   </main>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
 
-const { loading, dokumentasi, loadDokumentasiData, openArticleModal } = useDokumentasi()
+definePageMeta({
+  pageTransition: { name: 'article-slide', mode: 'out-in' },
+})
 
-useHead({
-  title: 'Dokumentasi — OSIS Nawasena'
+const { loading, dokumentasi, loadDokumentasiData } = useDokumentasi()
+
+useSeoMeta({
+  title: 'Dokumentasi',
+  description: 'Galeri dokumentasi kegiatan dan acara OSIS Nawasena — rekam jejak dan memori perjalanan kabinet Nawasena 2025/2026.',
+  ogTitle: 'Dokumentasi — OSIS Nawasena',
+  ogDescription: 'Galeri dokumentasi kegiatan dan acara OSIS Nawasena.',
 })
 
 onMounted(() => {

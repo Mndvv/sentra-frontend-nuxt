@@ -144,7 +144,6 @@
             :ev="ev"
             :is-featured="idx === 0"
             :delay="idx * 80"
-            @click="openArticleModal"
           />
         </div>
       </section>
@@ -155,10 +154,6 @@
       </section>
 
     </main>
-
-    <!-- Modals -->
-    <DokumArticleModal />
-    <DokumLightboxModal />
   </div>
 </template>
 
@@ -168,7 +163,7 @@ import { useDokumentasi } from '~/composables/useDokumentasi'
 
 const { loading: agendaLoading, agendas, loadAgendas } = useAgenda()
 const { loading: prokerLoading, programs, loadPrograms } = useProgram()
-const { loading: dokumLoading, dokumentasi, loadDokumentasiData, openArticleModal } = useDokumentasi()
+const { loading: dokumLoading, dokumentasi, loadDokumentasiData } = useDokumentasi()
 
 const programHighlights = computed(() => {
   const order: Record<string, number> = { Berjalan: 0, Direncanakan: 1, Selesai: 2 }
@@ -179,7 +174,12 @@ const programHighlights = computed(() => {
 
 const dokumHighlights = computed(() => dokumentasi.value.slice(0, 3))
 
-useHead({ title: 'Beranda — OSIS Nawasena SENTRA' })
+useSeoMeta({
+  title: 'Beranda',
+  description: 'Selamat datang di portal OSIS Nawasena — kabinet 2025/2026. Lihat agenda terkini, dengarkan radio sekolah, dan jelajahi program kerja serta dokumentasi kegiatan kami.',
+  ogTitle: 'Beranda — OSIS Nawasena',
+  ogDescription: 'Selamat datang di portal OSIS Nawasena — kabinet 2025/2026.',
+})
 
 onMounted(() => {
   loadAgendas()

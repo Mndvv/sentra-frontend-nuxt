@@ -124,3 +124,32 @@
     0%, 100% { height: 6px; }
     50% { height: 14px; }
 }
+
+/* ── Page Transitions: dokumentasi ⇄ article (modal-like slide-up) ────────── */
+.article-slide-enter-active,
+.article-slide-leave-active {
+    transition:
+        opacity 280ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+}
+.article-slide-enter-from {
+    opacity: 0;
+    transform: translateY(28px) scale(0.985);
+}
+.article-slide-leave-to {
+    opacity: 0;
+    transform: translateY(28px) scale(0.985);
+}
+
+/* Reduced motion: drop the transform, keep just a quick fade. */
+@media (prefers-reduced-motion: reduce) {
+    .article-slide-enter-active,
+    .article-slide-leave-active {
+        transition: opacity 120ms linear;
+    }
+    .article-slide-enter-from,
+    .article-slide-leave-to {
+        transform: none;
+    }
+}
