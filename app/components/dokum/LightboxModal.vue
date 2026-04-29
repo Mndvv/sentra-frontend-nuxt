@@ -30,11 +30,19 @@
 
       <!-- Stage -->
       <div class="flex-1 flex items-center justify-center p-[4rem_1rem_3rem] md:p-[5rem_5rem_4rem] relative">
-        <img 
+        <div
           :key="currentPhoto?.url"
-          :src="useImageUrl(currentPhoto?.url)" 
-          class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-[0_20px_60px_rgba(0,0,0,0.6)] animate-[fadeIn_0.3s_ease]"
+          class="max-w-full max-h-[70vh] w-auto h-auto rounded-lg overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] animate-[fadeIn_0.3s_ease] flex items-center justify-center"
+          style="min-width: 100px; min-height: 60px;"
         >
+          <AppImg
+            :src="useImageUrl(currentPhoto?.url)"
+            loading="eager"
+            fit="contain"
+            class="max-w-full max-h-[70vh] w-auto"
+            style="aspect-ratio: auto;"
+          />
+        </div>
         
         <div v-if="currentPhoto?.caption" class="absolute bottom-[20px] md:bottom-[80px] left-1/2 -translate-x-1/2 bg-black/50 text-white font-sans text-[0.85rem] px-[18px] py-[6px] rounded-[20px] whitespace-nowrap max-w-[80%] overflow-hidden text-ellipsis">
           {{ currentPhoto.caption }}
@@ -54,14 +62,15 @@
       <!-- Thumbnails -->
       <div class="bg-black/60 p-[0.8rem_1rem] overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-accent">
         <div class="inline-flex gap-2 min-w-max mx-auto justify-center w-full" ref="thumbList">
-          <img 
-            v-for="(img, i) in photos" 
+          <div
+            v-for="(img, i) in photos"
             :key="i"
-            :src="useImageUrl(img.url)" 
-            class="w-[72px] h-[50px] object-cover rounded-[6px] cursor-pointer border-2 transition-all duration-250 shrink-0"
+            class="w-[72px] h-[50px] rounded-[6px] cursor-pointer border-2 transition-all duration-250 shrink-0 overflow-hidden"
             :class="i === currentIndex ? 'border-accent opacity-100 scale-105' : 'border-transparent opacity-55 hover:opacity-85'"
             @click="jump(i)"
           >
+            <AppImg :src="useImageUrl(img.url)" class="w-full h-full" />
+          </div>
         </div>
       </div>
     </div>

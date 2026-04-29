@@ -34,12 +34,11 @@
             <div v-if="members.length" class="grid grid-cols-3 sm:grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-3">
               <div v-for="member in members" :key="member.name + member.role" class="flex flex-col items-center text-center bg-bg-card-2 border border-border rounded-2xl p-3.5 transition-all duration-200 hover:border-accent hover:-translate-y-0.5">
                 <div class="mb-2">
-                  <img
+                  <AppImg
                     :src="useImageUrl(member.foto, member.name)"
                     :alt="member.name"
-                    class="w-[58px] h-[58px] rounded-full object-cover border-2 border-border bg-bg-card transition-colors duration-200 hover:border-accent"
-                    loading="lazy"
-                    decoding="async"
+                    rounded="full"
+                    class="w-[58px] h-[58px] rounded-full"
                     @error="(e) => onImgError(e, member.name)"
                   />
                 </div>

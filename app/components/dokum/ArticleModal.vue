@@ -15,7 +15,7 @@
 
       <!-- Hero Foto -->
       <div class="relative h-[260px] md:h-[420px] overflow-hidden">
-        <img :src="useImageUrl(event?.thumbnail)" :alt="event?.title" class="w-full h-full object-cover block">
+        <AppImg :src="useImageUrl(event?.thumbnail)" :alt="event?.title" loading="eager" class="w-full h-full" />
         <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent"></div>
         <div class="absolute bottom-0 left-0 right-0 p-6 md:p-10 text-white">
           <span class="inline-block bg-accent text-white font-sans text-[0.68rem] font-bold tracking-[0.1em] uppercase px-3.5 py-1.5 rounded-full mb-3">{{ event?.tag_text || 'Kegiatan' }}</span>
@@ -49,7 +49,7 @@
               :class="{ 'md:col-span-2 md:row-span-2': isHeroPhoto(i, previewPhotos.length) }"
               @click="openLightboxModal(photos, i)"
             >
-              <img :src="useImageUrl(img.url)" :alt="img.caption" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 brightness-90 group-hover:scale-105 group-hover:brightness-100">
+              <AppImg :src="useImageUrl(img.url)" :alt="img.caption" img-class="transition-transform duration-500 brightness-90 group-hover:scale-105 group-hover:brightness-100" class="absolute inset-0 w-full h-full" />
               <div v-if="img.caption" class="absolute inset-0 bg-transparent flex items-end p-3 transition-colors duration-300 group-hover:bg-black/45 z-10">
                 <span class="font-sans text-[0.75rem] text-white leading-[1.4] translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">{{ img.caption }}</span>
               </div>

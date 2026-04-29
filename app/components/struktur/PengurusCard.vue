@@ -15,12 +15,12 @@
         isFeatured ? 'w-[120px] h-[120px] md:w-[140px] md:h-[140px]' : 'w-[100px] h-[100px] mb-3.5'
       ]"
     >
-      <img
+      <AppImg
         :src="useImageUrl(pengurus.foto, pengurus.nama)"
         :alt="pengurus.nama"
-        loading="lazy"
-        decoding="async"
-        class="w-full h-full object-cover rounded-full border-[3px] border-transparent bg-bg-card-2 transition-colors duration-300 group-hover:border-accent"
+        rounded="full"
+        img-class="border-[3px] border-transparent group-hover:border-accent transition-colors duration-300"
+        class="w-full h-full rounded-full"
         @error="onImgError"
       />
     </div>

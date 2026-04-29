@@ -11,12 +11,12 @@
       class="relative overflow-hidden bg-[#0f172a] flex-shrink-0"
       :class="isFeatured ? 'h-[240px] lg:h-full lg:w-[55%] lg:min-w-[55%]' : 'h-[210px]'"
     >
-      <img 
-        :src="useImageUrl(ev.thumbnail)" 
-        :alt="ev.title" 
-        loading="lazy" 
-        class="w-full h-full object-cover block transition-transform duration-500 brightness-[0.92] group-hover:scale-[1.06] group-hover:brightness-100"
-      >
+      <AppImg
+        :src="useImageUrl(ev.thumbnail)"
+        :alt="ev.title"
+        img-class="transition-transform duration-500 brightness-[0.92] group-hover:scale-[1.06] group-hover:brightness-100"
+        class="w-full h-full"
+      />
       <span class="absolute top-3 left-3 bg-indigo-500/90 backdrop-blur-md text-white font-sans text-[0.65rem] font-bold tracking-[0.08em] uppercase px-2.5 py-1 rounded-full z-10">{{ ev.tag_text || 'Kegiatan' }}</span>
       <span class="absolute bottom-3 right-3 bg-black/50 backdrop-blur-[8px] text-white font-sans text-[0.72rem] font-semibold px-2.5 py-1 rounded-full flex items-center gap-1 z-10">
         <span class="text-[0.55rem] opacity-70 leading-none pb-px">◈</span> {{ ev.images?.length || 0 }} Foto

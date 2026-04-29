@@ -7,7 +7,13 @@
     ></div>
 
     <div class="relative w-[96px] h-[96px] mx-auto mb-[1.4rem]">
-      <img :src="useImageUrl(dev.foto)" :alt="dev.nama" class="w-[96px] h-[96px] rounded-full object-cover block bg-bg-primary" @error="(e) => (e.target as HTMLImageElement).src = useImageUrl('uploads/pp/default.webp')">
+      <AppImg
+        :src="useImageUrl(dev.foto, dev.nama)"
+        :alt="dev.nama"
+        rounded="full"
+        class="w-[96px] h-[96px] rounded-full"
+        @error="(e) => (e.target as HTMLImageElement).src = useImageUrl('', dev.nama)"
+      />
       
       <!-- Spinning Ring -->
       <div 

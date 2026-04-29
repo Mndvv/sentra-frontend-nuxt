@@ -32,12 +32,11 @@
             <div class="md:border-r md:border-border md:bg-bg-card-2/40 p-6 md:p-7 flex flex-col items-center md:items-start gap-4 md:rounded-l-3xl">
               <!-- Avatar -->
               <div class="relative">
-                <img
+                <AppImg
                   :src="useImageUrl(p.foto, p.nama)"
                   :alt="p.nama"
-                  class="w-[96px] h-[96px] md:w-[112px] md:h-[112px] rounded-full object-cover border-[3px] border-accent bg-bg-card-2 shadow-[0_4px_20px_rgba(99,102,241,0.25)]"
-                  loading="lazy"
-                  decoding="async"
+                  rounded="full"
+                  class="w-[96px] h-[96px] md:w-[112px] md:h-[112px] rounded-full border-[3px] border-accent shadow-[0_4px_20px_rgba(99,102,241,0.25)]"
                   @error="onImgError"
                 />
                 <span

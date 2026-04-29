@@ -18,7 +18,12 @@
       <div class="p-[1.5rem] md:p-[2rem] overflow-y-auto scrollbar-thin scrollbar-thumb-border flex-1">
         <!-- MODE: MEMBER_PROFILE -->
         <div v-if="modalType === 'MEMBER_PROFILE'" class="text-center py-8 px-4">
-          <img :src="useImageUrl(modalData?.foto)" class="w-[120px] h-[120px] rounded-full object-cover mx-auto mb-[1.5rem] border-[4px] border-[#f59e0b] block bg-bg-primary" @error="(e) => (e.target as HTMLImageElement).src = useImageUrl('uploads/pp/default.webp')">
+          <AppImg
+            :src="useImageUrl(modalData?.foto, modalData?.nama)"
+            :alt="modalData?.nama"
+            rounded="full"
+            class="w-[120px] h-[120px] rounded-full border-[4px] border-[#f59e0b] mx-auto mb-[1.5rem] block"
+          />
           <p class="text-[#f59e0b] font-[700] text-[0.75rem] mb-[0.5rem] uppercase tracking-[2px]">{{ modalData?.jabatan }}</p>
           <h3 class="text-text-main text-[1.4rem] font-serif m-0">{{ modalData?.nama }}</h3>
         </div>
@@ -27,7 +32,12 @@
         <div v-else-if="modalType === 'PERIOD_MEMBERS'" class="grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-[1rem] md:gap-[1.5rem] mt-[0.5rem]">
           <div v-for="m in modalData" :key="m.id" class="bg-bg-card p-[1.2rem] rounded-[20px] text-center border border-border shadow-sm relative overflow-hidden">
              <div class="relative w-[60px] h-[60px] mx-auto mb-[1rem]">
-                <img :src="useImageUrl(m.foto)" :alt="m.nama" class="w-[60px] h-[60px] rounded-full object-cover block bg-bg-primary" @error="(e) => (e.target as HTMLImageElement).src = useImageUrl('uploads/pp/default.webp')">
+                <AppImg
+                  :src="useImageUrl(m.foto, m.nama)"
+                  :alt="m.nama"
+                  rounded="full"
+                  class="w-[60px] h-[60px] rounded-full"
+                />
                 <div class="absolute -inset-[4px] rounded-full border-[2px] border-[#f59e0b]/30"></div>
              </div>
              <div class="text-[0.62rem] font-[700] tracking-[1.5px] uppercase text-[#f59e0b] mb-[0.4rem]">{{ m.jabatan }}</div>

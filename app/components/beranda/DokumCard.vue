@@ -17,11 +17,11 @@
         class="relative overflow-hidden flex-shrink-0 bg-bg-card-2"
         :class="isFeatured ? 'h-[260px]' : 'h-[180px]'"
       >
-        <img
+        <AppImg
           :src="useImageUrl(ev.thumbnail)"
           :alt="ev.title"
-          loading="lazy"
-          class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          img-class="transition-transform duration-500 group-hover:scale-105"
+          class="w-full h-full"
         />
         <!-- Dark overlay on hover -->
         <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />

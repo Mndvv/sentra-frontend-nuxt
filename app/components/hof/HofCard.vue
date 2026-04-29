@@ -8,7 +8,14 @@
     
     <template v-if="!isMore">
       <div class="relative w-[78px] h-[78px] mx-auto mb-[1rem]">
-        <img :src="useImageUrl(member?.foto)" :alt="member?.nama" class="w-[78px] h-[78px] rounded-full object-cover block bg-bg-primary" @error="(e) => (e.target as HTMLImageElement).src = useImageUrl('uploads/pp/default.webp')">
+        <AppImg
+          :src="useImageUrl(member?.foto, member?.nama)"
+          :alt="member?.nama"
+          rounded="full"
+          img-class="w-[78px] h-[78px]"
+          class="w-[78px] h-[78px] rounded-full"
+          @error="(e) => (e.target as HTMLImageElement).src = useImageUrl('', member?.nama)"
+        />
         <div class="absolute -inset-[4px] rounded-full border-[2px] border-[#f59e0b]/30 transition-colors duration-300 group-hover:border-[#f59e0b]/70" :class="{'!border-indigo-500/35 group-hover:!border-indigo-500/80': isCurrent}"></div>
       </div>
       <div class="text-[0.68rem] font-[700] tracking-[1.5px] uppercase text-[#f59e0b] mb-[0.4rem]" :class="{'!text-[#818cf8]': isCurrent}">{{ member?.jabatan }}</div>

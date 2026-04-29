@@ -16,6 +16,13 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/ui',
   ],
+
+  image: {
+    // Allow images served from the backend uploads domain
+    domains: ['api.nawasena.site'],
+    // Use the ipx provider (built-in, no extra server needed)
+    provider: 'ipx',
+  },
   vite: {
     optimizeDeps: {
       include: [
