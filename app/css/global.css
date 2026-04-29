@@ -30,68 +30,94 @@
 
 @layer base {
     :root {
-        --bg-primary: #f1f5f9;
-        --bg-card: #ffffff;
-        --bg-card-2: #f8fafc;
-        --text-main: #0f172a;
-        --text-muted: #64748b;
-        --text-subtle: #94a3b8;
-        --accent: #6366f1;
+        /* ── Backgrounds ──────────────────────────────────────── */
+        /* Soft violet-tinted base — distinctly "light" without being sterile white */
+        --bg-primary:   #f3f1fe;
+        --bg-card:      #ffffff;
+        --bg-card-2:    #f8f7ff;   /* Nested surfaces: slightly more tinted */
+
+        /* ── Typography ───────────────────────────────────────── */
+        /* Deep indigo-near-black — warmer than raw #0f172a slate */
+        --text-main:    #1c1a3e;
+        --text-muted:   #6b6882;
+        --text-subtle:  #a09dbf;
+
+        /* ── Accent ───────────────────────────────────────────── */
+        --accent:       #6366f1;
         --accent-hover: #4f46e5;
-        --accent-soft: rgba(99, 102, 241, 0.1);
-        --accent-glow: rgba(99, 102, 241, 0.25);
-        --nav-bg: rgba(255, 255, 255, 0.85);
-        --nav-border: rgba(0, 0, 0, 0.07);
-        --radius: 16px;
+        --accent-soft:  rgba(99, 102, 241, 0.08);
+        --accent-glow:  rgba(99, 102, 241, 0.18);
+
+        /* ── Navigation ───────────────────────────────────────── */
+        --nav-bg:     rgba(255, 255, 255, 0.80);
+        --nav-border: rgba(99, 102, 241, 0.13);
+
+        /* ── Borders — indigo-tinted, not raw black ───────────── */
+        --border: rgba(99, 102, 241, 0.11);
+
+        /* ── Shadows — elevated card feel ─────────────────────── */
+        --shadow:    0 1px 3px rgba(99,102,241,0.07), 0 4px 16px rgba(99,102,241,0.06);
+        --shadow-md: 0 4px 24px rgba(99,102,241,0.11), 0 1px 5px rgba(0,0,0,0.05);
+        --shadow-lg: 0 16px 48px rgba(99,102,241,0.18), 0 4px 12px rgba(99,102,241,0.07);
+
+        /* ── Radii ────────────────────────────────────────────── */
+        --radius:    16px;
         --radius-sm: 10px;
         --radius-lg: 24px;
-        --shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.04);
-        --shadow-md: 0 8px 30px -6px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
-        --shadow-lg: 0 20px 50px -12px rgba(0, 0, 0, 0.15);
-        --border: rgba(0, 0, 0, 0.06);
 
-        /* Badges */
-        --badge-ongoing-bg: #fef3c7;
-        --badge-ongoing-text: #d97706;
-        --badge-done-bg: #dcfce7;
-        --badge-done-text: #166534;
-        --badge-plan-bg: #e2e8f0;
-        --badge-plan-text: #475569;
+        /* ── Status Badges ────────────────────────────────────── */
+        --badge-ongoing-bg:   #fffbeb;
+        --badge-ongoing-text: #b45309;
+        --badge-done-bg:      #f0fdf4;
+        --badge-done-text:    #166534;
+        --badge-plan-bg:      #eeeeff;
+        --badge-plan-text:    #5253cc;
 
-        --bento-featured-gradient-end: #eef2ff;
+        /* ── Bento card feature gradient ─────────────────────── */
+        --bento-featured-gradient-end: #eae7ff;
     }
 
     body.dark-theme,
     .dark {
         --bg-primary: #060b14;
-        --bg-card: #0f172a;
-        --bg-card-2: #131f35;
-        --text-main: #f1f5f9;
+        --bg-card:    #0f172a;
+        --bg-card-2:  #131f35;
+        --text-main:  #f1f5f9;
         --text-muted: #94a3b8;
-        --text-subtle: #64748b;
-        --nav-bg: rgba(6, 11, 20, 0.9);
+        --text-subtle:#64748b;
+        --nav-bg:     rgba(6, 11, 20, 0.90);
         --nav-border: rgba(255, 255, 255, 0.07);
-        --border: rgba(255, 255, 255, 0.07);
-        --shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2);
-        --shadow-md: 0 8px 30px -6px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.2);
+        --border:     rgba(255, 255, 255, 0.07);
+        --shadow:     0 4px 20px -4px rgba(0,0,0,0.40), 0 1px 3px rgba(0,0,0,0.20);
+        --shadow-md:  0 8px 30px -6px rgba(0,0,0,0.50), 0 2px 8px rgba(0,0,0,0.20);
+        --shadow-lg:  0 20px 50px -12px rgba(0,0,0,0.60);
 
-        /* Status badge overrides for dark mode */
-        --badge-ongoing-bg: rgba(254, 243, 199, 0.12);
+        --badge-ongoing-bg:   rgba(254,243,199,0.12);
         --badge-ongoing-text: #fbbf24;
-        --badge-done-bg: rgba(220, 252, 231, 0.12);
-        --badge-done-text: #4ade80;
-        --badge-plan-bg: rgba(226, 232, 240, 0.1);
-        --badge-plan-text: #94a3b8;
+        --badge-done-bg:      rgba(220,252,231,0.12);
+        --badge-done-text:    #4ade80;
+        --badge-plan-bg:      rgba(226,232,240,0.10);
+        --badge-plan-text:    #94a3b8;
 
-        /* Featured bento gradient end color */
         --bento-featured-gradient-end: #1e2642;
     }
 
     body {
-        @apply bg-bg-primary text-text-main transition-colors duration-300 font-sans;
+        @apply text-text-main transition-colors duration-300 font-sans;
         overflow-x: hidden;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        background-color: var(--bg-primary);
+    }
+
+    /* Light mode only — ambient gradient layered on top of the flat bg-primary.
+       Fixed so it doesn't scroll, giving depth without affecting layout. */
+    body:not(.dark-theme):not(.dark) {
+        background-image:
+            radial-gradient(ellipse 70% 50% at 15% 10%, rgba(139,92,246,0.07) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 40% at 85% 90%, rgba(99,102,241,0.07) 0%, transparent 55%),
+            radial-gradient(ellipse 40% 60% at 50% 50%, rgba(167,139,250,0.04) 0%, transparent 70%);
+        background-attachment: fixed;
     }
 }
 
