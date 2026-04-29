@@ -12,8 +12,7 @@
           :src="useImageUrl(member?.foto, member?.nama)"
           :alt="member?.nama"
           rounded="full"
-          img-class="w-[78px] h-[78px]"
-          class="w-[78px] h-[78px] rounded-full"
+          class="w-[78px] h-[78px] rounded-full bg-bg-primary"
           @error="(e) => (e.target as HTMLImageElement).src = useImageUrl('', member?.nama)"
         />
         <div class="absolute -inset-[4px] rounded-full border-[2px] border-[#f59e0b]/30 transition-colors duration-300 group-hover:border-[#f59e0b]/70" :class="{'!border-indigo-500/35 group-hover:!border-indigo-500/80': isCurrent}"></div>

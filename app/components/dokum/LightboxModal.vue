@@ -30,19 +30,13 @@
 
       <!-- Stage -->
       <div class="flex-1 flex items-center justify-center p-[4rem_1rem_3rem] md:p-[5rem_5rem_4rem] relative">
-        <div
+        <img
           :key="currentPhoto?.url"
-          class="max-w-full max-h-[70vh] w-auto h-auto rounded-lg overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] animate-[fadeIn_0.3s_ease] flex items-center justify-center"
-          style="min-width: 100px; min-height: 60px;"
+          :src="useImageUrl(currentPhoto?.url)"
+          loading="eager"
+          decoding="async"
+          class="max-w-full max-h-[70vh] object-contain rounded-lg shadow-[0_20px_60px_rgba(0,0,0,0.6)] animate-[fadeIn_0.3s_ease]"
         >
-          <AppImg
-            :src="useImageUrl(currentPhoto?.url)"
-            loading="eager"
-            fit="contain"
-            class="max-w-full max-h-[70vh] w-auto"
-            style="aspect-ratio: auto;"
-          />
-        </div>
         
         <div v-if="currentPhoto?.caption" class="absolute bottom-[20px] md:bottom-[80px] left-1/2 -translate-x-1/2 bg-black/50 text-white font-sans text-[0.85rem] px-[18px] py-[6px] rounded-[20px] whitespace-nowrap max-w-[80%] overflow-hidden text-ellipsis">
           {{ currentPhoto.caption }}

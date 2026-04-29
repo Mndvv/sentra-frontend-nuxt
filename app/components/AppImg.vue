@@ -1,25 +1,25 @@
 <template>
-  <div class="app-img-wrap" :style="wrapStyle">
-    <!-- Skeleton shimmer shown while image is loading -->
-    <div
-      v-if="!loaded"
-      class="app-img-skeleton"
-      :class="rounded ? `rounded-${rounded}` : ''"
-    />
+  <!--
+    Wrapper sizes itself from user-passed Tailwind classes (e.g. w-[96px] h-[96px]).
+    Children fill the wrapper.
 
-    <!-- NuxtImg handles optimised delivery; src must be a full URL for external domains -->
-    <NuxtImg
+    NOTE: We use a plain <img> rather than <NuxtImg> for backend-served photos.
+    Routing user uploads through IPX/sharp drops EXIF orientation, so portrait
+    photos taken on phones end up rotated sideways. Plain <img> lets the browser
+    apply the orientation tag itself.
+  -->
+  <div class="app-img-wrap" :class="rounded ? `rounded-${rounded}` : ''" :style="wrapStyle">
+    <!-- Skeleton shimmer shown while image is loading -->
+    <div v-if="!loaded" class="app-img-skeleton" />
+
+    <img
       :src="src"
       :alt="alt"
       :loading="loading"
       :decoding="decoding"
-      :width="width"
-      :height="height"
-      :fit="fit"
       :class="[
-        imgClass,
-        rounded ? `rounded-${rounded}` : '',
         'app-img-el transition-opacity duration-300',
+        imgClass,
         loaded ? 'opacity-100' : 'opacity-0',
       ]"
       @load="onLoad"
@@ -35,16 +35,14 @@ const props = withDefaults(defineProps<{
   /** Resolved full URL (use useImageUrl() before passing) */
   src: string
   alt?: string
-  /** Tailwind rounded value: 'full', 'lg', 'xl', etc. */
+  /** Tailwind rounded value: 'full', 'lg', 'xl', etc. Applied to the wrapper so corners clip correctly. */
   rounded?: string
-  /** Extra classes forwarded to the <img> element */
+  /** Extra classes forwarded to the <img> element (e.g. border styles) */
   imgClass?: string
-  /** object-fit value forwarded to NuxtImg */
-  fit?: 'cover' | 'contain' | 'fill' | 'inside' | 'outside'
+  /** object-fit value applied to the inner <img> */
+  fit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down'
   loading?: 'lazy' | 'eager'
   decoding?: 'async' | 'sync' | 'auto'
-  width?: string | number
-  height?: string | number
   /** Aspect ratio of the wrapper so the skeleton has the right shape, e.g. '1/1', '16/9' */
   aspect?: string
 }>(), {
@@ -55,6 +53,7 @@ const props = withDefaults(defineProps<{
 })
 
 const emit = defineEmits<{
+  (e: 'load', event: Event): void
   (e: 'error', event: Event): void
 }>()
 
@@ -65,43 +64,45 @@ const wrapStyle = computed(() => {
   return undefined
 })
 
-function onLoad() {
+function onLoad(event: Event) {
   loaded.value = true
+  emit('load', event)
 }
 
-// NuxtImg emits string | Event on error
-function onError(payload: string | Event) {
+function onError(event: Event) {
   // Still reveal the img element so the browser broken-img / alt text is visible
   loaded.value = true
-  if (payload instanceof Event) emit('error', payload)
+  emit('error', event)
 }
 </script>
 
 <style scoped>
-.app-img-wrap {
+/*
+  Use :where() to keep specificity at 0 so user-passed Tailwind classes
+  (w-[96px], h-full, etc.) on the AppImg root reliably win.
+*/
+:where(.app-img-wrap) {
   position: relative;
   display: block;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 
-.app-img-skeleton {
+:where(.app-img-skeleton) {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     90deg,
-    var(--color-bg-card-2, #1e2130) 25%,
-    var(--color-bg-card, #252836) 50%,
-    var(--color-bg-card-2, #1e2130) 75%
+    var(--color-bg-card-2, rgba(0, 0, 0, 0.06)) 25%,
+    var(--color-bg-card, rgba(0, 0, 0, 0.12)) 50%,
+    var(--color-bg-card-2, rgba(0, 0, 0, 0.06)) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite linear;
+  pointer-events: none;
 }
 
-.app-img-el {
-  position: absolute;
-  inset: 0;
+:where(.app-img-el) {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: v-bind('props.fit');
