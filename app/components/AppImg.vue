@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 const props = withDefaults(defineProps<{
   /** Resolved full URL (use useImageUrl() before passing) */
@@ -58,6 +58,12 @@ const emit = defineEmits<{
 }>()
 
 const loaded = ref(false)
+
+// Reset loaded state when src changes so skeleton replays and
+// the browser fetches the new URL (no stale image after photo update).
+watch(() => props.src, () => {
+  loaded.value = false
+})
 
 const wrapStyle = computed(() => {
   if (props.aspect) return { aspectRatio: props.aspect }

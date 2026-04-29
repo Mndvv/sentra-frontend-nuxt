@@ -14,8 +14,14 @@ export const useImageUrl = (path: string | undefined | null, name?: string): str
 
   if (path.startsWith('http') || path.startsWith('assets/')) return path
 
+  // Split off the query string (e.g. "?t=1234567") BEFORE normalising the path
+  // so the cache-buster timestamp survives the transformation.
+  const qIdx = path.indexOf('?')
+  const qs        = qIdx !== -1 ? path.slice(qIdx) : ''   // '?t=...' or ''
+  const pathOnly  = qIdx !== -1 ? path.slice(0, qIdx) : path
+
   // Normalise: strip leading slash, strip "uploads/" prefix
-  let normalized = path.replace(/^\//, '')
+  let normalized = pathOnly.replace(/^\//, '')
   if (normalized.startsWith('uploads/')) {
     normalized = normalized.slice('uploads/'.length)
   }
@@ -27,7 +33,7 @@ export const useImageUrl = (path: string | undefined | null, name?: string): str
     ? apiBase.replace('/api', '/uploads')
     : `${apiBase}/uploads`
 
-  return `${uploadBase}/${normalized}`
+  return `${uploadBase}/${normalized}${qs}`
 }
 
 /** Generate an inline SVG data-URI circle avatar with the given initial.  */
