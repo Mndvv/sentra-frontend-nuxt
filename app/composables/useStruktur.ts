@@ -65,6 +65,52 @@ export const useStruktur = () => {
     activeOrg.value = org
   }
 
+  // ── Sekbid → Pengurus lookups ───────────────────────
+  /**
+   * Find a pengurus record matching a sekbid member entry from /sekbid.
+   * Sekbid `members` only contain { name, role, foto } so we resolve to the
+   * full pengurus profile (biodata, motto, programKerja, …) by matching on
+   * sekbid_number + nama.
+   */
+  const findPengurusForSekbidMember = (sekbidNumber: number, memberName: string) => {
+    return pengurusRaw.value.find(
+      p => p.sekbid_number === sekbidNumber && p.nama === memberName,
+    )
+  }
+
+  /** Find the coordinator (Koordinator) pengurus record for a given sekbid. */
+  const findKoordinatorForSekbid = (sekbidNumber: number) => {
+    return pengurusRaw.value.find(
+      p => p.sekbid_number === sekbidNumber && /koordinator/i.test(p.sekbid_role || ''),
+    )
+  }
+
+  /**
+   * Resolve the program kerja of a sekbid.
+   *
+   * The user spec is "the sekbid's program kerja IS the coordinator's program
+   * kerja". We honour that as the primary source, then merge in the legacy
+   * SEKBID-scoped programs (`sekbid.programs`) so we never drop existing data.
+   * Programs are deduplicated by id.
+   */
+  const resolveSekbidPrograms = (sekbid: any): any[] => {
+    if (!sekbid) return []
+
+    const koord = findKoordinatorForSekbid(sekbid.number)
+    const koordPrograms = (koord?.programKerja || []).map((p: any) => ({
+      id:          p.id,
+      name:        p.nama,
+      description: p.deskripsi,
+      status:      p.status,
+      target:      p.target,
+    }))
+
+    const seen = new Set<number | string>(koordPrograms.map((p: any) => p.id))
+    const legacy = (sekbid.programs || []).filter((p: any) => !seen.has(p.id))
+
+    return [...koordPrograms, ...legacy]
+  }
+
   // ── Pengurus modal ──────────────────────────────────
   const openPengurusModal = (data: any) => {
     if (_pengurusCloseTimer) {
@@ -121,5 +167,8 @@ export const useStruktur = () => {
     closePengurusModal,
     openSekbidModal,
     closeSekbidModal,
+    findPengurusForSekbidMember,
+    findKoordinatorForSekbid,
+    resolveSekbidPrograms,
   }
 }

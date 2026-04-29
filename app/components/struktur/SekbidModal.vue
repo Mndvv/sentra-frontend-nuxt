@@ -53,10 +53,13 @@
               </h4>
 
               <div v-if="members.length" class="grid grid-cols-3 sm:grid-cols-[repeat(auto-fill,minmax(110px,1fr))] gap-3">
-                <div
+                <button
                   v-for="member in members"
                   :key="member.name + member.role"
-                  class="sekbid-member group relative flex flex-col items-center text-center bg-bg-card-2 border border-border rounded-2xl p-3.5 transition-all duration-200 hover:-translate-y-0.5"
+                  type="button"
+                  class="sekbid-member group relative flex flex-col items-center text-center bg-bg-card-2 border border-border rounded-2xl p-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md cursor-pointer"
+                  :title="`Lihat profil ${member.name}`"
+                  @click="openMemberProfile(member)"
                 >
                   <!-- Koordinator crown -->
                   <span
@@ -82,22 +85,38 @@
                     {{ member.role }}
                   </p>
                   <p class="text-[0.78rem] font-semibold text-text-main m-0 leading-snug line-clamp-2">{{ member.name }}</p>
-                </div>
+                </button>
               </div>
               <p v-else class="text-[0.85rem] text-text-muted m-0">Belum ada anggota di sekbid ini.</p>
             </section>
 
-            <!-- Program Kerja section -->
+            <!-- Program Kerja section (mirrors koordinator's programKerja) -->
             <section class="mt-7">
               <h4 class="sekbid-section-h flex items-center gap-1.5 text-[0.74rem] font-bold uppercase tracking-[0.08em] pb-2.5 mb-4 border-b border-border">
                 <Icon name="material-symbols:checklist-rounded" class="text-base" />
                 Program Kerja
-                <span class="ml-auto text-text-subtle font-semibold tracking-normal normal-case">{{ sekbid.programs?.length ?? 0 }}</span>
+                <span class="ml-auto text-text-subtle font-semibold tracking-normal normal-case">{{ programs.length }}</span>
               </h4>
 
-              <div v-if="sekbid.programs?.length" class="flex flex-col gap-2.5">
+              <!-- Subtle attribution: koordinator authors the sekbid's program kerja -->
+              <p
+                v-if="koordinator && programs.length"
+                class="text-[0.72rem] text-text-subtle m-0 mb-3 inline-flex items-center gap-1"
+              >
+                <Icon name="material-symbols:workspace-premium-rounded" class="text-[0.9rem]" />
+                Disusun oleh
+                <button
+                  type="button"
+                  class="font-semibold text-text-main underline-offset-2 hover:underline cursor-pointer bg-transparent border-0 p-0"
+                  @click="openKoordinatorProfile"
+                >
+                  {{ koordinator.nama }}
+                </button>
+              </p>
+
+              <div v-if="programs.length" class="flex flex-col gap-2.5">
                 <div
-                  v-for="prog in sekbid.programs"
+                  v-for="prog in programs"
                   :key="prog.id"
                   class="bg-bg-card-2 border border-border rounded-xl px-4 py-3 transition-colors hover:border-[color:var(--sekbid-color)]"
                 >
@@ -130,13 +149,25 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const { isSekbidModalOpen, selectedSekbid, closeSekbidModal } = useStruktur()
+const {
+  isSekbidModalOpen,
+  selectedSekbid,
+  closeSekbidModal,
+  openPengurusModal,
+  findPengurusForSekbidMember,
+  findKoordinatorForSekbid,
+  resolveSekbidPrograms,
+} = useStruktur()
 
 const isOpen  = computed(() => isSekbidModalOpen.value)
 const sekbid  = computed(() => selectedSekbid.value)
 
 const meta    = computed(() => useSekbidMeta(sekbid.value?.number))
 const members = computed(() => sekbid.value?.members || [])
+
+// Sekbid PK = koordinator's PK (legacy SEKBID-scope used as fallback)
+const programs    = computed(() => resolveSekbidPrograms(sekbid.value))
+const koordinator = computed(() => sekbid.value?.number ? findKoordinatorForSekbid(sekbid.value.number) : null)
 
 const cssVars = computed(() => ({
   '--sekbid-color': meta.value.color,
@@ -146,6 +177,33 @@ const cssVars = computed(() => ({
 const isKoord = (role?: string) => /koordinator/i.test(role || '')
 
 const close = () => closeSekbidModal()
+
+/**
+ * Click on a sekbid member → open their full Pengurus profile.
+ * If we can't find a matching pengurus row (e.g. data inconsistency), we still
+ * open a minimal modal using only the member fields we have.
+ */
+function openMemberProfile(member: { name: string; role?: string; foto?: string }) {
+  const num = sekbid.value?.number
+  if (!num) return
+
+  const full = findPengurusForSekbidMember(num, member.name) ?? {
+    nama:          member.name,
+    jabatan:       member.role || `Anggota Sekbid ${num}`,
+    foto:          member.foto,
+    sekbid_number: num,
+    sekbid_role:   member.role,
+  }
+
+  closeSekbidModal()
+  openPengurusModal(full)
+}
+
+function openKoordinatorProfile() {
+  if (!koordinator.value) return
+  closeSekbidModal()
+  openPengurusModal(koordinator.value)
+}
 
 function onImgError(e: Event, name: string) {
   const img = e.target as HTMLImageElement
