@@ -124,7 +124,7 @@ const submit = async () => {
     nama: form.nama || 'Anonim',
     email: form.email || '-',
     kategori: form.kategori,
-    aspirasi: form.aspirasi
+    pesan: form.aspirasi // Map 'aspirasi' to 'pesan'
   }
 
   const res = await submitKotakSaran(payload)
