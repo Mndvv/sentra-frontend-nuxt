@@ -119,29 +119,49 @@
                 </div>
               </div>
 
-              <!-- Program Kerja -->
+              <!-- Program Kerja (merged with sekbid PK for sekbid members) -->
               <div>
                 <h4 class="flex items-center gap-1.5 text-[0.72rem] font-bold uppercase tracking-wider text-accent border-b border-border pb-2 mb-3">
                   <Icon name="material-symbols:checklist" class="text-sm" /> Program Kerja
+                  <span v-if="programs.length" class="ml-auto text-text-subtle font-semibold tracking-normal normal-case">{{ programs.length }}</span>
                 </h4>
-                <div v-if="p.programKerja?.length" class="flex flex-col gap-2">
+
+                <!-- Hint that sekbid PK is mixed in -->
+                <p
+                  v-if="isSekbidMember && hasSekbidPrograms"
+                  class="text-[0.7rem] text-text-subtle m-0 mb-2.5 inline-flex items-center gap-1"
+                >
+                  <Icon :name="sekbidMeta.icon" class="text-[0.95rem]" :style="{ color: sekbidMeta.color }" />
+                  Termasuk program kerja Sekbid {{ p.sekbid_number }}.
+                </p>
+
+                <div v-if="programs.length" class="flex flex-col gap-2">
                   <div
-                    v-for="prog in p.programKerja"
+                    v-for="prog in programs"
                     :key="prog.id"
                     class="bg-bg-card-2 border border-border rounded-xl px-3 py-2"
+                    :style="prog._source === 'sekbid' ? { borderColor: sekbidMeta.color + '40' } : undefined"
                   >
                     <div class="flex items-center justify-between gap-2 mb-0.5">
-                      <span class="text-[0.85rem] font-semibold text-text-main">{{ prog.nama }}</span>
-                      <span
-                        class="text-[0.6rem] font-bold px-2 py-0.5 rounded-full shrink-0"
-                        :class="{
-                          'bg-[var(--badge-ongoing-bg)] text-[var(--badge-ongoing-text)]': prog.status === 'Berjalan',
-                          'bg-[var(--badge-done-bg)] text-[var(--badge-done-text)]': prog.status === 'Selesai',
-                          'bg-[var(--badge-plan-bg)] text-[var(--badge-plan-text)]': !prog.status || prog.status === 'Direncanakan',
-                        }"
-                      >{{ prog.status || 'Direncanakan' }}</span>
+                      <span class="text-[0.85rem] font-semibold text-text-main">{{ prog.nama || prog.name }}</span>
+                      <div class="flex items-center gap-1.5 shrink-0">
+                        <!-- Sekbid source tag -->
+                        <span
+                          v-if="prog._source === 'sekbid'"
+                          class="text-[0.55rem] font-extrabold uppercase tracking-[0.08em] px-1.5 py-0.5 rounded-full leading-none"
+                          :style="{ background: sekbidMeta.glow, color: sekbidMeta.color }"
+                        >Sekbid</span>
+                        <span
+                          class="text-[0.6rem] font-bold px-2 py-0.5 rounded-full"
+                          :class="{
+                            'bg-[var(--badge-ongoing-bg)] text-[var(--badge-ongoing-text)]': prog.status === 'Berjalan',
+                            'bg-[var(--badge-done-bg)] text-[var(--badge-done-text)]': prog.status === 'Selesai',
+                            'bg-[var(--badge-plan-bg)] text-[var(--badge-plan-text)]': !prog.status || prog.status === 'Direncanakan',
+                          }"
+                        >{{ prog.status || 'Direncanakan' }}</span>
+                      </div>
                     </div>
-                    <p v-if="prog.deskripsi" class="text-[0.77rem] text-text-muted m-0">{{ prog.deskripsi }}</p>
+                    <p v-if="prog.deskripsi || prog.description" class="text-[0.77rem] text-text-muted m-0">{{ prog.deskripsi || prog.description }}</p>
                     <p v-if="prog.target" class="text-[0.7rem] text-text-subtle m-0 mt-0.5">Target: {{ prog.target }}</p>
                   </div>
                 </div>
@@ -159,13 +179,56 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const { isPengurusModalOpen, selectedPengurus, closePengurusModal } = useStruktur()
+const {
+  isPengurusModalOpen,
+  selectedPengurus,
+  closePengurusModal,
+  findKoordinatorForSekbid,
+} = useStruktur()
 const p = computed(() => selectedPengurus.value)
 
 // Organisation label — defaults to OSIS for legacy data
 const orgKey = computed(() => String(p.value?.organisasi ?? p.value?.org ?? 'osis').toLowerCase())
 const orgLabel = computed(() => orgKey.value === 'mpk' ? 'MPK' : 'OSIS')
 const orgIcon = computed(() => orgKey.value === 'mpk' ? 'material-symbols:groups-rounded' : 'material-symbols:school-rounded')
+
+// ── Program Kerja (merged for sekbid members) ────────────────────────────────
+// For BPH pengurus: just their own programKerja.
+// For sekbid members (Koordinator/Anggota): their personal programKerja PLUS
+// the sekbid's program kerja (= the koordinator's programKerja). Deduped by id.
+// Each program is tagged with `_source` so the UI can show a "Sekbid" badge.
+const isSekbidMember = computed(() => !!p.value?.sekbid_number)
+const sekbidMeta = computed(() => useSekbidMeta(p.value?.sekbid_number))
+
+const programs = computed<any[]>(() => {
+  if (!p.value) return []
+  const personal = p.value.programKerja || []
+
+  if (!isSekbidMember.value) {
+    return personal.map((prog: any) => ({ ...prog, _source: 'personal' }))
+  }
+
+  const koord = findKoordinatorForSekbid(p.value.sekbid_number)
+  const isKoordinator = koord && koord.id === p.value.id
+
+  // Koordinator's personal PK is *defined as* the sekbid PK, so we tag it as such.
+  if (isKoordinator) {
+    return personal.map((prog: any) => ({ ...prog, _source: 'sekbid' }))
+  }
+
+  // Anggota: personal PK first, then merge in sekbid PK from the koordinator.
+  const seen = new Set<number | string>(personal.map((prog: any) => prog.id))
+  const sekbidPrograms = (koord?.programKerja || [])
+    .filter((prog: any) => !seen.has(prog.id))
+    .map((prog: any) => ({ ...prog, _source: 'sekbid' }))
+
+  return [
+    ...personal.map((prog: any) => ({ ...prog, _source: 'personal' })),
+    ...sekbidPrograms,
+  ]
+})
+
+const hasSekbidPrograms = computed(() => programs.value.some(prog => prog._source === 'sekbid'))
 
 const hasVisiMisi = computed(() => {
   if (!p.value) return false
