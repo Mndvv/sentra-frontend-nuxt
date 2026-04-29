@@ -24,7 +24,7 @@ const _meta: Record<number, SekbidMeta> = {
   1:  { icon: 'material-symbols:mosque',                color: '#10b981', glow: 'rgba(16, 185, 129, 0.14)', short: 'Keimanan' },
   2:  { icon: 'material-symbols:volunteer-activism',    color: '#f43f5e', glow: 'rgba(244,  63,  94, 0.14)', short: 'Akhlak' },
   3:  { icon: 'material-symbols:flag-rounded',          color: '#ef4444', glow: 'rgba(239,  68,  68, 0.14)', short: 'Bela Negara' },
-  4:  { icon: 'material-symbols:emoji-events-rounded',  color: '#f59e0b', glow: 'rgba(245, 158,  11, 0.14)', short: 'Prestasi' },
+  4:  { icon: 'material-symbols:trophy',  color: '#f59e0b', glow: 'rgba(245, 158,  11, 0.14)', short: 'Prestasi' },
   5:  { icon: 'material-symbols:diversity-3-rounded',   color: '#6366f1', glow: 'rgba( 99, 102, 241, 0.14)', short: 'Demokrasi' },
   6:  { icon: 'material-symbols:lightbulb-rounded',     color: '#8b5cf6', glow: 'rgba(139,  92, 246, 0.14)', short: 'Kreativitas' },
   7:  { icon: 'material-symbols:fitness-center',        color: '#22c55e', glow: 'rgba( 34, 197,  94, 0.14)', short: 'Kesehatan' },
