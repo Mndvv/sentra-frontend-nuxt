@@ -91,7 +91,6 @@
             <div
               v-for="i in 6" :key="i"
               class="h-[200px] rounded-[18px] bg-gradient-to-r from-bg-card via-bg-card-2 to-bg-card animate-pulse border border-border"
-              :class="{ 'col-span-2': i === 1 }"
             />
           </div>
 
@@ -101,9 +100,10 @@
               v-for="p in pengurus"
               :key="p.id"
               :pengurus="p"
-              :is-featured="isFeatured(p.jabatan)"
+              :is-featured="isFeatured(p)"
               @click="openPengurusModal(p)"
             />
+
           </div>
           <p v-else class="text-[0.9rem] text-text-muted text-center py-6">Belum ada pengurus inti.</p>
         </section>
@@ -191,9 +191,10 @@ useSeoMeta({
   ogDescription: 'Pengurus inti dan seksi bidang Kabinet Nawasena 2025/2026.',
 })
 
-// Only Ketua Umum gets the large featured card (span 2, bigger avatar, motto shown)
-const isFeatured = (jabatan: string) =>
-  !!jabatan && /ketua umum/i.test(jabatan)
+// Ketua Umum (OSIS) atau Ketua MPK → featured HANYA kalau ada motto
+// Pakai regex /^ketua/i biar cocok dg apapun namanya di DB (Ketua Umum / Ketua MPK / Ketua)
+const isFeatured = (p: { jabatan?: string; motto?: string }) =>
+  !!p.jabatan && /^ketua/i.test(p.jabatan) && !!p.motto
 
 interface OrgTab {
   id: Organisasi
