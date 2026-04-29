@@ -21,6 +21,24 @@ export default defineNuxtConfig({
     '@nuxtjs/robots',
   ],
 
+  // @nuxt/image — IPX server-side resize untuk avatar/foto besar
+  // Tanpa `domains`, image dari apiBase tidak diproxy → load full size (lambat)
+  image: {
+    provider: 'ipx',
+    quality: 80,
+    format: ['webp', 'jpeg'],
+    screens: {
+      xs: 320, sm: 640, md: 768, lg: 1024, xl: 1280,
+    },
+    domains: [
+      '192.168.1.125',
+      'localhost',
+      '127.0.0.1',
+      'api.nawasena.site',
+      'nawasena.site',
+    ],
+  },
+
   // ── Site identity (consumed by sitemap, robots, etc.) ─────────────────────
   site: {
     url:         process.env.NUXT_PUBLIC_SITE_URL  ?? 'https://nawasena.site',
