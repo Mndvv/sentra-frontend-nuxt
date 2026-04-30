@@ -73,7 +73,7 @@
           
           <h4 class="text-[0.7rem] font-[700] tracking-[3px] uppercase text-[#818cf8] mb-[0.6rem]">Sentra System Developer</h4>
           <h2 class="font-serif text-[2rem] font-[700] text-text-main mb-[0.6rem]">Behind the Code</h2>
-          <p class="text-text-muted text-[0.9rem] max-w-[460px] mx-auto mb-[3rem] leading-[1.75]">Platform karya anak bangsa. Dipersembahkan oleh pengembang independen Nawasena untuk mengukir sejarah digital OSIS.</p>
+          <p class="text-text-muted text-[0.9rem] max-w-[460px] mx-auto mb-[3rem] leading-[1.75]">Platform karya anak bangsa. Dipersembahkan oleh pengembang independen Nawasena untuk mengukir sejarah digital OSIS-MPK.</p>
           
           <div class="flex flex-wrap gap-[2rem] justify-center text-left">
             <HofDevCard 
@@ -111,9 +111,9 @@ const { loading, error, topPeriods, otherPeriods, developers, loadHofData, openO
 
 useSeoMeta({
   title: 'Hall of Fame',
-  description: 'Hall of Fame OSIS Nawasena — penghormatan untuk para pengurus periode-periode terdahulu yang telah menorehkan dedikasi dan kepemimpinan inspiratif.',
-  ogTitle: 'Hall of Fame — OSIS Nawasena',
-  ogDescription: 'Penghormatan untuk pengurus OSIS Nawasena dari periode-periode terdahulu.',
+  description: 'Hall of Fame OSPK Nawasena — penghormatan untuk para pengurus periode-periode terdahulu yang telah menorehkan dedikasi dan kepemimpinan inspiratif.',
+  ogTitle: 'Hall of Fame — OSPK Nawasena',
+  ogDescription: 'Penghormatan untuk pengurus OSIS-MPK Nawasena dari periode-periode terdahulu.',
 })
 
 // Using color-mode logic directly in Tailwind classes handles the dark mode effectively.

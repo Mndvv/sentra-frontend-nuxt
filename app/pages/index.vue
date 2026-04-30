@@ -176,9 +176,9 @@ const dokumHighlights = computed(() => dokumentasi.value.slice(0, 3))
 
 useSeoMeta({
   title: 'Beranda',
-  description: 'Selamat datang di portal OSIS Nawasena — kabinet 2025/2026. Lihat agenda terkini, dengarkan radio sekolah, dan jelajahi program kerja serta dokumentasi kegiatan kami.',
-  ogTitle: 'Beranda — OSIS Nawasena',
-  ogDescription: 'Selamat datang di portal OSIS Nawasena — kabinet 2025/2026.',
+  description: 'Selamat datang di portal OSPK Nawasena — kabinet 2025/2026. Lihat agenda terkini, dengarkan radio sekolah, dan jelajahi program kerja serta dokumentasi kegiatan kami.',
+  ogTitle: 'Beranda — OSPK Nawasena',
+  ogDescription: 'Selamat datang di portal OSPK Nawasena — kabinet 2025/2026.',
 })
 
 onMounted(() => {

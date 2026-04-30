@@ -48,10 +48,10 @@ useHead({
         '@type':    'Organization',
         '@id':      `${siteUrl}#organization`,
         name:       siteName,
-        alternateName: 'OSIS Nawasena',
+        alternateName: 'OSPK Nawasena',
         url:        siteUrl,
         logo:       `${siteUrl}/og-default.png`,
-        description: 'Organisasi Siswa Intra Sekolah (OSIS) Nawasena — Kabinet Periode 2025/2026.',
+        description: 'OSIS-MPK(OSPK) Nawasena — Kabinet Periode 2025/2026.',
         sameAs: [
           // Populate with real social links once available
         ],
