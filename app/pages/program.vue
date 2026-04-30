@@ -35,9 +35,9 @@ const { loading, programs, filter, filteredPrograms, loadPrograms } = useProgram
 
 useSeoMeta({
   title: 'Program Kerja',
-  description: 'Daftar program kerja, target capaian, dan status pelaksanaan kabinet OSIS Nawasena 2025/2026.',
-  ogTitle: 'Program Kerja — OSIS Nawasena',
-  ogDescription: 'Daftar program kerja kabinet OSIS Nawasena 2025/2026.',
+  description: 'Daftar program kerja, target capaian, dan status pelaksanaan kabinet OSIS-MPK Nawasena 2025/2026.',
+  ogTitle: 'Program Kerja — OSPK Nawasena',
+  ogDescription: 'Daftar program kerja kabinet OSIS-MPK Nawasena 2025/2026.',
 })
 
 onMounted(() => {

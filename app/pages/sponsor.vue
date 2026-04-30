@@ -168,7 +168,7 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'Sponsorship — OSIS Nawasena'
+  title: 'Sponsorship — OSPK Nawasena'
 })
 </script>
 

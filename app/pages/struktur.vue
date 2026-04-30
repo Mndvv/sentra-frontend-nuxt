@@ -187,7 +187,7 @@ const divisionTagline = computed(() =>
 useSeoMeta({
   title: 'Struktur Organisasi',
   description: 'Susunan pengurus inti dan 10 seksi bidang Kabinet Nawasena 2025/2026 — siapa saja yang menggerakkan setiap program kerja OSIS.',
-  ogTitle: 'Struktur Organisasi — OSIS Nawasena',
+  ogTitle: 'Struktur Organisasi — OSPK Nawasena',
   ogDescription: 'Pengurus inti dan seksi bidang Kabinet Nawasena 2025/2026.',
 })
 
