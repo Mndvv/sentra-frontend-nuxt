@@ -37,28 +37,28 @@
         <p>Memuat prasasti...</p>
       </div>
 
-      <div v-else-if="error || (!topPeriods.length && !developers.length)" class="text-center py-[4rem] text-text-muted bg-bg-card border border-dashed border-border rounded-[20px] max-w-[600px] mx-auto">
+      <div v-else-if="error || (!topGenerations.length && !developers.length)" class="text-center py-[4rem] text-text-muted bg-bg-card border border-dashed border-border rounded-[20px] max-w-[600px] mx-auto">
         <Icon name="material-symbols:history-edu" size="48" class="mb-4 opacity-50" />
         <p>Belum ada catatan kepengurusan yang tersimpan di Hall of Fame.</p>
       </div>
 
       <template v-else>
-        <!-- Top Periods -->
+        <!-- Top Generations (OSIS + MPK per angkatan) -->
         <HofPeriodBlock 
-          v-for="(p, index) in topPeriods" 
-          :key="p.id" 
-          :period="p" 
+          v-for="(g, index) in topGenerations" 
+          :key="g.angkatan" 
+          :generation="g" 
           :index="index" 
         />
 
-        <!-- Older Periods Button -->
+        <!-- Older Generations Button -->
         <button 
-          v-if="otherPeriods.length > 0"
+          v-if="olderGenerations.length > 0"
           class="block w-full mt-[4rem] p-[15px] bg-bg-card-2 border border-dashed border-border text-text-muted rounded-[12px] text-center font-[600] text-[0.9rem] cursor-pointer transition-all duration-300 hover:bg-accent-soft hover:text-text-main hover:border-accent focus:outline-none focus:border-accent"
           @click="openOlderPeriodsModal"
         >
           <Icon name="material-symbols:history" size="18" class="align-middle mr-1" />
-          Tampilkan Periode Terdahulu ({{ otherPeriods.length }} Periode)
+          Tampilkan Angkatan Terdahulu ({{ olderGenerations.length }} Angkatan)
         </button>
 
         <!-- Developers -->
@@ -107,7 +107,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 
-const { loading, error, topPeriods, otherPeriods, developers, loadHofData, openOlderPeriodsModal } = useHof()
+const { loading, error, topGenerations, olderGenerations, developers, loadHofData, openOlderPeriodsModal } = useHof()
 
 useSeoMeta({
   title: 'Hall of Fame',

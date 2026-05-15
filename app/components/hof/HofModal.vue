@@ -30,7 +30,11 @@
 
         <!-- MODE: PERIOD_MEMBERS -->
         <div v-else-if="modalType === 'PERIOD_MEMBERS'" class="grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-[1rem] md:gap-[1.5rem] mt-[0.5rem]">
-          <div v-for="m in modalData" :key="m.id" class="bg-bg-card p-[1.2rem] rounded-[20px] text-center border border-border shadow-sm relative overflow-hidden">
+          <div 
+            v-for="m in (modalData?.members ?? modalData)" 
+            :key="m.id" 
+            class="bg-bg-card p-[1.2rem] rounded-[20px] text-center border border-border shadow-sm relative overflow-hidden"
+          >
              <div class="relative w-[60px] h-[60px] mx-auto mb-[1rem]">
                 <AppImg
                   :src="useImageUrl(m.foto, m.nama)"
@@ -38,29 +42,68 @@
                   rounded="full"
                   class="w-[60px] h-[60px] rounded-full"
                 />
-                <div class="absolute -inset-[4px] rounded-full border-[2px] border-[#f59e0b]/30"></div>
+                <div class="absolute -inset-[4px] rounded-full border-[2px]"
+                  :style="`border-color: ${modalData?.org === 'MPK' ? '#ec489950' : '#f59e0b50'}`"
+                ></div>
              </div>
-             <div class="text-[0.62rem] font-[700] tracking-[1.5px] uppercase text-[#f59e0b] mb-[0.4rem]">{{ m.jabatan }}</div>
+             <div class="text-[0.62rem] font-[700] tracking-[1.5px] uppercase mb-[0.4rem]"
+               :style="`color: ${modalData?.org === 'MPK' ? '#ec4899' : '#f59e0b'}`"
+             >{{ m.jabatan }}</div>
              <h3 class="text-[0.82rem] font-[600] text-text-main leading-[1.4] m-0">{{ m.nama }}</h3>
           </div>
         </div>
 
-        <!-- MODE: OLDER_PERIODS -->
-        <div v-else-if="modalType === 'OLDER_PERIODS'" class="flex flex-col gap-[1rem] mt-[0.5rem]">
+        <!-- MODE: OLDER_PERIODS — each item is a generation { angkatan, osis, mpk } -->
+        <div v-else-if="modalType === 'OLDER_PERIODS'" class="flex flex-col gap-[1.2rem] mt-[0.5rem]">
           <div 
-            v-for="p in modalData" 
-            :key="p.id" 
-            class="bg-bg-card border border-border rounded-[12px] p-[1rem_1.5rem] flex justify-between items-center cursor-pointer hover:border-accent group transition-all duration-300 focus:outline-none focus:border-accent"
-            @click="openPeriodMembersModal(p, true)"
-            @keyup.enter="openPeriodMembersModal(p, true)"
-            tabindex="0"
-            role="button"
+            v-for="g in modalData" 
+            :key="g.angkatan"
+            class="border border-border rounded-[14px] overflow-hidden"
           >
-            <div>
-              <h4 class="font-[600] text-text-main mb-[0.3rem]">Periode {{ p.nama }}</h4>
-              <p class="text-[0.85rem] text-text-muted m-0">{{ p.tahun }} &bull; Angkatan Ke-{{ p.angkatan }}</p>
+            <!-- Angkatan header -->
+            <div class="px-4 py-2 text-[0.65rem] font-[800] tracking-[2.5px] uppercase"
+              style="background: var(--bg-card-2, rgba(0,0,0,0.04)); color: var(--text-muted)">
+              Angkatan Ke-{{ g.angkatan }}
             </div>
-            <Icon name="material-symbols:chevron-right" size="24" class="text-text-muted group-hover:text-accent transition-colors" />
+
+            <!-- OSIS row -->
+            <div 
+              v-if="g.osis"
+              class="p-[0.9rem_1.4rem] flex justify-between items-center cursor-pointer transition-colors group hover:bg-indigo-500/5"
+              @click="openPeriodMembersModal(g.osis, 'OSIS', true)"
+              tabindex="0"
+              role="button"
+              @keyup.enter="openPeriodMembersModal(g.osis, 'OSIS', true)"
+            >
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="text-[0.6rem] font-[800] tracking-[1.5px] uppercase px-2 py-0.5 rounded-full bg-indigo-500/10 text-[#818cf8] border border-indigo-500/20 shrink-0">OSIS</span>
+                <div class="min-w-0">
+                  <p class="font-[600] text-text-main text-[0.9rem] truncate m-0">Periode {{ g.osis.nama }}</p>
+                  <p class="text-[0.82rem] text-text-muted m-0">{{ g.osis.tahun }}</p>
+                </div>
+              </div>
+              <Icon name="material-symbols:chevron-right" size="22" class="text-text-muted group-hover:text-[#818cf8] transition-colors shrink-0" />
+            </div>
+
+            <!-- MPK row -->
+            <div 
+              v-if="g.mpk"
+              class="p-[0.9rem_1.4rem] flex justify-between items-center cursor-pointer transition-colors group hover:bg-pink-500/5 border-t"
+              :class="g.osis ? 'border-border/40' : 'border-transparent'"
+              @click="openPeriodMembersModal(g.mpk, 'MPK', true)"
+              tabindex="0"
+              role="button"
+              @keyup.enter="openPeriodMembersModal(g.mpk, 'MPK', true)"
+            >
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="text-[0.6rem] font-[800] tracking-[1.5px] uppercase px-2 py-0.5 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/20 shrink-0">MPK</span>
+                <div class="min-w-0">
+                  <p class="font-[600] text-text-main text-[0.9rem] truncate m-0">Periode {{ g.mpk.nama }}</p>
+                  <p class="text-[0.82rem] text-text-muted m-0">{{ g.mpk.tahun }}</p>
+                </div>
+              </div>
+              <Icon name="material-symbols:chevron-right" size="22" class="text-text-muted group-hover:text-pink-400 transition-colors shrink-0" />
+            </div>
           </div>
         </div>
       </div>

@@ -1,12 +1,12 @@
 import { ref } from 'vue'
 
 // ─── Module-level singleton state ─────────────────────────────────────────────
-const loading      = ref(true)
-const error        = ref(false)
+const loading        = ref(true)
+const error          = ref(false)
 
-const topPeriods   = ref<any[]>([])
-const otherPeriods = ref<any[]>([])
-const developers   = ref<any[]>([])
+const topGenerations   = ref<any[]>([])
+const olderGenerations = ref<any[]>([])
+const developers       = ref<any[]>([])
 
 // Modal state — shared across hof.vue, HofModal.vue, HofPeriodBlock.vue
 const isHofModalOpen = ref(false)
@@ -25,11 +25,11 @@ export const useHof = () => {
     loading.value = true
     error.value   = false
     try {
-      const data = await fetchHof()
+      const data: any = await fetchHof()
       if (data) {
-        topPeriods.value   = data.top_periods   || []
-        otherPeriods.value = data.other_periods || []
-        developers.value   = data.developers    || []
+        topGenerations.value   = data.top_generations   || []
+        olderGenerations.value = data.older_generations || []
+        developers.value       = data.developers        || []
       } else {
         error.value = true
       }
@@ -43,13 +43,14 @@ export const useHof = () => {
   }
 
   // ── Modal openers ───────────────────────────────────
-  const openPeriodMembersModal = (period: any, isOther = false) => {
+  // period = osis or mpk sub-object (has .nama, .tahun, .anggota[] or .members[])
+  const openPeriodMembersModal = (period: any, org: 'OSIS' | 'MPK', isOther = false) => {
     modalType.value  = 'PERIOD_MEMBERS'
-    modalTitle.value = `Anggota Pengurus — Periode ${period.nama}`
+    modalTitle.value = `Anggota ${org} — Periode ${period.nama}`
     const members    = isOther
       ? (period.members || [])
-      : [...(period.bph || []), ...(period.anggota || [])]
-    modalData.value      = members
+      : (period.anggota || [])
+    modalData.value      = { members, org }
     isHofModalOpen.value = true
     if (import.meta.client) document.body.style.overflow = 'hidden'
   }
@@ -65,7 +66,7 @@ export const useHof = () => {
   const openOlderPeriodsModal = () => {
     modalType.value      = 'OLDER_PERIODS'
     modalTitle.value     = 'Periode Terdahulu'
-    modalData.value      = otherPeriods.value
+    modalData.value      = olderGenerations.value
     isHofModalOpen.value = true
     if (import.meta.client) document.body.style.overflow = 'hidden'
   }
@@ -78,8 +79,8 @@ export const useHof = () => {
   return {
     loading,
     error,
-    topPeriods,
-    otherPeriods,
+    topGenerations,
+    olderGenerations,
     developers,
     loadHofData,
 
