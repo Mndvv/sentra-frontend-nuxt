@@ -9,13 +9,43 @@
       Kembali ke Dokumentasi
     </NuxtLink>
 
-    <!-- Loading -->
-    <div v-if="pending" class="space-y-6">
-      <div class="h-[260px] md:h-[420px] rounded-3xl bg-gradient-to-r from-bg-card via-bg-card-2 to-bg-card animate-pulse border border-border" />
-      <div class="space-y-3 pt-2">
-        <div class="h-6 w-3/4 rounded bg-bg-card-2 animate-pulse" />
-        <div class="h-4 w-2/3 rounded bg-bg-card-2 animate-pulse" />
-        <div class="h-4 w-5/6 rounded bg-bg-card-2 animate-pulse" />
+    <!-- Loading skeleton (mirrors article layout) -->
+    <div v-if="pending" class="bg-bg-card rounded-3xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.08)] border border-border overflow-hidden">
+      <!-- Hero skeleton -->
+      <div class="relative h-[260px] md:h-[420px] skeleton-shimmer">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-10 space-y-3">
+          <div class="h-5 w-20 rounded-full bg-white/20 animate-pulse" />
+          <div class="h-8 md:h-10 w-4/5 rounded-lg bg-white/15 animate-pulse" />
+          <div class="h-4 w-32 rounded bg-white/10 animate-pulse" />
+        </div>
+      </div>
+      <!-- Body skeleton -->
+      <div class="p-6 md:p-10 pb-8 md:pb-12 space-y-4">
+        <div class="h-7 w-3/5 rounded-lg bg-bg-card-2 animate-pulse" />
+        <div class="space-y-2.5 pt-2">
+          <div class="h-4 w-full rounded bg-bg-card-2 animate-pulse" />
+          <div class="h-4 w-full rounded bg-bg-card-2 animate-pulse" />
+          <div class="h-4 w-5/6 rounded bg-bg-card-2 animate-pulse" />
+          <div class="h-4 w-full rounded bg-bg-card-2 animate-pulse" />
+          <div class="h-4 w-2/3 rounded bg-bg-card-2 animate-pulse" />
+        </div>
+        <div class="pt-6 space-y-2.5">
+          <div class="h-4 w-full rounded bg-bg-card-2 animate-pulse" />
+          <div class="h-4 w-4/5 rounded bg-bg-card-2 animate-pulse" />
+          <div class="h-4 w-full rounded bg-bg-card-2 animate-pulse" />
+        </div>
+        <!-- Gallery skeleton -->
+        <div class="pt-8">
+          <div class="flex items-center gap-4 mb-6">
+            <div class="flex-1 h-px bg-border" />
+            <div class="h-3 w-24 rounded bg-bg-card-2 animate-pulse" />
+            <div class="flex-1 h-px bg-border" />
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div v-for="i in 4" :key="i" class="aspect-square rounded-xl skeleton-shimmer border border-border" :class="{ 'hidden md:block': i > 3 }" />
+          </div>
+        </div>
       </div>
     </div>
 
@@ -140,9 +170,10 @@ const siteName = cfg.public.siteName as string
 const slugParam = computed(() => String(route.params.slug || ''))
 const articleId = computed(() => parseArticleSlug(slugParam.value))
 
-// Server-side fetch so SEO meta is set during SSR (bots see it).
-const { data, pending } = await useAsyncData(
-  () => `dokumentasi-list`,
+// Lazy fetch: navigates instantly on client (shows skeleton), but still fetches
+// during SSR for SEO (bots see full content on direct visit).
+const { data, pending } = useLazyAsyncData(
+  `dokumentasi-${articleId.value}`,
   () => $fetch<any[]>(`${apiBase}/api/dokumentasi`).catch(() => []),
   { default: () => [] as any[] },
 )
@@ -295,6 +326,15 @@ definePageMeta({
 </script>
 
 <style>
+@keyframes skeletonShimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(to right, var(--bg-card) 0%, var(--bg-card-2) 50%, var(--bg-card) 100%);
+  background-size: 800px 100%;
+  animation: skeletonShimmer 1.5s infinite linear;
+}
 .article-page .html-content p { margin-bottom: 1rem; }
 .article-page .html-content p:last-child { margin-bottom: 0; }
 .article-page .html-content img { max-width: 100%; border-radius: 12px; margin: 1.25rem 0; display: block; }
