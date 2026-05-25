@@ -31,7 +31,7 @@
           </div>
         </div>
       </div>
-      <ProgramProkerStats v-else :programs="programs" />
+      <ProgramProkerStats v-else :programs="programs" v-model:active-filter="filter" />
 
       <!-- ── Filter + Grid section ────────────────────────── -->
       <section>
