@@ -39,9 +39,9 @@
         </div>
 
         <!-- Skeleton -->
-        <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-          <div class="h-[380px] md:col-span-2 lg:col-span-3 rounded-[18px] bg-gradient-to-r from-[var(--bg-card)] via-[var(--bg-card-2)] to-[var(--bg-card)] bg-[length:800px_100%] animate-[skeletonShimmer_1.5s_infinite_linear] border border-border"></div>
-          <div v-for="i in 6" :key="i" class="h-[380px] rounded-[18px] bg-gradient-to-r from-[var(--bg-card)] via-[var(--bg-card-2)] to-[var(--bg-card)] bg-[length:800px_100%] animate-[skeletonShimmer_1.5s_infinite_linear] border border-border"></div>
+        <div v-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-stretch">
+          <div class="h-[260px] md:h-[380px] md:col-span-2 lg:col-span-3 rounded-[18px] skeleton-shimmer border border-border"></div>
+          <div v-for="i in 4" :key="i" class="h-[260px] md:h-[380px] rounded-[18px] skeleton-shimmer border border-border" :class="{ 'hidden md:block': i > 2 }"></div>
         </div>
 
         <!-- Empty state -->
@@ -56,7 +56,7 @@
         </div>
 
         <!-- Gallery Grid -->
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 items-stretch">
           <DokumGalleryCard 
             v-for="(ev, index) in dokumentasi" 
             :key="ev.id" 
@@ -98,5 +98,10 @@ onMounted(() => {
 @keyframes skeletonShimmer {
   0% { background-position: -400px 0; }
   100% { background-position: 400px 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(to right, var(--bg-card) 0%, var(--bg-card-2) 50%, var(--bg-card) 100%);
+  background-size: 800px 100%;
+  animation: skeletonShimmer 1.5s infinite linear;
 }
 </style>

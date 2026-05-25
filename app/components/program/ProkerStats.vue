@@ -1,70 +1,74 @@
 <template>
-  <div class="bg-bg-card border border-border rounded-2xl shadow-md p-5 md:p-7 mb-8 w-full">
-    <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 lg:gap-8 items-center">
+  <div class="bg-bg-card border border-border rounded-2xl shadow-md p-4 md:p-7 mb-8 w-full">
+
+    <!-- ═══ Mobile layout (< md) ═══════════════════════════════ -->
+    <div class="md:hidden">
+      <!-- Chart + total side-by-side -->
+      <div class="flex items-center gap-4">
+        <!-- Compact donut -->
+        <div class="relative w-[120px] h-[120px] shrink-0">
+          <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--border)" stroke-width="14" class="cursor-pointer" @click="toggleFilter('all')" />
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#22c55e" :stroke-width="arcWidth('Selesai')" stroke-linecap="round" :stroke-dasharray="circumference" :stroke-dashoffset="circumference - selesaiArc" :opacity="arcOpacity('Selesai')" class="transition-all duration-500 ease-out cursor-pointer" @click="toggleFilter('Selesai')" />
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#f59e0b" :stroke-width="arcWidth('Berjalan')" stroke-linecap="round" :stroke-dasharray="circumference" :stroke-dashoffset="circumference - berjalanArc" :style="{ transform: `rotate(${selesaiDeg}deg)`, transformOrigin: '60px 60px' }" :opacity="arcOpacity('Berjalan')" class="transition-all duration-500 ease-out cursor-pointer" @click="toggleFilter('Berjalan')" />
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#94a3b8" :stroke-width="arcWidth('Direncanakan')" stroke-linecap="round" :stroke-dasharray="circumference" :stroke-dashoffset="circumference - direncanakanArc" :style="{ transform: `rotate(${selesaiDeg + berjalanDeg}deg)`, transformOrigin: '60px 60px' }" :opacity="arcOpacity('Direncanakan')" class="transition-all duration-500 ease-out cursor-pointer" @click="toggleFilter('Direncanakan')" />
+            <circle v-if="dibatalkan > 0" cx="60" cy="60" r="50" fill="none" stroke="#f87171" :stroke-width="arcWidth('Dibatalkan')" stroke-linecap="round" :stroke-dasharray="circumference" :stroke-dashoffset="circumference - dibatalkanArc" :style="{ transform: `rotate(${selesaiDeg + berjalanDeg + direncanakanDeg}deg)`, transformOrigin: '60px 60px' }" :opacity="arcOpacity('Dibatalkan')" class="transition-all duration-500 ease-out cursor-pointer" @click="toggleFilter('Dibatalkan')" />
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+            <span class="text-[1.4rem] font-[900] tracking-[-1.5px] leading-none" :style="{ color: centerColor }">
+              {{ centerValue }}<small v-if="activeFilter === 'all'" class="text-[0.8rem] font-[700] tracking-normal">%</small>
+            </span>
+            <span class="text-[0.58rem] font-semibold text-text-muted uppercase tracking-[0.06em] mt-0.5">{{ centerLabel }}</span>
+          </div>
+        </div>
+
+        <!-- Total + scope on the right -->
+        <div class="flex-1 min-w-0">
+          <button type="button" class="w-full text-left mb-2" @click="toggleFilter('all')">
+            <span class="text-[1.8rem] font-[900] tracking-[-1.5px] leading-none text-text-main">{{ total }}</span>
+            <span class="text-[0.68rem] font-semibold text-text-muted uppercase tracking-[0.04em] ml-1.5">Program</span>
+          </button>
+          <div class="flex items-center gap-2 text-[0.68rem] font-semibold text-text-muted">
+            <span class="inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-sm bg-[#6366f1]"></span>BPH: {{ bphCount }}</span>
+            <span class="opacity-30">·</span>
+            <span class="inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-sm bg-[#a855f7]"></span>Sekbid: {{ sekbidCount }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Status grid 2-col compact -->
+      <div class="grid grid-cols-2 gap-2 mt-3">
+        <button
+          v-for="s in statusItems"
+          :key="s.key"
+          type="button"
+          class="flex items-center gap-2 p-2.5 rounded-xl border text-left transition-all duration-200"
+          :class="activeFilter === s.key ? '' : 'bg-bg-card-2 border-border'"
+          :style="activeFilter === s.key ? `background:${s.color}12;border-color:${s.color}40;box-shadow:0 0 0 1px ${s.color}25` : ''"
+          @click="toggleFilter(s.key)"
+        >
+          <span class="w-2.5 h-2.5 rounded-full shrink-0" :style="{ background: s.color }"></span>
+          <span class="text-[0.68rem] font-semibold text-text-muted uppercase tracking-[0.03em] flex-1 min-w-0 truncate">{{ s.label }}</span>
+          <span class="text-[1rem] font-[800] tracking-[-0.5px]" :style="{ color: s.color }">{{ s.count }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ═══ Desktop layout (>= md) ═════════════════════════════ -->
+    <div class="hidden md:grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 lg:gap-8 items-center">
 
       <!-- ── Donut Chart (interactive) ────────────────────── -->
       <div class="flex items-center justify-center">
-        <div class="relative w-[200px] h-[200px] md:w-[220px] md:h-[220px]">
+        <div class="relative w-[220px] h-[220px]">
           <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
-            <!-- Background ring (click = reset to "all") -->
-            <circle
-              cx="60" cy="60" r="50" fill="none"
-              stroke="var(--border)" stroke-width="12"
-              class="cursor-pointer"
-              @click="toggleFilter('all')"
-            />
-            <!-- Selesai arc -->
-            <circle
-              cx="60" cy="60" r="50" fill="none"
-              stroke="#22c55e"
-              :stroke-width="arcWidth('Selesai')" stroke-linecap="round"
-              :stroke-dasharray="circumference"
-              :stroke-dashoffset="circumference - selesaiArc"
-              :opacity="arcOpacity('Selesai')"
-              class="transition-all duration-500 ease-out cursor-pointer"
-              @click="toggleFilter('Selesai')"
-            />
-            <!-- Berjalan arc -->
-            <circle
-              cx="60" cy="60" r="50" fill="none"
-              stroke="#f59e0b"
-              :stroke-width="arcWidth('Berjalan')" stroke-linecap="round"
-              :stroke-dasharray="circumference"
-              :stroke-dashoffset="circumference - berjalanArc"
-              :style="{ transform: `rotate(${selesaiDeg}deg)`, transformOrigin: '60px 60px' }"
-              :opacity="arcOpacity('Berjalan')"
-              class="transition-all duration-500 ease-out cursor-pointer"
-              @click="toggleFilter('Berjalan')"
-            />
-            <!-- Direncanakan arc -->
-            <circle
-              cx="60" cy="60" r="50" fill="none"
-              stroke="#94a3b8"
-              :stroke-width="arcWidth('Direncanakan')" stroke-linecap="round"
-              :stroke-dasharray="circumference"
-              :stroke-dashoffset="circumference - direncanakanArc"
-              :style="{ transform: `rotate(${selesaiDeg + berjalanDeg}deg)`, transformOrigin: '60px 60px' }"
-              :opacity="arcOpacity('Direncanakan')"
-              class="transition-all duration-500 ease-out cursor-pointer"
-              @click="toggleFilter('Direncanakan')"
-            />
-            <!-- Dibatalkan arc -->
-            <circle
-              v-if="dibatalkan > 0"
-              cx="60" cy="60" r="50" fill="none"
-              stroke="#f87171"
-              :stroke-width="arcWidth('Dibatalkan')" stroke-linecap="round"
-              :stroke-dasharray="circumference"
-              :stroke-dashoffset="circumference - dibatalkanArc"
-              :style="{ transform: `rotate(${selesaiDeg + berjalanDeg + direncanakanDeg}deg)`, transformOrigin: '60px 60px' }"
-              :opacity="arcOpacity('Dibatalkan')"
-              class="transition-all duration-500 ease-out cursor-pointer"
-              @click="toggleFilter('Dibatalkan')"
-            />
+            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--border)" stroke-width="12" class="cursor-pointer" @click="toggleFilter('all')" />
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#22c55e" :stroke-width="arcWidth('Selesai')" stroke-linecap="round" :stroke-dasharray="circumference" :stroke-dashoffset="circumference - selesaiArc" :opacity="arcOpacity('Selesai')" class="transition-all duration-500 ease-out cursor-pointer" @click="toggleFilter('Selesai')" />
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#f59e0b" :stroke-width="arcWidth('Berjalan')" stroke-linecap="round" :stroke-dasharray="circumference" :stroke-dashoffset="circumference - berjalanArc" :style="{ transform: `rotate(${selesaiDeg}deg)`, transformOrigin: '60px 60px' }" :opacity="arcOpacity('Berjalan')" class="transition-all duration-500 ease-out cursor-pointer" @click="toggleFilter('Berjalan')" />
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#94a3b8" :stroke-width="arcWidth('Direncanakan')" stroke-linecap="round" :stroke-dasharray="circumference" :stroke-dashoffset="circumference - direncanakanArc" :style="{ transform: `rotate(${selesaiDeg + berjalanDeg}deg)`, transformOrigin: '60px 60px' }" :opacity="arcOpacity('Direncanakan')" class="transition-all duration-500 ease-out cursor-pointer" @click="toggleFilter('Direncanakan')" />
+            <circle v-if="dibatalkan > 0" cx="60" cy="60" r="50" fill="none" stroke="#f87171" :stroke-width="arcWidth('Dibatalkan')" stroke-linecap="round" :stroke-dasharray="circumference" :stroke-dashoffset="circumference - dibatalkanArc" :style="{ transform: `rotate(${selesaiDeg + berjalanDeg + direncanakanDeg}deg)`, transformOrigin: '60px 60px' }" :opacity="arcOpacity('Dibatalkan')" class="transition-all duration-500 ease-out cursor-pointer" @click="toggleFilter('Dibatalkan')" />
           </svg>
-          <!-- Center label (dynamic based on active filter) -->
           <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span class="text-[2rem] md:text-[2.2rem] font-[900] tracking-[-2px] leading-none" :style="{ color: centerColor }">
+            <span class="text-[2.2rem] font-[900] tracking-[-2px] leading-none" :style="{ color: centerColor }">
               {{ centerValue }}<small v-if="activeFilter === 'all'" class="text-[1.1rem] font-[700] tracking-normal">%</small>
             </span>
             <span class="text-[0.68rem] font-semibold text-text-muted uppercase tracking-[0.08em] mt-1">{{ centerLabel }}</span>
@@ -74,7 +78,7 @@
 
       <!-- ── Stats + Legend (interactive) ─────────────────── -->
       <div class="flex flex-col gap-3">
-        <!-- Total banner (click = reset) -->
+        <!-- Total banner -->
         <button
           type="button"
           class="flex items-center gap-3 p-3.5 rounded-xl border text-left w-full transition-all duration-200"
@@ -92,16 +96,14 @@
           </div>
         </button>
 
-        <!-- Status rows (clickable) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <!-- Status rows -->
+        <div class="grid grid-cols-2 gap-2.5">
           <button
             v-for="s in statusItems"
             :key="s.key"
             type="button"
             class="flex items-center gap-3 p-3 rounded-xl border text-left transition-all duration-200"
-            :class="activeFilter === s.key
-              ? `bg-[${s.color}]/8 border-[${s.color}]/30 ring-1 ring-[${s.color}]/20`
-              : 'bg-bg-card-2 border-border hover:border-[rgba(99,102,241,0.2)]'"
+            :class="activeFilter === s.key ? '' : 'bg-bg-card-2 border-border hover:border-[rgba(99,102,241,0.2)]'"
             :style="activeFilter === s.key ? `background:${s.color}12;border-color:${s.color}40;box-shadow:0 0 0 1px ${s.color}25` : ''"
             @click="toggleFilter(s.key)"
           >

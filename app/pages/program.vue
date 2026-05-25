@@ -18,15 +18,29 @@
       </header>
 
       <!-- ── Stats Dashboard (chart + numbers) ────────────── -->
-      <div v-if="loading" class="bg-bg-card border border-border rounded-2xl p-5 md:p-7 mb-8">
-        <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 lg:gap-8 items-center">
+      <div v-if="loading" class="bg-bg-card border border-border rounded-2xl p-4 md:p-7 mb-8">
+        <!-- Mobile skeleton -->
+        <div class="md:hidden">
+          <div class="flex items-center gap-4">
+            <div class="w-[120px] h-[120px] shrink-0 rounded-full skeleton-shimmer border border-border"></div>
+            <div class="flex-1 space-y-3">
+              <div class="h-8 w-24 rounded-lg skeleton-shimmer border border-border"></div>
+              <div class="h-3 w-32 rounded skeleton-shimmer border border-border"></div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 mt-3">
+            <div v-for="i in 3" :key="i" class="h-11 rounded-xl skeleton-shimmer border border-border"></div>
+          </div>
+        </div>
+        <!-- Desktop skeleton -->
+        <div class="hidden md:grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 lg:gap-8 items-center">
           <div class="flex justify-center">
-            <div class="w-[200px] h-[200px] md:w-[220px] md:h-[220px] rounded-full bg-gradient-to-r from-[var(--bg-card)] via-[var(--bg-card-2)] to-[var(--bg-card)] bg-[length:800px_100%] animate-[skeletonShimmer_1.5s_infinite_linear] border border-border"></div>
+            <div class="w-[220px] h-[220px] rounded-full skeleton-shimmer border border-border"></div>
           </div>
           <div class="space-y-3">
-            <div class="h-16 rounded-xl bg-gradient-to-r from-[var(--bg-card)] via-[var(--bg-card-2)] to-[var(--bg-card)] bg-[length:800px_100%] animate-[skeletonShimmer_1.5s_infinite_linear] border border-border"></div>
+            <div class="h-16 rounded-xl skeleton-shimmer border border-border"></div>
             <div class="grid grid-cols-2 gap-2.5">
-              <div v-for="i in 3" :key="i" class="h-12 rounded-xl bg-gradient-to-r from-[var(--bg-card)] via-[var(--bg-card-2)] to-[var(--bg-card)] bg-[length:800px_100%] animate-[skeletonShimmer_1.5s_infinite_linear] border border-border"></div>
+              <div v-for="i in 3" :key="i" class="h-12 rounded-xl skeleton-shimmer border border-border"></div>
             </div>
           </div>
         </div>
@@ -84,5 +98,10 @@ onMounted(() => {
 @keyframes skeletonShimmer {
   0% { background-position: -400px 0; }
   100% { background-position: 400px 0; }
+}
+.skeleton-shimmer {
+  background: linear-gradient(to right, var(--bg-card) 0%, var(--bg-card-2) 50%, var(--bg-card) 100%);
+  background-size: 800px 100%;
+  animation: skeletonShimmer 1.5s infinite linear;
 }
 </style>
