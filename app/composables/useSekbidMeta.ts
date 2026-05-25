@@ -42,11 +42,11 @@ const _fallback: SekbidMeta = {
 
 // Visual meta untuk MPK Komisi (A–E)
 const _komisiMeta: Record<string, SekbidMeta> = {
-  A: { icon: 'material-symbols:gavel-rounded',     color: '#0ea5e9', glow: 'rgba( 14, 165, 233, 0.14)', short: 'Komisi A' },
-  B: { icon: 'material-symbols:campaign-rounded',  color: '#f59e0b', glow: 'rgba(245, 158,  11, 0.14)', short: 'Komisi B' },
-  C: { icon: 'material-symbols:assessment-rounded',color: '#10b981', glow: 'rgba( 16, 185, 129, 0.14)', short: 'Komisi C' },
-  D: { icon: 'material-symbols:shield-rounded',    color: '#8b5cf6', glow: 'rgba(139,  92, 246, 0.14)', short: 'Komisi D' },
-  E: { icon: 'material-symbols:public-rounded',    color: '#ec4899', glow: 'rgba(236,  72, 153, 0.14)', short: 'Komisi E' },
+  A: { icon: 'material-symbols:diversity_1',     color: '#0ea5e9', glow: 'rgba( 14, 165, 233, 0.14)', short: 'Komisi A' },
+  B: { icon: 'material-symbols:sports_handball',  color: '#f59e0b', glow: 'rgba(245, 158,  11, 0.14)', short: 'Komisi B' },
+  C: { icon: 'material-symbols:partner_exchange',color: '#10b981', glow: 'rgba( 16, 185, 129, 0.14)', short: 'Komisi C' },
+  D: { icon: 'material-symbols:travel_explore',    color: '#8b5cf6', glow: 'rgba(139,  92, 246, 0.14)', short: 'Komisi D' },
+  E: { icon: 'material-symbols:person_check',    color: '#ec4899', glow: 'rgba(236,  72, 153, 0.14)', short: 'Komisi E' },
 }
 
 export const useSekbidMeta = (key?: number | string | null): SekbidMeta => {
