@@ -170,22 +170,24 @@ const siteName = cfg.public.siteName as string
 const slugParam = computed(() => String(route.params.slug || ''))
 const articleId = computed(() => parseArticleSlug(slugParam.value))
 
-// Lazy fetch: navigates instantly on client (shows skeleton), but still fetches
-// during SSR for SEO (bots see full content on direct visit).
-const { data, pending } = useLazyAsyncData(
-  `dokumentasi-${articleId.value}`,
-  () => $fetch<any[]>(`${apiBase}/api/dokumentasi`).catch(() => []),
-  { default: () => [] as any[] },
-)
+// Use module-level singleton from useDokumentasi so:
+//   • Client nav from list page  → data already loaded, zero delay
+//   • Direct URL / new tab       → onMounted fetches on the client, bypassing
+//     the SSR payload cache that would otherwise permanently block a refetch
+//     when the server-side $fetch fails (api unreachable from SSR process).
+const { loading, dokumentasi, loadDokumentasiData, openLightboxModal } = useDokumentasi()
 
-const article = computed<any | null>(() => {
-  const list = data.value as any[]
-  if (!Array.isArray(list) || isNaN(articleId.value)) return null
-  return list.find((a: any) => a.id === articleId.value) ?? null
+onMounted(() => {
+  loadDokumentasiData()
 })
 
-// ── Photos / gallery ────────────────────────────────────────────────────────
-const { openLightboxModal } = useDokumentasi()
+// pending = true while data hasn't arrived yet (loading starts as true in module)
+const pending = computed(() => loading.value)
+
+const article = computed<any | null>(() => {
+  if (!Array.isArray(dokumentasi.value) || isNaN(articleId.value)) return null
+  return dokumentasi.value.find((a: any) => a.id === articleId.value) ?? null
+})
 const photos        = computed(() => article.value?.images || [])
 const hasPhotos     = computed(() => Array.isArray(photos.value) && photos.value.length > 0)
 const previewPhotos = computed(() => photos.value.slice(0, 8))
