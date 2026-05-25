@@ -170,6 +170,33 @@ const siteName = cfg.public.siteName as string
 const slugParam = computed(() => String(route.params.slug || ''))
 const articleId = computed(() => parseArticleSlug(slugParam.value))
 
+// ── SSR-only SEO fetch ───────────────────────────────────────────────────────
+// Runs on the server to populate <head> og: tags for social sharing / crawlers.
+// On the client we intentionally never re-fetch (getCachedData always returns
+// a non-undefined value so Nuxt treats it as "already have data").
+// If the server-side $fetch fails, ssrData is null and we fall back to the
+// reactive seoArticle computed below once the client loads the content.
+const { data: ssrData } = useAsyncData(
+  `doc-article-${articleId.value}`,
+  () => $fetch<any[]>(`${apiBase}/api/dokumentasi`)
+    .then(list => (Array.isArray(list) ? list.find((a: any) => a.id === articleId.value) ?? null : null))
+    .catch(() => null),
+  {
+    default: () => null as any,
+    lazy: true,
+    // Never refetch on client — either use SSR payload or null.
+    // Returning null (not undefined) tells Nuxt "I have a value, don't fetch".
+    getCachedData: (key, nuxtApp) => {
+      if (import.meta.client) {
+        const v = nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]
+        return v !== undefined ? v : null
+      }
+      return nuxtApp.payload.data[key] ?? nuxtApp.static.data[key]
+    },
+  },
+)
+
+// ── Content fetch ────────────────────────────────────────────────────────────
 // Use module-level singleton from useDokumentasi so:
 //   • Client nav from list page  → data already loaded, zero delay
 //   • Direct URL / new tab       → onMounted fetches on the client, bypassing
@@ -188,6 +215,11 @@ const article = computed<any | null>(() => {
   if (!Array.isArray(dokumentasi.value) || isNaN(articleId.value)) return null
   return dokumentasi.value.find((a: any) => a.id === articleId.value) ?? null
 })
+
+// seoArticle: SSR data takes priority (guarantees og: tags in initial HTML when
+// the API is reachable from the server). Falls back to the client-loaded article
+// once useDokumentasi finishes, so meta tags stay up-to-date reactively.
+const seoArticle = computed(() => ssrData.value || article.value)
 const photos        = computed(() => article.value?.images || [])
 const hasPhotos     = computed(() => Array.isArray(photos.value) && photos.value.length > 0)
 const previewPhotos = computed(() => photos.value.slice(0, 8))
@@ -251,16 +283,16 @@ function extractDescription(article: any): string {
   return candidate.substring(0, 152).replace(/\s+\S*$/, '') + '…'
 }
 
-const articleDescription = computed(() => extractDescription(article.value))
+const articleDescription = computed(() => extractDescription(seoArticle.value))
 
 const articleUrl = computed(() => {
-  if (!article.value) return `${siteUrl}/dokumentasi`
-  return `${siteUrl}/dokumentasi/${articleSlug(article.value)}`
+  if (!seoArticle.value) return `${siteUrl}/dokumentasi`
+  return `${siteUrl}/dokumentasi/${articleSlug(seoArticle.value)}`
 })
 
 const articleImage = computed(() => {
-  if (!article.value?.thumbnail) return `${siteUrl}/og-default.png`
-  const t = article.value.thumbnail as string
+  if (!seoArticle.value?.thumbnail) return `${siteUrl}/og-default.png`
+  const t = seoArticle.value.thumbnail as string
   if (t.startsWith('http')) return t
   // Backend serves uploads from `${apiBase}/uploads/...`
   const path = t.startsWith('/') ? t : `/${t}`
@@ -268,19 +300,19 @@ const articleImage = computed(() => {
 })
 
 useSeoMeta({
-  title:           () => article.value?.title || 'Artikel',
+  title:           () => seoArticle.value?.title || 'Artikel',
   description:     () => articleDescription.value,
-  ogTitle:         () => article.value?.title ? `${article.value.title} — ${siteName}` : siteName,
+  ogTitle:         () => seoArticle.value?.title ? `${seoArticle.value.title} — ${siteName}` : siteName,
   ogDescription:   () => articleDescription.value,
   ogType:          'article',
   ogUrl:           () => articleUrl.value,
   ogImage:         () => articleImage.value,
   twitterCard:     'summary_large_image',
-  twitterTitle:    () => article.value?.title || siteName,
+  twitterTitle:    () => seoArticle.value?.title || siteName,
   twitterDescription: () => articleDescription.value,
   twitterImage:    () => articleImage.value,
-  articlePublishedTime: () => article.value?.start_date || undefined,
-  articleSection:  () => article.value?.tag_text || undefined,
+  articlePublishedTime: () => seoArticle.value?.start_date || undefined,
+  articleSection:  () => seoArticle.value?.tag_text || undefined,
 })
 
 useHead({
@@ -290,15 +322,15 @@ useHead({
   script: [
     {
       type: 'application/ld+json',
-      innerHTML: () => article.value ? JSON.stringify({
+      innerHTML: () => seoArticle.value ? JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'NewsArticle',
-        headline: article.value.title,
+        headline: seoArticle.value.title,
         description: articleDescription.value,
         image: [articleImage.value],
-        datePublished: article.value.start_date,
-        dateModified: article.value.start_date,
-        articleSection: article.value.tag_text || 'Kegiatan',
+        datePublished: seoArticle.value.start_date,
+        dateModified: seoArticle.value.start_date,
+        articleSection: seoArticle.value.tag_text || 'Kegiatan',
         url: articleUrl.value,
         mainEntityOfPage: {
           '@type': 'WebPage',
