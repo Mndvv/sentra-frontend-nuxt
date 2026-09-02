@@ -1,13 +1,17 @@
 <template>
-  <div 
-    v-if="isOpen" 
-    class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[2000] flex items-center justify-center transition-opacity"
-    @click.self="close"
-  >
-    <div class="bg-bg-card border border-border rounded-2xl w-[90%] max-w-[600px] relative shadow-xl max-h-[90vh] overflow-y-auto transform transition-all duration-300">
+  <Transition name="modal">
+    <div 
+      v-if="isOpen" 
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[2000] flex items-center justify-center"
+      @click.self="close"
+      role="dialog"
+      aria-modal="true"
+    >
+      <div class="bg-bg-card border border-border rounded-2xl w-[90%] max-w-[600px] relative shadow-xl max-h-[90vh] overflow-y-auto">
       <button 
         class="absolute top-6 right-6 bg-bg-primary border-none w-9 h-9 rounded-full flex justify-center items-center cursor-pointer text-text-muted transition-colors hover:bg-accent-soft hover:text-accent" 
         @click="close"
+        aria-label="Tutup modal aspirasi"
       >
         <Icon name="material-symbols:close" size="24" />
       </button>
@@ -75,12 +79,12 @@
             class="mt-2 flex items-center justify-center gap-2 bg-gradient-to-br from-[#6366f1] to-[#8b5cf6] text-white px-7 py-3.5 rounded-xl font-semibold text-[0.9rem] border-none cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(99,102,241,0.45)] w-full active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             <Icon v-if="loading" name="line-md:loading-loop" size="20" />
-            <span v-else>Kirim Aspirasi</span>
+            <span>{{ loading ? 'Mengirim...' : 'Kirim Aspirasi' }}</span>
           </button>
         </form>
       </div>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <script setup lang="ts">

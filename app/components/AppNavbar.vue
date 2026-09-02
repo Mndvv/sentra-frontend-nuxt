@@ -43,6 +43,15 @@
 
     </div>
   </nav>
+
+  <!-- Mobile Overlay Backdrop -->
+  <Transition name="fade">
+    <div 
+      v-if="isMenuOpen" 
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[990] md:hidden"
+      @click="closeMenu"
+    ></div>
+  </Transition>
 </template>
 
 <script setup lang="ts">
