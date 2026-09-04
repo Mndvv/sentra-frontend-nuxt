@@ -84,6 +84,7 @@
         </form>
       </div>
     </div>
+    </div>
   </Transition>
 </template>
 
