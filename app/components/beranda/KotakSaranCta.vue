@@ -1,21 +1,69 @@
 <template>
-  <div ref="el" class="transition-all duration-700" :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
-    <div class="relative rounded-[24px] overflow-hidden bg-accent p-[1px]">
-      <div class="relative rounded-[calc(1rem-1px)] bg-bg-card px-7 py-10 md:px-10 md:py-12 flex flex-col md:flex-row items-center gap-7 md:gap-10 overflow-hidden">
-        <!-- Icon -->
-        <div class="shrink-0 w-18 h-18 rounded-[20px] bg-accent flex items-center justify-center shadow-[0_8px_25px_rgba(99,102,241,0.4)]">
-          <Icon name="material-symbols:mail-rounded" class="text-white text-[32px]" aria-hidden="true" />
+  <div
+    ref="el"
+    class="transition-all duration-700"
+    :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+  >
+    <div
+      class="relative rounded-2xl bg-bg-card border border-border p-7 sm:p-10 md:p-12 shadow-sm hover:shadow-md hover:border-accent/40 transition-all duration-300 overflow-hidden"
+    >
+      <!-- Ambient subtle background glow -->
+      <div
+        class="absolute -top-24 -right-24 w-80 h-80 bg-accent/10 rounded-full blur-[90px] pointer-events-none"
+        aria-hidden="true"
+      />
+
+      <div
+        class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-10"
+      >
+        <!-- Icon & Content -->
+        <div
+          class="flex flex-col sm:flex-row items-start sm:items-center gap-5 max-w-[680px]"
+        >
+          <div
+            class="w-14 h-14 rounded-xl bg-accent text-white flex items-center justify-center shrink-0 shadow-md"
+          >
+            <Icon
+              name="material-symbols:mark-email-unread-rounded"
+              class="text-2xl"
+              aria-hidden="true"
+            />
+          </div>
+
+          <div>
+            <div
+              class="inline-flex items-center gap-2 text-accent text-xs font-bold tracking-wider uppercase mb-1"
+            >
+              <span>Kanal Aspirasi Siswa</span>
+              <span class="w-1 h-1 rounded-full bg-accent" />
+              <span>AURORA</span>
+            </div>
+            <h3
+              class="text-xl sm:text-2xl font-black text-text-main tracking-tight leading-snug mb-2"
+            >
+              Suaramu Membentuk Arah Nawasena
+            </h3>
+            <p class="text-text-muted text-xs sm:text-sm leading-relaxed m-0">
+              Punya gagasan program baru, aspirasi, atau evaluasi demi kemajuan
+              sekolah? Sampaikan secara aman dan 100% anonim. Setiap suara
+              diperhatikan secara berkala oleh komisi MPK & OSIS.
+            </p>
+          </div>
         </div>
 
-        <div class="flex-1 text-center md:text-left relative z-10">
-          <h3 class="text-[1.15rem] md:text-[1.4rem] font-black text-text-main mb-2 tracking-tight">Kotak Saran Nawasena</h3>
-          <p class="text-text-muted text-[0.88rem] leading-relaxed m-0">Punya ide, kritik, atau aspirasi? Sampaikan secara anonim. Setiap suaramu berarti bagi kami.</p>
-        </div>
-
-        <div class="shrink-0 relative z-10">
-          <button class="inline-flex items-center gap-2 bg-accent text-white px-6 py-3 rounded-[16px] font-bold text-[0.9rem] no-underline transition-all duration-200 hover:bg-accent-hover hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(99,102,241,0.45)] active:scale-95" @click="openAurora">
-            <Icon name="material-symbols:edit-rounded" size="18" aria-hidden="true" />
-            Isi Sekarang
+        <!-- Action Button -->
+        <div class="shrink-0 w-full sm:w-auto">
+          <button
+            type="button"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-accent text-white px-6 py-3.5 rounded-xl font-bold text-sm transition-all duration-200 hover:bg-accent-hover hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.98] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 min-h-[44px]"
+            @click="openAurora"
+          >
+            <Icon
+              name="material-symbols:edit-note-rounded"
+              class="text-xl"
+              aria-hidden="true"
+            />
+            <span>Sampaikan Aspirasi</span>
           </button>
         </div>
       </div>
@@ -24,7 +72,10 @@
 </template>
 
 <script setup lang="ts">
-const { el, isVisible } = useScrollReveal()
-const isAuroraOpen = useState('isAuroraOpen', () => false)
-const openAurora = () => { isAuroraOpen.value = true }
+const { el, isVisible } = useScrollReveal();
+const isAuroraOpen = useState("isAuroraOpen", () => false);
+
+const openAurora = () => {
+  isAuroraOpen.value = true;
+};
 </script>

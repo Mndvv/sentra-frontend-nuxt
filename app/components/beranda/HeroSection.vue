@@ -1,154 +1,214 @@
 <template>
-  <header class="min-h-[92vh] md:min-h-screen relative overflow-hidden px-4 md:px-[10%] pt-20 md:pt-24 pb-16 md:pb-20 flex flex-col">
+  <header
+    class="relative overflow-hidden pt-28 md:pt-36 pb-12 md:pb-16 border-b border-border/60"
+  >
+    <!-- Ambient subtle background glow (respecting palette) -->
+    <div
+      class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[320px] bg-accent/8 rounded-full blur-[110px] pointer-events-none -z-10"
+      aria-hidden="true"
+    />
 
-    <!-- ── Paper ground (lembar kerja) ───────────────────────── -->
-    <div class="absolute inset-0 pointer-events-none">
-      <div class="absolute inset-0 opacity-40 pointer-events-none" style="background-image: repeating-linear-gradient(0deg, rgba(99,102,241,0.06) 0, rgba(99,102,241,0.06) 1px, transparent 1px, transparent 24px); background-size: 100% 24px;" />
-    </div>
-
-    <div class="relative z-10 w-full flex-grow flex flex-col items-start justify-center text-left md:max-w-[960px] md:text-center md:items-center pb-16 md:pb-0">
-
-      <!-- ── Badge (lembar kerja header) ─────────────────────── -->
-      <div class="flex mb-6 md:mb-8 animate-[fadeInDown_0.6s_ease_both]">
-        <span class="inline-flex items-center gap-2 bg-accent-soft text-accent px-4 py-1.5 rounded-full text-[0.72rem] font-bold tracking-widest uppercase border border-accent/20">
-          <Icon name="material-symbols:assignment-rounded" class="text-sm animate-pulse" aria-hidden="true" />
-          Lembar Kerja Nawasena
-        </span>
-      </div>
-
-      <!-- ── Headline — tulisan tangan di atas garis lurus ────── -->
-      <h1 class="text-[clamp(2.6rem,9vw,5.6rem)] leading-[1.0] mb-6 font-black tracking-[-0.04em] md:tracking[-0.05em] animate-[fadeInUp_0.7s_ease_0.1s_both]">
-        Membangun
-        <br />
-        <span class="text-accent underline underline-offset-4 decoration-[2px] decoration-accent">Masa Depan</span>
-        Bersama.
-      </h1>
-
-      <!-- ── Sub ──────────────────────────────────────────────── -->
-      <p class="text-text-muted max-w-[540px] mx-auto md:mx-0 mb-10 md:mb-0 text-[0.98rem] md:text-[1.08rem] leading-[1.6] animate-[fadeInUp_0.7s_ease_0.2s_both]">
-        Sebuah mercusuar digital yang mengintegrasikan gerak organisasi dan menampung titah aspirasi demi kemajuan sekolah.
-      </p>
-
-      <!-- ── CTAs ─────────────────────────────────────────────── -->
-      <div
-        class="flex flex-col sm:flex-row gap-3 justify-start md:justify-center items-start md:items-center animate-[fadeInUp_0.7s_ease_0.3s_both]"
-      >
-        <button
-          class="inline-flex items-center justify-center gap-2 bg-accent text-white px-7 py-3.5 rounded-[16px] font-semibold text-[0.92rem] border-none cursor-pointer transition-all duration-200 hover:bg-accent-hover hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(99,102,241,0.25)] w-full sm:w-auto active:translate-y-0 active:scale-95"
-          @click="scrollToContent"
-        >
-          <Icon name="material-symbols:explore-rounded" size="18" aria-hidden="true" />
-          Jelajahi
-        </button>
-        <button
-          class="inline-flex items-center justify-center gap-2 border border-border bg-bg-card text-text-main px-6 py-3.5 rounded-[16px] font-semibold text-[0.92rem] cursor-pointer transition-all duration-200 hover:border-accent/40 hover:bg-accent-soft hover:-translate-y-0.5 w-full sm:w-auto active:scale-95"
-          @click="toggleRadio"
-        >
-          <span class="w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0" :class="player.isPlaying.value ? 'border-accent' : 'border-text-muted'">
-            <span v-if="player.isPlaying.value" class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-          </span>
-          <Icon
-            :name="player.isPlaying.value ? 'material-symbols:pause-rounded' : 'material-symbols:radio'"
-            size="18"
-            aria-hidden="true"
-          />
-          {{ player.isPlaying.value ? 'Pause Radio' : 'Putar Radio' }}
-        </button>
-      </div>
-
-      <!-- ── Now playing ticker ──────────────────────────────── -->
-      <Transition name="slide-up">
+    <div class="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-[780px]">
+        <!-- Live Cabinet Status Badge -->
         <div
-          v-if="player.isPlaying.value && player.currentTrack()"
-          class="mt-8 flex justify-start md:justify-center"
+          class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-accent-soft border border-accent/20 mb-6"
         >
-          <div
-            class="inline-flex items-center gap-2.5 bg-bg-card border border-border rounded-full px-4 py-2 text-[0.75rem] text-text-muted"
+          <span class="relative flex h-2 w-2">
+            <span
+              class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"
+            />
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-accent" />
+          </span>
+          <span class="text-xs font-semibold tracking-wide text-accent">
+            Kabinet Nawasena · SMAN 2 Jonggol 2025/2026
+          </span>
+        </div>
+
+        <!-- Headline: Authoritative, balanced scale for PC and mobile -->
+        <h1
+          class="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-black tracking-[-0.035em] text-text-main leading-[1.12] mb-5"
+        >
+          Membangun Masa Depan,
+          <br class="hidden sm:inline" />
+          <span
+            class="text-accent underline underline-offset-8 decoration-accent/30"
+            >Menyatukan Gerak</span
           >
-            <span class="flex items-end gap-[3px] h-3">
-              <span class="w-[3px] bg-accent rounded-full animate-[eq1_0.8s_ease-in-out_infinite]" />
-              <span class="w-[3px] bg-accent rounded-full animate-[eq2_0.8s_ease-in-out_0.15s_infinite]" />
-              <span class="w-[3px] bg-accent rounded-full animate-[eq3_0.8s_ease-in-out_0.3s_infinite]" />
+          Bersama.
+        </h1>
+
+        <!-- Subtitle: High-contrast, optimal measure (65-75ch) -->
+        <p
+          class="text-text-muted text-base sm:text-lg leading-relaxed max-w-[640px] mb-8"
+        >
+          Portal terpadu OSIS & MPK Nawasena sebagai pusat informasi program
+          kerja, agenda kegiatan, siaran radio sekolah, dan kanal aspirasi
+          seluruh siswa.
+        </p>
+
+        <!-- CTA Action Group -->
+        <div class="flex flex-wrap items-center gap-3.5">
+          <!-- Primary CTA: Scroll to Content -->
+          <button
+            type="button"
+            class="inline-flex items-center justify-center gap-2 bg-accent text-white px-6 py-3.5 rounded-xl font-bold text-sm transition-all duration-200 hover:bg-accent-hover hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(99,102,241,0.28)] active:translate-y-0 active:scale-[0.98] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 min-h-[44px]"
+            @click="scrollToContent"
+          >
+            <Icon
+              name="material-symbols:explore-rounded"
+              class="text-lg"
+              aria-hidden="true"
+            />
+            <span>Jelajahi Portal</span>
+          </button>
+
+          <!-- Secondary CTA: Play / Pause Radio -->
+          <button
+            type="button"
+            class="inline-flex items-center justify-center gap-2.5 bg-bg-card border border-border text-text-main px-5 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 hover:border-accent/40 hover:bg-accent-soft hover:text-accent hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 min-h-[44px]"
+            @click="toggleRadio"
+          >
+            <!-- Animated Soundwave Equalizer -->
+            <span
+              class="flex items-end gap-[3px] h-3.5 w-3.5 shrink-0"
+              aria-hidden="true"
+            >
+              <span
+                class="w-[2.5px] rounded-full bg-accent transition-all duration-200"
+                :class="
+                  player.isPlaying.value
+                    ? 'animate-[eq1_0.7s_ease-in-out_infinite]'
+                    : 'h-1.5'
+                "
+              />
+              <span
+                class="w-[2.5px] rounded-full bg-accent transition-all duration-200"
+                :class="
+                  player.isPlaying.value
+                    ? 'animate-[eq2_0.7s_ease-in-out_0.15s_infinite]'
+                    : 'h-3'
+                "
+              />
+              <span
+                class="w-[2.5px] rounded-full bg-accent transition-all duration-200"
+                :class="
+                  player.isPlaying.value
+                    ? 'animate-[eq3_0.7s_ease-in-out_0.3s_infinite]'
+                    : 'h-2'
+                "
+              />
             </span>
-            <span class="text-accent font-semibold">Sedang Diputar:</span>
-            <span class="max-w-[180px] truncate">{{ player.currentTrack()?.judul || player.currentTrack()?.title }}</span>
+            <Icon
+              :name="
+                player.isPlaying.value
+                  ? 'material-symbols:pause-rounded'
+                  : 'material-symbols:radio'
+              "
+              class="text-lg"
+              aria-hidden="true"
+            />
+            <span>{{
+              player.isPlaying.value ? "Jeda Radio" : "Putar Radio Sekolah"
+            }}</span>
+          </button>
+        </div>
+
+        <!-- Live Now-Playing / Broadcast Pill -->
+        <div
+          class="mt-8 pt-6 border-t border-border/50 flex flex-wrap items-center gap-3 text-xs text-text-muted"
+        >
+          <div class="flex items-center gap-2">
+            <span
+              class="w-2 h-2 rounded-full"
+              :class="
+                player.isPlaying.value
+                  ? 'bg-green-500 animate-pulse'
+                  : 'bg-accent/60'
+              "
+            />
+            <span class="font-medium">
+              {{
+                player.isPlaying.value
+                  ? "Sedang Mengudara:"
+                  : "Radio Nawasena Siap Diputar"
+              }}
+            </span>
+          </div>
+
+          <div
+            v-if="player.currentTrack()"
+            class="inline-flex items-center gap-1.5 font-semibold text-text-main bg-bg-card-2 border border-border/80 px-2.5 py-1 rounded-md max-w-[280px] sm:max-w-[360px] truncate"
+          >
+            <Icon
+              name="material-symbols:music-note-rounded"
+              class="text-accent text-sm shrink-0"
+              aria-hidden="true"
+            />
+            <span class="truncate">{{
+              player.currentTrack()?.judul || player.currentTrack()?.title
+            }}</span>
           </div>
         </div>
-      </Transition>
-
-      <!-- ── Scroll indicator ────────────────────────────────── -->
-      <div
-        class="absolute bottom-6 left-0 right-0 flex justify-center animate-[fadeIn_1s_ease_1s_both]"
-        :class="player.isPlaying.value ? 'hidden sm:flex' : 'flex'"
-      >
-        <button
-          class="flex flex-col items-center gap-1 text-text-muted hover:text-accent transition-colors cursor-pointer bg-transparent border-none"
-          @click="scrollToContent"
-        >
-          <span class="text-[0.65rem] font-bold tracking-widest uppercase opacity-60">Scroll</span>
-          <Icon name="material-symbols:keyboard-arrow-down-rounded" class="text-2xl animate-bounce" aria-hidden="true" />
-        </button>
       </div>
-
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
-const player = useMusicPlayer()
+const player = useMusicPlayer();
 
 const scrollToContent = () => {
   if (import.meta.client) {
-    const el = document.getElementById('nawasena-section')
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    const el = document.getElementById("bento-hub");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }
-}
+};
 
 const toggleRadio = async () => {
   if (player.playlist.value.length === 0) {
-    await player.loadPlaylist()
+    await player.loadPlaylist();
   }
-  if (player.playlist.value.length === 0) return
-  player.togglePlay()
-}
+  if (player.playlist.value.length === 0) return;
+  player.togglePlay();
+};
 </script>
 
-<style>
-@keyframes float {
-  0%, 100% { transform: translateY(0px) scale(1); }
-  50% { transform: translateY(-20px) scale(1.05); }
-}
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+<style scoped>
 @keyframes eq1 {
-  0%, 100% { height: 4px; }
-  50% { height: 12px; }
+  0%,
+  100% {
+    height: 4px;
+  }
+  50% {
+    height: 14px;
+  }
 }
 @keyframes eq2 {
-  0%, 100% { height: 8px; }
-  50% { height: 4px; }
+  0%,
+  100% {
+    height: 10px;
+  }
+  50% {
+    height: 4px;
+  }
 }
 @keyframes eq3 {
-  0%, 100% { height: 6px; }
-  50% { height: 12px; }
+  0%,
+  100% {
+    height: 6px;
+  }
+  50% {
+    height: 14px;
+  }
 }
 
-.slide-up-enter-active,
-.slide-up-leave-active { transition: all 0.3s ease; }
-.slide-up-enter-from,
-.slide-up-leave-to { opacity: 0; transform: translateY(8px); }
-
 @media (prefers-reduced-motion: reduce) {
-  .animate-float, [class*="animate-[float"] { animation: none !important; }
+  .animate-ping,
+  .animate-pulse {
+    animation: none !important;
+  }
 }
 </style>
