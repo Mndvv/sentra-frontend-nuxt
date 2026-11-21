@@ -10,7 +10,7 @@
         >
           Kabinet <span class="text-accent">Nawasena</span>
           <span class="text-text-muted font-normal text-2xl sm:text-3xl"
-            >2025/2026</span
+            >2026/2027</span
           >
         </h1>
 
@@ -271,10 +271,10 @@ const divisionTagline = computed(() =>
 useSeoMeta({
   title: "Struktur Organisasi",
   description:
-    "Susunan pengurus inti dan 10 seksi bidang Kabinet Nawasena 2025/2026 SMAN 2 Jonggol, yang menggerakkan setiap program kerja OSIS.",
+    "Susunan pengurus inti dan 10 seksi bidang Kabinet Nawasena 2026/2027 SMAN 2 Jonggol, yang menggerakkan setiap program kerja OSIS.",
   ogTitle: "Struktur Organisasi - OSPK Nawasena",
   ogDescription:
-    "Pengurus inti dan seksi bidang Kabinet Nawasena 2025/2026 SMAN 2 Jonggol.",
+    "Pengurus inti dan seksi bidang Kabinet Nawasena 2026/2027 SMAN 2 Jonggol.",
 });
 
 const isFeatured = (p: { jabatan?: string; motto?: string }) =>

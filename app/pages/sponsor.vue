@@ -11,7 +11,7 @@
           Kemitraan Strategis
           <span class="text-accent">Nawasena</span>
           <span class="text-text-muted font-normal text-2xl sm:text-3xl"
-            >2025/2026</span
+            >2026/2027</span
           >
         </h1>
         <p
@@ -211,7 +211,7 @@
               Email Kami
             </a>
             <a
-              href="https://wa.me/6282299234269"
+              href="https://wa.me/6281918401478"
               target="_blank"
               rel="noopener"
               class="inline-flex items-center gap-2 border border-white/30 text-white bg-white/10 hover:bg-white/20 rounded-full px-5 py-2.5 text-xs sm:text-sm font-semibold no-underline transition-colors min-h-[44px]"
@@ -317,7 +317,7 @@ const tiers = [
     icon: "material-symbols:workspace-premium",
     label: "Alexandrite",
     title: "Paket Premium",
-    price: "Rp350.000",
+    price: "Rp300.000",
     desc: "Paket premium yang memberikan peluang promosi lebih optimal serta interaksi langsung.",
     perks: [
       "Semua benefit Paket Sapphire",
@@ -372,7 +372,7 @@ function handleSelectTier(tierId: string) {
     amethyst: "Amethyst - Rp75.000",
     topaz: "Topaz - Rp150.000",
     sapphire: "Sapphire - Rp200.000",
-    alexandrite: "Alexandrite - Rp350.000",
+    alexandrite: "Alexandrite - Rp300.000",
   };
   selectedTier.value = map[tierId.toLowerCase()] || tierId;
   scrollToId("sponsor-form");

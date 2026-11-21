@@ -30,7 +30,7 @@
         Terima kasih! Draf pesan kerjasama Anda telah disusun dan diarahkan ke
         WhatsApp resmi OSIS. Jika tidak terbuka otomatis, silakan
         <a
-          href="https://wa.me/6282299234269"
+          href="https://wa.me/6281918401478"
           target="_blank"
           rel="noopener"
           class="underline underline-offset-2 font-bold"
@@ -159,8 +159,8 @@
               <option value="Amethyst - Rp75.000">Amethyst - Rp75.000</option>
               <option value="Topaz - Rp150.000">Topaz - Rp150.000</option>
               <option value="Sapphire - Rp200.000">Sapphire - Rp200.000</option>
-              <option value="Alexandrite - Rp350.000">
-                Alexandrite - Rp350.000
+              <option value="Alexandrite - Rp300.000">
+                Alexandrite - Rp300.000
               </option>
             </optgroup>
             <optgroup label="Tipe Kemitraan">
@@ -320,7 +320,7 @@ function buildMessage() {
     "Halo Sekretariat OSIS SMAN 2 Jonggol,",
     `Selamat ${greeting()},`,
     "",
-    `Perkenalkan saya *${form.nama}* (Kontak: ${form.kontak}). Kami tertarik menjalin kemitraan sponsorship dengan OSIS SMAN 2 Jonggol periode 2025/2026.`,
+    `Perkenalkan saya *${form.nama}* (Kontak: ${form.kontak}). Kami tertarik menjalin kemitraan sponsorship dengan OSIS SMAN 2 Jonggol periode 2026/2027.`,
     "",
     "Berikut ringkasan pengajuan kami:",
     `- Pilihan Paket / Kemitraan: *${form.tipe}*`,
@@ -360,7 +360,7 @@ function submit() {
     return;
   }
 
-  const waUrl = `https://wa.me/6282299234269?text=${encodeURIComponent(buildMessage())}`;
+  const waUrl = `https://wa.me/6281918401478?text=${encodeURIComponent(buildMessage())}`;
   window.open(waUrl, "_blank", "noopener");
 
   success.value = true;

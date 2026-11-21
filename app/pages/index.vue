@@ -304,10 +304,10 @@ const dokumHighlights = computed(() => dokumentasi.value.slice(0, 3));
 useSeoMeta({
   title: "Beranda",
   description:
-    "Portal resmi SENTRA OSIS & MPK Nawasena SMAN 2 Jonggol 2025/2026 — pusat informasi program kerja, agenda kegiatan, siaran radio sekolah, dan kanal aspirasi siswa.",
-  ogTitle: "Beranda — SENTRA Nawasena SMAN 2 Jonggol",
+    "Portal resmi SENTRA OSIS & MPK Nawasena SMAN 2 Jonggol 2026/2027: pusat informasi program kerja, agenda kegiatan, siaran radio sekolah, dan kanal aspirasi siswa.",
+  ogTitle: "Beranda | SENTRA Nawasena SMAN 2 Jonggol",
   ogDescription:
-    "Portal resmi SENTRA OSIS & MPK Nawasena SMAN 2 Jonggol periode 2025/2026.",
+    "Portal resmi SENTRA OSIS & MPK Nawasena SMAN 2 Jonggol periode 2026/2027.",
 });
 
 onMounted(() => {

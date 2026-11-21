@@ -21,7 +21,7 @@
             <span class="relative inline-flex rounded-full h-2 w-2 bg-accent" />
           </span>
           <span class="text-xs font-semibold tracking-wide text-accent">
-            Kabinet Nawasena · SMAN 2 Jonggol 2025/2026
+            Kabinet Nawasena · SMAN 2 Jonggol 2026/2027
           </span>
         </div>
 

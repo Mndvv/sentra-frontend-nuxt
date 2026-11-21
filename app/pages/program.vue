@@ -10,7 +10,7 @@
         >
           Inisiatif <span class="text-accent">Nawasena</span>
           <span class="text-text-muted font-normal text-2xl sm:text-3xl"
-            >2025/2026</span
+            >2026/2027</span
           >
         </h1>
 
@@ -181,16 +181,16 @@ const programCountLabel = computed(() => {
   const total = programs.value.length;
   if (loading.value) return "Memetakan program kerja...";
   if (total === 0) return "Belum ada program tercatat";
-  return `${total} program tercatat untuk kabinet 2025/2026`;
+  return `${total} program tercatat untuk kabinet 2026/2027`;
 });
 
 useSeoMeta({
   title: "Program Kerja",
   description:
-    "Target capaian dan status pelaksanaan program kerja OSIS dan MPK SMAN 2 Jonggol periode 2025/2026.",
+    "Target capaian dan status pelaksanaan program kerja OSIS dan MPK SMAN 2 Jonggol periode 2026/2027.",
   ogTitle: "Program Kerja - OSPK Nawasena",
   ogDescription:
-    "Target capaian dan status pelaksanaan program kerja OSIS dan MPK SMAN 2 Jonggol 2025/2026.",
+    "Target capaian dan status pelaksanaan program kerja OSIS dan MPK SMAN 2 Jonggol 2026/2027.",
 });
 
 onMounted(() => {
