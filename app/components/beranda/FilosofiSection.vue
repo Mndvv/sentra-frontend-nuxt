@@ -1,38 +1,95 @@
 <template>
-  <div ref="el" class="transition-all duration-700" :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'">
-    <div class="relative bg-bg-card border border-border rounded-[24px] px-7 py-10 md:px-10 md:py-14 shadow overflow-hidden group hover:shadow-[0_20px_50px_rgba(99,102,241,0.14)] transition-all duration-500 hover:border-accent/50">
-      <!-- Stamp motif (cap resmi indigo di pojok) -->
-      <div class="absolute top-6 right-6 w-20 h-20 rounded-full border border-accent/30 flex items-center justify-center text-[10px] font-black uppercase tracking-widest text-accent/40 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-        NAWASENA
+  <div
+    ref="el"
+    class="transition-all duration-700 h-full"
+    :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'"
+  >
+    <div
+      class="relative h-full flex flex-col justify-between bg-bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md hover:border-accent/40 transition-all duration-300 overflow-hidden"
+    >
+      <!-- Subtle compass geometric watermark in background (palette consistent) -->
+      <div
+        class="absolute -right-8 -bottom-8 w-48 h-48 opacity-[0.03] text-accent pointer-events-none"
+        aria-hidden="true"
+      >
+        <svg viewBox="0 0 100 100" fill="currentColor">
+          <circle
+            cx="50"
+            cy="50"
+            r="45"
+            stroke="currentColor"
+            stroke-width="2"
+            fill="none"
+          />
+          <polygon points="50,10 58,42 90,50 58,58 50,90 42,58 10,50 42,42" />
+        </svg>
       </div>
 
-      <!-- Left margin rule (garis pinggir kiri lembar kerja) -->
-      <div class="absolute left-0 top-0 bottom-0 w-[4px] bg-accent rounded-l-[24px]" />
+      <div>
+        <div class="flex items-center gap-2 text-accent mb-4">
+          <Icon
+            name="material-symbols:explore-rounded"
+            class="text-xl"
+            aria-hidden="true"
+          />
+          <span class="text-xs font-bold tracking-wider uppercase"
+            >Makna & Filosofi</span
+          >
+        </div>
 
-      <p class="leading-relaxed text-[0.97rem] md:text-[1.05rem] text-text-main relative z-10">
-        Nama <strong class="text-accent underline underline-offset-2 decoration-[1px] decoration-accent">Nawasena</strong> yang diambil dari bahasa Sanskerta secara ontologis menempatkan organisasi ini pada posisi kompas moral yang mengarahkan pandangan jauh ke cakrawala.
-        <em class="not-italic font-semibold text-text-main">Masa depan yang cerah</em> bukan sekadar angan, namun menjadi jangkar bagi setiap tindakan yang diambil oleh para pengurusnya. Di sini, Nawasena berperan sebagai payung besar atau
-        <em class="not-italic font-semibold text-text-main">oikos</em> yang menaungi OSIS dan MPK dalam satu napas perjuangan yang harmonis.
-      </p>
+        <h3
+          class="text-xl sm:text-2xl font-black text-text-main tracking-tight leading-snug mb-3"
+        >
+          Kompas Penggerak Nawasena
+        </h3>
 
-      <div class="flex flex-wrap gap-2 mt-10 relative z-10">
-        <span v-for="chip in chips" :key="chip.word" class="inline-flex items-center gap-1.5 text-[0.72rem] font-semibold px-2.5 py-1 rounded-full border border-accent/30 bg-accent-soft text-accent">
-          <Icon :name="chip.icon" class="text-sm" aria-hidden="true" />
-          <span class="font-bold">{{ chip.word }}</span>
-          <span class="opacity-60">·</span>
-          <span>{{ chip.meaning }}</span>
-        </span>
+        <p class="text-text-muted text-sm sm:text-base leading-relaxed">
+          Nama <strong class="text-accent font-bold">Nawasena</strong> berakar
+          dari bahasa Sanskerta yang menempatkan organisasi ini sebagai kompas
+          moral.
+          <span class="text-text-main font-semibold"
+            >Masa depan yang cerah</span
+          >
+          bukan sekadar angan, melainkan jangkar penentu gerak dalam menaungi
+          OSIS dan MPK dalam satu harmoni perjuangan.
+        </p>
+      </div>
+
+      <!-- Etymology Chips -->
+      <div class="flex flex-wrap gap-2 pt-6 mt-6 border-t border-border/60">
+        <div
+          v-for="chip in chips"
+          :key="chip.word"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-bg-card-2 border border-border text-xs text-text-main"
+        >
+          <Icon
+            :name="chip.icon"
+            class="text-accent text-sm shrink-0"
+            aria-hidden="true"
+          />
+          <span class="font-bold text-accent">{{ chip.word }}</span>
+          <span class="text-text-subtle">·</span>
+          <span class="text-text-muted">{{ chip.meaning }}</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-const { el, isVisible } = useScrollReveal()
+const { el, isVisible } = useScrollReveal();
 
 const chips = [
-  { word: 'Nawa', meaning: 'Baru', icon: 'material-symbols:brightness-9-rounded' },
-  { word: 'Sena', meaning: 'Kekuatan / Pasukan', icon: 'material-symbols:public-rounded' },
-  { word: 'Nawasena', meaning: 'Pasukan Pembawa Perubahan Dengan Masa Depan Yang Cerah', icon: 'material-symbols:lightbulb-rounded' },
-]
+  { word: "Nawa", meaning: "Baru", icon: "material-symbols:sparkles-rounded" },
+  {
+    word: "Sena",
+    meaning: "Kekuatan / Pasukan",
+    icon: "material-symbols:shield-rounded",
+  },
+  {
+    word: "Nawasena",
+    meaning: "Pasukan pembawa masa depan cerah",
+    icon: "material-symbols:flare-rounded",
+  },
+];
 </script>

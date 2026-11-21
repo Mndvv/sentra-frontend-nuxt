@@ -1,141 +1,121 @@
 <template>
-  <div class="bg-bg-card border border-border rounded-2xl shadow-md p-4 md:p-7 mb-8 w-full">
-
-    <!-- ═══ Mobile layout (< md) ═══════════════════════════════ -->
-    <div class="md:hidden">
-      <div class="flex items-center gap-4">
-        <div class="relative w-[120px] h-[120px] shrink-0">
-          <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
-            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--border)" stroke-width="14" class="cursor-pointer" @click="toggleFilter('all')" />
-            <circle
-              v-for="s in statusItems"
-              :key="s.key"
-              cx="60" cy="60" r="50" fill="none"
-              :stroke="s.color"
-              :stroke-width="arcWidth(s.key)"
-              stroke-linecap="round"
-              :stroke-dasharray="`${s.len} ${circumference - s.len}`"
-              :stroke-dashoffset="arcStart(s.key)"
-              :opacity="arcOpacity(s.key)"
-              class="transition-all duration-500 ease-out cursor-pointer"
-              @click="toggleFilter(s.key)"
-            />
-            <circle v-if="dibatalkan" cx="60" cy="60" r="50" fill="none" stroke="#f87171" stroke-width="14" :stroke-dasharray="`${dibatalkanLen} ${circumference - dibatalkanLen}`" :stroke-dashoffset="dibatalkanStart" :opacity="arcOpacity('Dibatalkan')" class="transition-all duration-500 ease-out cursor-pointer" @click="toggleFilter('Dibatalkan')" />
-          </svg>
-          <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span class="text-[1.4rem] font-[900] tracking-[-1.5px] leading-none" :style="{ color: centerColor }">
-              {{ centerValue }}
-              <small v-if="activeFilter === 'all'" class="text-[0.8rem] font-[700] tracking-normal">%</small>
-            </span>
-            <span class="text-[0.58rem] font-semibold text-text-muted uppercase tracking-[0.06em] mt-0.5">{{ centerLabel }}</span>
-          </div>
-        </div>
-
-        <div class="flex-1 min-w-0">
-          <button type="button" class="w-full text-left mb-2" @click="toggleFilter('all')">
-            <span class="text-[1.8rem] font-[900] tracking-[-1.5px] leading-none text-text-main">{{ total }}</span>
-            <span class="text-[0.68rem] font-semibold text-text-muted uppercase tracking-[0.04em] ml-1.5">Program</span>
-          </button>
-          <div class="flex items-center gap-2 text-[0.68rem] font-semibold text-text-muted">
-            <span class="inline-flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-sm" :style="{ background: '#6366f1' }"></span>BPH: {{ bphCount }}
-            </span>
-            <span class="opacity-30">·</span>
-            <span class="inline-flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-sm" :style="{ background: '#a855f7' }"></span>Sekbid: {{ sekbidCount }}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2 mt-3">
-        <button
-          v-for="s in statusItems"
-          :key="s.key"
-          type="button"
-          class="flex items-center gap-2 p-2.5 rounded-xl border text-left transition-all duration-200"
-          :class="activeFilter === s.key ? '' : 'bg-bg-card-2 border-border'"
-          :style="activeFilter === s.key ? `background:${s.color}12;border-color:${s.color}40;box-shadow:0 0 0 1px ${s.color}25` : ''"
-          @click="toggleFilter(s.key)"
-        >
-          <span class="w-2.5 h-2.5 rounded-full shrink-0" :style="{ background: s.color }"></span>
-          <span class="text-[0.68rem] font-semibold text-text-muted uppercase tracking-[0.03em] flex-1 min-w-0 truncate">{{ s.label }}</span>
-          <span class="text-[1rem] font-[800] tracking-[-0.5px]" :style="{ color: s.color }">{{ s.count }}</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- ═══ Desktop layout (>= md) ═════════════════════════════ -->
-    <div class="hidden md:grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6 lg:gap-8 items-center">
-
-      <!-- Ring -->
-      <div class="flex items-center justify-center">
-        <div class="relative w-[220px] h-[220px]">
-          <svg viewBox="0 0 120 120" class="w-full h-full -rotate-90">
-            <circle cx="60" cy="60" r="50" fill="none" stroke="var(--border)" stroke-width="12" class="cursor-pointer" @click="toggleFilter('all')" />
-            <circle
-              v-for="s in statusItems"
-              :key="s.key"
-              cx="60" cy="60" r="50" fill="none"
-              :stroke="s.color"
-              :stroke-width="arcWidth(s.key)"
-              stroke-linecap="round"
-              :stroke-dasharray="`${s.len} ${circumference - s.len}`"
-              :stroke-dashoffset="arcStart(s.key)"
-              :opacity="arcOpacity(s.key)"
-              class="transition-all duration-500 ease-out cursor-pointer"
-              @click="toggleFilter(s.key)"
-            />
-          </svg>
-          <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <span class="text-[2.2rem] font-[900] tracking-[-2px] leading-none" :style="{ color: centerColor }">
-              {{ centerValue }}
-              <small v-if="activeFilter === 'all'" class="text-[1.1rem] font-[700] tracking-normal">%</small>
-            </span>
-            <span class="text-[0.68rem] font-semibold text-text-muted uppercase tracking-[0.08em] mt-1">{{ centerLabel }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Status + scope -->
-      <div class="flex flex-col gap-3">
-        <button type="button" class="flex items-center gap-3 p-3.5 rounded-xl border text-left w-full transition-all duration-200" :class="activeFilter === 'all' ? 'bg-bg-card-2 border-accent/30' : 'bg-bg-card-2 border-border hover:border-accent/25'" @click="toggleFilter('all')">
-          <div class="w-10 h-10 rounded-xl bg-accent-soft flex items-center justify-center shrink-0">
-            <Icon name="material-symbols:assignment-rounded" class="text-accent text-[1.2rem]" />
-          </div>
-          <div>
-            <span class="text-[1.5rem] font-[800] tracking-[-1px] leading-none text-text-main">{{ total }}</span>
-            <span class="text-[0.72rem] font-semibold text-text-muted uppercase tracking-[0.06em] ml-2">Total Program</span>
-          </div>
-        </button>
-
-        <div class="grid grid-cols-2 gap-2.5">
-          <button
-            v-for="s in statusItems"
-            :key="s.key"
-            type="button"
-            class="flex items-center gap-3 p-3 rounded-xl border text-left transition-all duration-200"
-            :class="activeFilter === s.key ? '' : 'bg-bg-card-2 border-border hover:border-[rgba(99,102,241,0.2)]'"
-            :style="activeFilter === s.key ? `background:${s.color}12;border-color:${s.color}40;box-shadow:0 0 0 1px ${s.color}25` : ''"
-            @click="toggleFilter(s.key)"
+  <div
+    class="bg-bg-card border border-border rounded-2xl shadow-sm p-4 sm:p-6 mb-8 w-full"
+  >
+    <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 items-center">
+      <!-- Left Section: Progres Keseluruhan -->
+      <div
+        class="flex flex-col justify-center pr-0 lg:pr-6 lg:border-r lg:border-border"
+      >
+        <div class="flex items-center justify-between mb-2">
+          <span
+            class="text-xs font-bold uppercase tracking-wider text-text-muted"
+            >Capaian Selesai</span
           >
-            <span class="w-3 h-3 rounded-full shrink-0" :style="{ background: s.color }"></span>
-            <div class="flex-1 min-w-0">
-              <span class="text-[0.72rem] font-semibold text-text-muted uppercase tracking-[0.04em]">{{ s.label }}</span>
-            </div>
-            <span class="text-[1.15rem] font-[800] tracking-[-0.5px]" :style="{ color: s.color }">{{ s.count }}</span>
-          </button>
+          <span class="text-xs font-semibold text-text-subtle"
+            >{{ selesai }}/{{ total }} Program</span
+          >
         </div>
 
-        <div class="flex items-center gap-2 pt-2 border-t border-border mt-1">
-          <div class="flex items-center gap-1.5 text-[0.72rem] font-semibold text-text-muted">
-            <span class="inline-block w-2 h-2 rounded-sm" :style="{ background: '#6366f1' }"></span>
+        <div
+          class="text-3xl sm:text-4xl font-black text-text-main leading-none tracking-tight"
+        >
+          {{ completionRate }}%
+        </div>
+
+        <!-- Progress Bar -->
+        <div
+          class="w-full h-2.5 rounded-full bg-bg-card-2 border border-border overflow-hidden mt-3 relative"
+          role="progressbar"
+          :aria-valuenow="completionRate"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-label="Capaian program selesai"
+        >
+          <div
+            class="h-full rounded-full bg-accent transition-all duration-500 ease-out"
+            :style="{ width: `${completionRate}%` }"
+          />
+        </div>
+
+        <!-- Subtitle counters -->
+        <div
+          class="flex items-center flex-wrap gap-2 text-xs font-medium text-text-muted mt-3"
+        >
+          <span class="font-semibold text-text-main">{{ total }} Total</span>
+          <span class="w-1 h-1 rounded-full bg-border" aria-hidden="true" />
+          <span class="inline-flex items-center gap-1.5">
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-accent"
+              aria-hidden="true"
+            />
             BPH: {{ bphCount }}
-          </div>
-          <span class="text-text-border">·</span>
-          <div class="flex items-center gap-1.5 text-[0.72rem] font-semibold text-text-muted">
-            <span class="inline-block w-2 h-2 rounded-sm" :style="{ background: '#a855f7' }"></span>
+          </span>
+          <span class="w-1 h-1 rounded-full bg-border" aria-hidden="true" />
+          <span class="inline-flex items-center gap-1.5">
+            <span
+              class="w-1.5 h-1.5 rounded-full bg-[var(--badge-plan-text)]"
+              aria-hidden="true"
+            />
             Sekbid: {{ sekbidCount }}
+          </span>
+          <template v-if="dibatalkan > 0">
+            <span class="w-1 h-1 rounded-full bg-border" aria-hidden="true" />
+            <button
+              type="button"
+              class="text-xs transition-colors cursor-pointer hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded"
+              :class="
+                activeFilter === 'Dibatalkan'
+                  ? 'font-bold text-accent'
+                  : 'text-text-subtle'
+              "
+              @click="toggleFilter('Dibatalkan')"
+            >
+              {{ dibatalkan }} Dibatalkan
+            </button>
+          </template>
+        </div>
+      </div>
+
+      <!-- Right Section: Interactive Status Cards -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div
+          v-for="card in metricCards"
+          :key="card.key"
+          role="button"
+          tabindex="0"
+          :aria-pressed="isCardActive(card.key)"
+          :aria-label="`Filter ${card.label}: ${card.count} program`"
+          class="group relative flex flex-col justify-between p-3.5 sm:p-4 rounded-xl border transition-all duration-200 cursor-pointer select-none min-h-[80px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          :class="[
+            isCardActive(card.key)
+              ? 'border-accent bg-accent-soft/40 ring-1 ring-accent/30 shadow-xs'
+              : 'border-border bg-bg-card-2 hover:border-accent/30 hover:bg-bg-card hover:shadow-xs',
+          ]"
+          @click="toggleFilter(card.key)"
+          @keydown.enter="toggleFilter(card.key)"
+          @keydown.space.prevent="toggleFilter(card.key)"
+        >
+          <!-- Card Header (Label + Dot) -->
+          <div class="flex items-center justify-between gap-1.5 mb-2">
+            <span
+              class="text-xs font-semibold text-text-muted uppercase tracking-wider truncate"
+            >
+              {{ card.label }}
+            </span>
+            <span
+              class="w-2 h-2 rounded-full shrink-0"
+              :class="card.dotClass"
+              aria-hidden="true"
+            />
+          </div>
+
+          <!-- Card Counter -->
+          <div
+            class="text-2xl sm:text-3xl font-extrabold tracking-tight leading-none"
+            :class="card.textClass"
+          >
+            {{ card.count }}
           </div>
         </div>
       </div>
@@ -144,86 +124,110 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue";
 
-const props = defineProps<{
-  programs: any[]
-  activeFilter: string
-}>()
+interface ProgramItem {
+  id?: number | string;
+  nama?: string;
+  status?: string | null;
+  scope?: string | null;
+  [key: string]: any;
+}
+
+interface MetricCard {
+  key: string;
+  label: string;
+  count: number;
+  dotClass: string;
+  textClass: string;
+}
+
+const props = withDefaults(
+  defineProps<{
+    programs?: ProgramItem[];
+    activeFilter?: string;
+  }>(),
+  {
+    programs: () => [],
+    activeFilter: "all",
+  },
+);
 
 const emit = defineEmits<{
-  (e: 'update:activeFilter', value: string): void
-}>()
+  (e: "update:activeFilter", value: string): void;
+}>();
+
+const total = computed(() => props.programs.length);
+const selesai = computed(
+  () => props.programs.filter((p) => p.status === "Selesai").length,
+);
+const berjalan = computed(
+  () => props.programs.filter((p) => p.status === "Berjalan").length,
+);
+const direncanakan = computed(
+  () =>
+    props.programs.filter((p) => !p.status || p.status === "Direncanakan")
+      .length,
+);
+const dibatalkan = computed(
+  () => props.programs.filter((p) => p.status === "Dibatalkan").length,
+);
+
+const bphCount = computed(
+  () => props.programs.filter((p) => p.scope !== "SEKBID").length,
+);
+const sekbidCount = computed(
+  () => props.programs.filter((p) => p.scope === "SEKBID").length,
+);
+
+const completionRate = computed(() => {
+  if (total.value <= 0) return 0;
+  return Math.round((selesai.value / total.value) * 100);
+});
+
+function isCardActive(key: string): boolean {
+  if (key === "all") {
+    return !props.activeFilter || props.activeFilter === "all";
+  }
+  return props.activeFilter === key;
+}
 
 function toggleFilter(key: string) {
-  emit('update:activeFilter', props.activeFilter === key ? 'all' : key)
-}
-
-const total = computed(() => props.programs.length)
-const selesai = computed(() => props.programs.filter(p => p.status === 'Selesai').length)
-const berjalan = computed(() => props.programs.filter(p => p.status === 'Berjalan').length)
-const direncanakan = computed(() => props.programs.filter(p => !p.status || p.status === 'Direncanakan').length)
-const dibatalkan = computed(() => props.programs.filter(p => p.status === 'Dibatalkan').length)
-const bphCount = computed(() => props.programs.filter(p => p.scope !== 'SEKBID').length)
-const sekbidCount = computed(() => props.programs.filter(p => p.scope === 'SEKBID').length)
-
-const circumference = 2 * Math.PI * 50 // ~314.16
-
-const safeTotal = computed(() => Math.max(total.value, 1))
-const selesaiLen = computed(() => (selesai.value / safeTotal.value) * circumference)
-const berjalanLen = computed(() => (berjalan.value / safeTotal.value) * circumference)
-const direncanakanLen = computed(() => (direncanakan.value / safeTotal.value) * circumference)
-const dibatalkanLen = computed(() => (dibatalkan.value / safeTotal.value) * circumference)
-
-const dibatalkanStart = computed(() => selesaiLen.value + berjalanLen.value + direncanakanLen.value)
-
-const percent = computed(() => total.value > 0 ? Math.round((selesai.value / total.value) * 100) : 0)
-
-const statusItems = computed(() => {
-  const items = [
-    { key: 'Selesai', label: 'Selesai', color: '#22c55e', count: selesai.value, len: selesaiLen.value },
-    { key: 'Berjalan', label: 'Berjalan', color: '#f59e0b', count: berjalan.value, len: berjalanLen.value },
-    { key: 'Direncanakan', label: 'Direncanakan', color: '#94a3b8', count: direncanakan.value, len: direncanakanLen.value },
-  ]
-  if (dibatalkan.value > 0) {
-    items.push({ key: 'Dibatalkan', label: 'Dibatalkan', color: '#f87171', count: dibatalkan.value, len: dibatalkanLen.value })
+  if (key === "all") {
+    emit("update:activeFilter", "all");
+  } else {
+    emit("update:activeFilter", props.activeFilter === key ? "all" : key);
   }
-  return items
-})
-
-const STATUS_COLORS: Record<string, string> = {
-  Selesai: '#22c55e', Berjalan: '#f59e0b', Direncanakan: '#94a3b8', Dibatalkan: '#f87171',
 }
 
-const arcStart = (status: string): number => {
-  if (status === 'Selesai') return 0
-  if (status === 'Berjalan') return selesaiLen.value
-  if (status === 'Direncanakan') return selesaiLen.value + berjalanLen.value
-  if (status === 'Dibatalkan') return selesaiLen.value + berjalanLen.value + direncanakanLen.value
-  return 0
-}
-
-const centerValue = computed(() => {
-  if (props.activeFilter === 'all') return String(percent.value)
-  const item = statusItems.value.find(s => s.key === props.activeFilter)
-  return item ? String(item.count) : String(percent.value)
-})
-const centerLabel = computed(() => {
-  if (props.activeFilter === 'all') return 'Selesai'
-  return props.activeFilter
-})
-const centerColor = computed(() => {
-  if (props.activeFilter === 'all') return 'var(--text-main)'
-  return STATUS_COLORS[props.activeFilter] || 'var(--text-main)'
-})
-
-const arcWidth = (status: string): number => {
-  if (props.activeFilter === 'all') return 12
-  return props.activeFilter === status ? 15 : 10
-}
-
-const arcOpacity = (status: string): number => {
-  if (props.activeFilter === 'all') return 1
-  return props.activeFilter === status ? 1 : 0.25
-}
+const metricCards = computed<MetricCard[]>(() => [
+  {
+    key: "all",
+    label: "Semua",
+    count: total.value,
+    dotClass: "bg-accent",
+    textClass: "text-text-main",
+  },
+  {
+    key: "Berjalan",
+    label: "Berjalan",
+    count: berjalan.value,
+    dotClass: "bg-[var(--badge-ongoing-text)]",
+    textClass: "text-[var(--badge-ongoing-text)]",
+  },
+  {
+    key: "Selesai",
+    label: "Selesai",
+    count: selesai.value,
+    dotClass: "bg-[var(--badge-done-text)]",
+    textClass: "text-[var(--badge-done-text)]",
+  },
+  {
+    key: "Direncanakan",
+    label: "Direncanakan",
+    count: direncanakan.value,
+    dotClass: "bg-[var(--badge-plan-text)]",
+    textClass: "text-[var(--badge-plan-text)]",
+  },
+]);
 </script>

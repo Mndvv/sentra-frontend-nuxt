@@ -1,117 +1,67 @@
 <template>
-  <article class="hof-dev">
-    <!-- avatar -->
-    <div class="hof-dev-avatar">
+  <article
+    class="flex flex-col items-center text-center gap-3 p-6 rounded-2xl bg-bg-card border border-border shadow-sm hover:shadow-md hover:border-accent/40 transition-all duration-200 hover:-translate-y-0.5 max-w-[320px] w-full"
+  >
+    <!-- Avatar with developer badge -->
+    <div class="relative w-20 h-20 rounded-full shrink-0">
       <AppImg
         :src="useImageUrl(dev.foto, dev.nama)"
         :alt="dev.nama"
         rounded="full"
         loading="lazy"
-        class="w-full h-full"
+        class="w-full h-full rounded-full border border-border"
       />
-      <span class="hof-dev-mark" aria-hidden="true">
-        <Icon name="material-symbols:code" class="hof-dev-mark-icon" />
+      <span
+        class="absolute -right-1 -bottom-1 w-7 h-7 rounded-full bg-accent text-white flex items-center justify-center shadow-xs border-2 border-bg-card"
+        aria-hidden="true"
+      >
+        <Icon name="material-symbols:code" class="text-sm" />
       </span>
     </div>
 
-    <div class="hof-dev-body">
-      <span class="hof-dev-role">{{ dev.role }}</span>
-      <h3 class="hof-dev-name">{{ dev.nama }}</h3>
-      <p v-if="dev.periode_dev" class="hof-dev-period">Periode Dev {{ dev.periode_dev }}</p>
-      <p v-if="dev.deskripsi" class="hof-dev-desc">{{ dev.deskripsi }}</p>
+    <!-- Dev Info -->
+    <div class="flex flex-col items-center gap-1.5 w-full">
+      <span
+        class="inline-block text-[0.65rem] font-bold tracking-widest uppercase text-accent bg-accent-soft border border-accent/20 rounded-full px-3 py-0.5"
+      >
+        {{ dev.role }}
+      </span>
+      <h3
+        class="text-base sm:text-lg font-bold text-text-main m-0 leading-tight"
+      >
+        {{ dev.nama }}
+      </h3>
+      <p v-if="dev.periode_dev" class="text-xs text-text-subtle italic m-0">
+        Periode Dev {{ dev.periode_dev }}
+      </p>
+      <p
+        v-if="dev.deskripsi"
+        class="text-xs text-text-muted leading-relaxed m-0 mt-1 line-clamp-3"
+      >
+        {{ dev.deskripsi }}
+      </p>
 
-      <div v-if="(dev.tech_stack || []).length" class="hof-dev-stack">
-        <span v-for="(stack, i) in dev.tech_stack" :key="i" class="hof-dev-chip">{{ stack }}</span>
+      <!-- Tech Stack -->
+      <div
+        v-if="(dev.tech_stack || []).length"
+        class="flex flex-wrap justify-center gap-1.5 mt-2"
+      >
+        <span
+          v-for="(stack, i) in dev.tech_stack"
+          :key="i"
+          class="text-[0.68rem] font-semibold text-text-muted bg-bg-card-2 border border-border rounded-md px-2 py-0.5"
+        >
+          {{ stack }}
+        </span>
       </div>
     </div>
   </article>
 </template>
 
 <script setup lang="ts">
+import { useImageUrl } from "~/composables/useImageUrl";
+
 defineProps<{
-  dev: any
-}>()
+  dev: any;
+}>();
 </script>
-
-<style scoped>
-.hof-dev {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 16px;
-  max-width: 320px;
-  width: 100%;
-}
-
-.hof-dev-avatar {
-  position: relative;
-  width: 92px;
-  height: 92px;
-  border-radius: 9999px;
-}
-
-.hof-dev-mark {
-  position: absolute;
-  right: -2px;
-  bottom: -2px;
-  width: 28px;
-  height: 28px;
-  border-radius: 9999px;
-  display: grid;
-  place-items: center;
-  color: #fff;
-  background: linear-gradient(160deg, #6366f1, #a855f7);
-  border: 2px solid var(--bg-card, #fff);
-}
-.hof-dev-mark-icon { font-size: 15px; }
-
-.hof-dev-role {
-  display: inline-block;
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent, #6366f1);
-  background: var(--accent-soft, rgba(99, 102, 241, 0.08));
-  border: 1px solid rgba(99, 102, 241, 0.2);
-  border-radius: 9999px;
-  padding: 4px 12px;
-}
-
-.hof-dev-name {
-  margin: 10px 0 0;
-  font-weight: 800;
-  font-size: 1.12rem;
-  color: var(--text-main, #1c1a3e);
-}
-.hof-dev-period {
-  margin: 3px 0 0;
-  font-size: 0.76rem;
-  font-style: italic;
-  color: var(--text-subtle, #a09dbf);
-}
-.hof-dev-desc {
-  margin: 10px 0 0;
-  font-size: 0.84rem;
-  line-height: 1.7;
-  color: var(--text-muted, #6b6882);
-}
-
-.hof-dev-stack {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 12px;
-}
-.hof-dev-chip {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-muted, #6b6882);
-  background: var(--bg-card-2, #f8f7ff);
-  border: 1px solid var(--border, rgba(99, 102, 241, 0.11));
-  border-radius: var(--radius-sm, 10px);
-  padding: 3px 10px;
-}
-</style>

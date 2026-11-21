@@ -1,5 +1,9 @@
 <template>
-  <div class="hof-starfield" :data-ink="tone === 'ink' ? 'true' : undefined" aria-hidden="true">
+  <div
+    class="hof-starfield"
+    :data-ink="tone === 'ink' ? 'true' : undefined"
+    aria-hidden="true"
+  >
     <span
       v-for="s in stars"
       :key="s.key"
@@ -19,64 +23,70 @@
     <span
       v-if="shooting && !prefersReduced"
       class="hof-shooting-star"
-      :style="{ animationDelay: shootDelay + 's', animationDuration: shootDuration + 's' }"
+      :style="{
+        animationDelay: shootDelay + 's',
+        animationDuration: shootDuration + 's',
+      }"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { mulberry32, hashString } from '~/utils/constellation'
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import { mulberry32, hashString } from "~/utils/constellation";
 
-const props = withDefaults(defineProps<{
-  /** Number of stars to scatter. */
-  density?: number
-  /** Stable seed so the sky is identical across renders and clients. */
-  seed?: string
-  /** Tint of the stars: 'light' (for dark sky) or 'ink' (for light ground). */
-  tone?: 'light' | 'ink'
-  /** Whether to include the occasional shooting star. */
-  shooting?: boolean
-}>(), {
-  density: 90,
-  seed: 'nawasena-sky',
-  tone: 'light',
-  shooting: false,
-})
+const props = withDefaults(
+  defineProps<{
+    /** Number of stars to scatter. */
+    density?: number;
+    /** Stable seed so the sky is identical across renders and clients. */
+    seed?: string;
+    /** Tint of the stars: 'light' (for dark sky) or 'ink' (for light ground). */
+    tone?: "light" | "ink";
+    /** Whether to include the occasional shooting star. */
+    shooting?: boolean;
+  }>(),
+  {
+    density: 90,
+    seed: "nawasena-sky",
+    tone: "light",
+    shooting: false,
+  },
+);
 
-const prefersReduced = ref(false)
-let mq: MediaQueryList | null = null
-let mqHandler: ((e: MediaQueryListEvent) => void) | null = null
+const prefersReduced = ref(false);
+let mq: MediaQueryList | null = null;
+let mqHandler: ((e: MediaQueryListEvent) => void) | null = null;
 
 onMounted(() => {
-  if (!import.meta.client) return
-  mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-  prefersReduced.value = mq.matches
-  mqHandler = (e: MediaQueryListEvent) => (prefersReduced.value = e.matches)
-  mq.addEventListener('change', mqHandler)
-})
+  if (!import.meta.client) return;
+  mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  prefersReduced.value = mq.matches;
+  mqHandler = (e: MediaQueryListEvent) => (prefersReduced.value = e.matches);
+  mq.addEventListener("change", mqHandler);
+});
 
 onUnmounted(() => {
-  if (mq && mqHandler) mq.removeEventListener('change', mqHandler)
-})
+  if (mq && mqHandler) mq.removeEventListener("change", mqHandler);
+});
 
 interface Star {
-  key: number
-  x: number
-  y: number
-  size: number
-  bright: boolean
-  delay: number
-  duration: number
+  key: number;
+  x: number;
+  y: number;
+  size: number;
+  bright: boolean;
+  delay: number;
+  duration: number;
 }
 
 const stars = computed<Star[]>(() => {
-  const rand = mulberry32(hashString(props.seed))
-  const list: Star[] = []
-  const count = props.density
+  const rand = mulberry32(hashString(props.seed));
+  const list: Star[] = [];
+  const count = props.density;
   for (let i = 0; i < count; i++) {
     // bias larger "bright" stars toward a rough band so it reads like a real sky
-    const bright = i % 7 === 0
+    const bright = i % 7 === 0;
     list.push({
       key: i,
       x: Math.round(rand() * 1000) / 10,
@@ -85,14 +95,14 @@ const stars = computed<Star[]>(() => {
       bright,
       delay: Math.round(rand() * 60) / 10,
       duration: 2.4 + Math.round(rand() * 30) / 10,
-    })
+    });
   }
-  return list
-})
+  return list;
+});
 
 // Deterministic timing for the shooting star
-const shootDelay = computed(() => 4 + (hashString(props.seed) % 5))
-const shootDuration = computed(() => 2.6 + ((hashString(props.seed) % 10) / 10))
+const shootDelay = computed(() => 4 + (hashString(props.seed) % 5));
+const shootDuration = computed(() => 2.6 + (hashString(props.seed) % 10) / 10);
 </script>
 
 <style scoped>
@@ -112,7 +122,7 @@ const shootDuration = computed(() => 2.6 + ((hashString(props.seed) % 10) / 10))
   animation: hof-twinkle 3s ease-in-out infinite;
 }
 
-/* tone: ink — indigo points that sit on the light ground */
+/* tone: ink (indigo points that sit on the light ground) */
 :where(.hof-starfield[data-ink]) .hof-star {
   background: var(--hof-star-ink, rgba(99, 102, 241, 0.5));
 }
@@ -130,7 +140,11 @@ const shootDuration = computed(() => 2.6 + ((hashString(props.seed) % 10) / 10))
   width: 120px;
   height: 1.5px;
   border-radius: 9999px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(226, 229, 255, 0.9));
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(226, 229, 255, 0.9)
+  );
   transform: rotate(-35deg);
   opacity: 0;
   animation: hof-shoot 6s ease-in infinite;

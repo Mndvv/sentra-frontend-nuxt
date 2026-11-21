@@ -37,13 +37,21 @@
       :key="star.member.id ?? `${star.member.nama}-${i}`"
       class="cm-node"
       :class="{ 'is-revealed': revealed }"
-      :style="{ left: star.x + '%', top: star.y + '%', transitionDelay: `${i * 70}ms` }"
+      :style="{
+        left: star.x + '%',
+        top: star.y + '%',
+        transitionDelay: `${i * 70}ms`,
+      }"
     >
       <component
         :is="interactive ? 'button' : 'div'"
         class="cm-core"
         :class="{ 'is-interactive': interactive }"
-        :aria-label="interactive ? `${star.member.nama}, ${star.member.jabatan}` : undefined"
+        :aria-label="
+          interactive
+            ? `${star.member.nama}, ${star.member.jabatan}`
+            : undefined
+        "
         @click="interactive && $emit('star-click', star.member)"
       >
         <span class="cm-avatar">
@@ -62,58 +70,67 @@
           :class="star.member.org === 'MPK' ? 'is-mpk' : 'is-osis'"
           :title="star.member.org"
         >
-          {{ star.member.org === 'MPK' ? 'MPK' : 'OSIS' }}
+          {{ star.member.org === "MPK" ? "MPK" : "OSIS" }}
         </span>
       </component>
 
       <div v-if="showLabels" class="cm-label" :style="{ top: labelTop + 'px' }">
         <span class="cm-name">{{ star.member.nama }}</span>
-        <span v-if="star.member.jabatan" class="cm-role">{{ star.member.jabatan }}</span>
+        <span v-if="star.member.jabatan" class="cm-role">{{
+          star.member.jabatan
+        }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
-import { buildConstellation } from '~/utils/constellation'
+import { ref, computed, onMounted, watch } from "vue";
+import { buildConstellation } from "~/utils/constellation";
 
-const props = withDefaults(defineProps<{
-  /** Member entries — each needs at least { id?, nama, jabatan?, foto?, org? }. */
-  stars: any[]
-  /** Render name + role labels beneath each star. */
-  showLabels?: boolean
-  /** Avatar scale. */
-  size?: 'sm' | 'md' | 'lg'
-  /** 'bright' = latest cabinet, 'faint' = older cabinets. */
-  variant?: 'bright' | 'faint'
-  /** Make stars focusable/clickable (emits `star-click`). */
-  interactive?: boolean
-}>(), {
-  showLabels: true,
-  size: 'md',
-  variant: 'bright',
-  interactive: true,
-})
+const props = withDefaults(
+  defineProps<{
+    /** Member entries: each needs at least { id?, nama, jabatan?, foto?, org? }. */
+    stars: any[];
+    /** Render name + role labels beneath each star. */
+    showLabels?: boolean;
+    /** Avatar scale. */
+    size?: "sm" | "md" | "lg";
+    /** 'bright' = latest cabinet, 'faint' = older cabinets. */
+    variant?: "bright" | "faint";
+    /** Make stars focusable/clickable (emits `star-click`). */
+    interactive?: boolean;
+  }>(),
+  {
+    showLabels: true,
+    size: "md",
+    variant: "bright",
+    interactive: true,
+  },
+);
 
 const emit = defineEmits<{
-  (e: 'star-click', member: any): void
-}>()
+  (e: "star-click", member: any): void;
+}>();
 
-const { el, isVisible } = useScrollReveal()
-const revealed = ref(false)
+const { el, isVisible } = useScrollReveal();
+const revealed = ref(false);
 
 onMounted(() => {
   // Above the fold, reveal immediately; otherwise the observer will flip it.
-  if (isVisible.value) revealed.value = true
-})
+  if (isVisible.value) revealed.value = true;
+});
 
 // Let the observer's first fire drive the draw-in for all other cases.
-watch(isVisible, (v) => { if (v) revealed.value = true })
+watch(isVisible, (v) => {
+  if (v) revealed.value = true;
+});
 
 const constellation = computed(() =>
-  buildConstellation(props.stars.map((s, i) => s.id ?? `${s.nama ?? 'star'}-${i}`)),
-)
+  buildConstellation(
+    props.stars.map((s, i) => s.id ?? `${s.nama ?? "star"}-${i}`),
+  ),
+);
 
 const positioned = computed(() =>
   props.stars.map((member, i) => ({
@@ -121,11 +138,13 @@ const positioned = computed(() =>
     x: Math.round(constellation.value.points[i]?.x * 1000) / 10,
     y: Math.round(constellation.value.points[i]?.y * 1000) / 10,
   })),
-)
+);
 
 // Label offset sits just below the avatar ring.
-const avatarPx = computed(() => (props.size === 'lg' ? 84 : props.size === 'sm' ? 40 : 56))
-const labelTop = computed(() => avatarPx.value / 2 + 10)
+const avatarPx = computed(() =>
+  props.size === "lg" ? 84 : props.size === "sm" ? 40 : 56,
+);
+const labelTop = computed(() => avatarPx.value / 2 + 10);
 </script>
 
 <style scoped>
@@ -134,24 +153,42 @@ const labelTop = computed(() => avatarPx.value / 2 + 10)
   width: 100%;
   min-height: 340px;
 }
-.cm-sm { min-height: 260px; }
-.cm-lg { min-height: 400px; }
+.cm-sm {
+  min-height: 260px;
+}
+.cm-lg {
+  min-height: 400px;
+}
 @media (min-width: 768px) {
-  .cm-sm { min-height: 300px; }
-  .cm-md { min-height: 380px; }
-  .cm-lg { min-height: 460px; }
+  .cm-sm {
+    min-height: 300px;
+  }
+  .cm-md {
+    min-height: 380px;
+  }
+  .cm-lg {
+    min-height: 460px;
+  }
 }
 
 .cm-halo {
   position: absolute;
   inset: 8%;
   border-radius: 9999px;
-  background: radial-gradient(circle, var(--halo-color, rgba(99, 102, 241, 0.14)), transparent 68%);
+  background: radial-gradient(
+    circle,
+    var(--halo-color, rgba(99, 102, 241, 0.14)),
+    transparent 68%
+  );
   filter: blur(12px);
   pointer-events: none;
 }
-.cm-bright .cm-halo { --halo-color: rgba(124, 122, 255, 0.20); }
-.cm-faint .cm-halo { --halo-color: rgba(99, 102, 241, 0.09); }
+.cm-bright .cm-halo {
+  --halo-color: rgba(124, 122, 255, 0.2);
+}
+.cm-faint .cm-halo {
+  --halo-color: rgba(99, 102, 241, 0.09);
+}
 
 .cm-lines {
   position: absolute;
@@ -167,8 +204,12 @@ const labelTop = computed(() => avatarPx.value / 2 + 10)
   stroke-linecap: round;
   transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.cm-bright .cm-line { --line-color: rgba(139, 128, 255, 0.55); }
-.cm-faint .cm-line { --line-color: rgba(99, 102, 241, 0.28); }
+.cm-bright .cm-line {
+  --line-color: rgba(139, 128, 255, 0.55);
+}
+.cm-faint .cm-line {
+  --line-color: rgba(99, 102, 241, 0.28);
+}
 
 .cm-node {
   position: absolute;
@@ -176,7 +217,9 @@ const labelTop = computed(() => avatarPx.value / 2 + 10)
   height: 0;
   opacity: 0;
   transform: scale(0.92);
-  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .cm-node.is-revealed {
   opacity: 1;
@@ -206,14 +249,28 @@ const labelTop = computed(() => avatarPx.value / 2 + 10)
   display: block;
   border-radius: 9999px;
 }
-.cm-sm .cm-avatar { width: 40px; height: 40px; }
-.cm-md .cm-avatar { width: 56px; height: 56px; }
-.cm-lg .cm-avatar { width: 72px; height: 72px; }
+.cm-sm .cm-avatar {
+  width: 40px;
+  height: 40px;
+}
+.cm-md .cm-avatar {
+  width: 56px;
+  height: 56px;
+}
+.cm-lg .cm-avatar {
+  width: 72px;
+  height: 72px;
+}
 @media (min-width: 768px) {
-  .cm-lg .cm-avatar { width: 84px; height: 84px; }
+  .cm-lg .cm-avatar {
+    width: 84px;
+    height: 84px;
+  }
 }
 
-.cm-avatar-img { border-radius: 9999px; }
+.cm-avatar-img {
+  border-radius: 9999px;
+}
 .cm-avatar :deep(.app-img-wrap) {
   border-radius: 9999px;
   box-shadow: 0 8px 22px -6px rgba(15, 16, 44, 0.35);
@@ -227,11 +284,22 @@ const labelTop = computed(() => avatarPx.value / 2 + 10)
   box-shadow: 0 0 14px var(--ring-glow, rgba(124, 122, 255, 0.45));
   pointer-events: none;
 }
-.cm-bright { --ring-color: rgba(139, 128, 255, 0.75); --ring-glow: rgba(124, 122, 255, 0.5); }
-.cm-faint  { --ring-color: rgba(99, 102, 241, 0.4);  --ring-glow: rgba(99, 102, 241, 0.2); }
+.cm-bright {
+  --ring-color: rgba(139, 128, 255, 0.75);
+  --ring-glow: rgba(124, 122, 255, 0.5);
+}
+.cm-faint {
+  --ring-color: rgba(99, 102, 241, 0.4);
+  --ring-glow: rgba(99, 102, 241, 0.2);
+}
 
-.cm-core.is-interactive:hover .cm-avatar { transform: scale(1.08); }
-.cm-core.is-interactive:hover .cm-ring { --ring-color: rgba(99, 102, 241, 1); --ring-glow: rgba(99, 102, 241, 0.7); }
+.cm-core.is-interactive:hover .cm-avatar {
+  transform: scale(1.08);
+}
+.cm-core.is-interactive:hover .cm-ring {
+  --ring-color: rgba(99, 102, 241, 1);
+  --ring-glow: rgba(99, 102, 241, 0.7);
+}
 
 .cm-org {
   position: absolute;
@@ -247,7 +315,9 @@ const labelTop = computed(() => avatarPx.value / 2 + 10)
   background: #6366f1;
   border: 2px solid var(--bg-card, #fff);
 }
-.cm-org.is-mpk { background: #a855f7; }
+.cm-org.is-mpk {
+  background: #a855f7;
+}
 
 .cm-label {
   position: absolute;
@@ -284,8 +354,14 @@ const labelTop = computed(() => avatarPx.value / 2 + 10)
   white-space: nowrap;
 }
 @media (max-width: 639px) {
-  .cm-role { display: none; }
-  .cm-label { max-width: 96px; }
-  .cm-name { font-size: 0.7rem; }
+  .cm-role {
+    display: none;
+  }
+  .cm-label {
+    max-width: 96px;
+  }
+  .cm-name {
+    font-size: 0.7rem;
+  }
 }
 </style>
