@@ -1,52 +1,85 @@
 <template>
-  <div class="flex gap-2 mb-6 w-full overflow-x-auto pb-1 scrollbar-hide">
-    <button 
-      class="inline-flex items-center gap-1.5 px-3.5 md:px-4 py-2 rounded-[10px] border border-border bg-bg-card text-text-muted font-semibold text-[0.8rem] md:text-[0.85rem] cursor-pointer transition-all duration-200 whitespace-nowrap shrink-0"
-      :class="modelValue === 'all' ? '!text-accent !border-accent !bg-accent-soft' : 'hover:text-accent hover:border-accent hover:bg-accent-soft'" 
-      @click="$emit('update:modelValue', 'all')"
+  <div
+    class="flex items-center gap-1.5 overflow-x-auto pb-1 mb-6 scrollbar-hide w-full"
+    role="tablist"
+    aria-label="Filter status program kerja"
+  >
+    <button
+      v-for="tab in tabs"
+      :key="tab.value"
+      type="button"
+      role="tab"
+      :aria-selected="modelValue === tab.value"
+      class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs sm:text-sm cursor-pointer select-none whitespace-nowrap shrink-0 min-h-[44px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      :class="[
+        modelValue === tab.value
+          ? 'bg-accent text-white shadow-sm font-semibold'
+          : 'bg-bg-card text-text-muted hover:text-text-main hover:bg-bg-card-2 border border-border font-medium',
+      ]"
+      @click="$emit('update:modelValue', tab.value)"
     >
-      Semua
-    </button>
-    <button 
-      class="inline-flex items-center gap-1.5 px-3.5 md:px-4 py-2 rounded-[10px] border border-border bg-bg-card text-text-muted font-semibold text-[0.8rem] md:text-[0.85rem] cursor-pointer transition-all duration-200 whitespace-nowrap shrink-0"
-      :class="modelValue === 'Berjalan' ? '!text-accent !border-accent !bg-accent-soft' : 'hover:text-accent hover:border-accent hover:bg-accent-soft'" 
-      @click="$emit('update:modelValue', 'Berjalan')"
-    >
-      <span class="inline-block w-[7px] h-[7px] rounded-full bg-[#f59e0b] shrink-0"></span>Berjalan
-    </button>
-    <button 
-      class="inline-flex items-center gap-1.5 px-3.5 md:px-4 py-2 rounded-[10px] border border-border bg-bg-card text-text-muted font-semibold text-[0.8rem] md:text-[0.85rem] cursor-pointer transition-all duration-200 whitespace-nowrap shrink-0"
-      :class="modelValue === 'Selesai' ? '!text-accent !border-accent !bg-accent-soft' : 'hover:text-accent hover:border-accent hover:bg-accent-soft'" 
-      @click="$emit('update:modelValue', 'Selesai')"
-    >
-      <span class="inline-block w-[7px] h-[7px] rounded-full bg-[#22c55e] shrink-0"></span>Selesai
-    </button>
-    <button 
-      class="inline-flex items-center gap-1.5 px-3.5 md:px-4 py-2 rounded-[10px] border border-border bg-bg-card text-text-muted font-semibold text-[0.8rem] md:text-[0.85rem] cursor-pointer transition-all duration-200 whitespace-nowrap shrink-0"
-      :class="modelValue === 'Direncanakan' ? '!text-accent !border-accent !bg-accent-soft' : 'hover:text-accent hover:border-accent hover:bg-accent-soft'" 
-      @click="$emit('update:modelValue', 'Direncanakan')"
-    >
-      <span class="inline-block w-[7px] h-[7px] rounded-full bg-[#94a3b8] shrink-0"></span>Direncanakan
-    </button>
-    <button 
-      class="inline-flex items-center gap-1.5 px-3.5 md:px-4 py-2 rounded-[10px] border border-border bg-bg-card text-text-muted font-semibold text-[0.8rem] md:text-[0.85rem] cursor-pointer transition-all duration-200 whitespace-nowrap shrink-0"
-      :class="modelValue === 'Dibatalkan' ? '!text-accent !border-accent !bg-accent-soft' : 'hover:text-accent hover:border-accent hover:bg-accent-soft'" 
-      @click="$emit('update:modelValue', 'Dibatalkan')"
-    >
-      <span class="inline-block w-[7px] h-[7px] rounded-full bg-[#f87171] shrink-0"></span>Dibatalkan
+      <span
+        v-if="tab.dotClass"
+        class="w-2 h-2 rounded-full shrink-0 transition-colors"
+        :class="modelValue === tab.value ? 'bg-white' : tab.dotClass"
+        aria-hidden="true"
+      />
+      <span>{{ tab.label }}</span>
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  modelValue: string
-}>()
+interface FilterTab {
+  value: string;
+  label: string;
+  dotClass?: string;
+}
 
-defineEmits(['update:modelValue'])
+withDefaults(
+  defineProps<{
+    modelValue?: string;
+  }>(),
+  {
+    modelValue: "all",
+  },
+);
+
+defineEmits<{
+  (e: "update:modelValue", value: string): void;
+}>();
+
+const tabs: FilterTab[] = [
+  { value: "all", label: "Semua" },
+  {
+    value: "Berjalan",
+    label: "Berjalan",
+    dotClass: "bg-[var(--badge-ongoing-text)]",
+  },
+  {
+    value: "Selesai",
+    label: "Selesai",
+    dotClass: "bg-[var(--badge-done-text)]",
+  },
+  {
+    value: "Direncanakan",
+    label: "Direncanakan",
+    dotClass: "bg-[var(--badge-plan-text)]",
+  },
+  {
+    value: "Dibatalkan",
+    label: "Dibatalkan",
+    dotClass: "bg-[var(--text-subtle)]",
+  },
+];
 </script>
 
 <style scoped>
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 </style>
