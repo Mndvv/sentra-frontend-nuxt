@@ -2,7 +2,7 @@
   <div class="bg-bg-primary text-text-main transition-colors duration-300">
     <!-- ── Hero Masthead ──────────────────────────────────── -->
     <header
-      class="pt-24 md:pt-28 pb-12 md:pb-16 text-center relative overflow-hidden border-b border-border/60"
+      class="pt-10 md:pt-14 pb-12 md:pb-16 text-center relative overflow-hidden border-b border-border/60"
     >
       <div class="max-w-[1120px] mx-auto px-4 sm:px-6 lg:px-8">
         <h1

@@ -1,7 +1,7 @@
 <template>
   <div>
     <main
-      class="max-w-[1120px] mx-auto pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8"
+      class="max-w-[1120px] mx-auto pt-8 md:pt-10 pb-16 px-4 sm:px-6 lg:px-8"
     >
       <!-- Masthead -->
       <header class="mb-9 md:mb-11">

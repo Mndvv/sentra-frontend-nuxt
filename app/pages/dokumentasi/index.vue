@@ -1,7 +1,5 @@
 <template>
-  <main
-    class="max-w-[1120px] mx-auto pt-24 md:pt-28 pb-16 px-4 sm:px-6 lg:px-8"
-  >
+  <main class="max-w-[1120px] mx-auto pt-8 md:pt-10 pb-16 px-4 sm:px-6 lg:px-8">
     <!-- ── Masthead ─────────────────────────────────────── -->
     <header class="mb-8 md:mb-10">
       <h1
@@ -28,7 +26,7 @@
     <!-- ── Controls Toolbar ─────────────────────────────── -->
     <div
       v-if="!loading && dokumentasi.length > 0"
-      class="sticky top-16 z-20 bg-bg-primary/95 backdrop-blur-md py-3 mb-8 border-b border-border/80"
+      class="sticky top-16 z-20 bg-bg-primary py-3 mb-8 border-b border-border/80"
     >
       <div
         class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4"

@@ -1,6 +1,6 @@
 <template>
   <header
-    class="relative overflow-hidden pt-28 md:pt-36 pb-12 md:pb-16 border-b border-border/60"
+    class="relative overflow-hidden pt-12 md:pt-16 pb-12 md:pb-16 border-b border-border/60"
   >
     <!-- Ambient subtle background glow (respecting palette) -->
     <div
