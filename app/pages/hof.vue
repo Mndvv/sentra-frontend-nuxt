@@ -31,8 +31,8 @@
           Konstelasi Kepemimpinan
         </h2>
         <p class="text-sm sm:text-base text-text-muted leading-relaxed">
-          Dari masa ke masa, setiap kabinet meninggalkan jejaknya di langit
-          Nawasena. Sentuh bintang anggota untuk mengenang kepengurusannya.
+          Dari masa ke masa, setiap kabinet meninggalkan jejak dedikasinya di
+          Nawasena. Pilih pengurus untuk mengenang kepemimpinan mereka.
         </p>
       </div>
 
