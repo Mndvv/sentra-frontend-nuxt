@@ -12,11 +12,11 @@
 
     <!-- Horizon: visual transition between dark sky and content background -->
     <div
-      class="relative h-7 -mt-px bg-gradient-to-b from-[#241d57] to-[var(--bg-primary,#f3f1fe)]"
+      class="relative h-7 -mt-px bg-gradient-to-b from-[#090e1f] to-[var(--bg-primary,#f3f1fe)]"
       aria-hidden="true"
     >
       <div
-        class="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-[#8b80ff]/70 to-transparent"
+        class="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-slate-400/25 to-transparent"
       />
     </div>
 

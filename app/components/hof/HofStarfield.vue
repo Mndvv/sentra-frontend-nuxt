@@ -91,18 +91,18 @@ const stars = computed<Star[]>(() => {
       key: i,
       x: Math.round(rand() * 1000) / 10,
       y: Math.round(rand() * 1000) / 10,
-      size: bright ? 1 + Math.round(rand() * 1.6) : 1,
+      size: bright ? 1.5 + Math.round(rand() * 10) / 10 : 1,
       bright,
       delay: Math.round(rand() * 60) / 10,
-      duration: 2.4 + Math.round(rand() * 30) / 10,
+      duration: 3.2 + Math.round(rand() * 38) / 10,
     });
   }
   return list;
 });
 
-// Deterministic timing for the shooting star
-const shootDelay = computed(() => 4 + (hashString(props.seed) % 5));
-const shootDuration = computed(() => 2.6 + (hashString(props.seed) % 10) / 10);
+// Deterministic timing for the shooting star with a serene, rare cycle (10s - 14s)
+const shootDelay = computed(() => 3 + (hashString(props.seed) % 5));
+const shootDuration = computed(() => 10 + (hashString(props.seed) % 5));
 </script>
 
 <style scoped>
@@ -118,8 +118,10 @@ const shootDuration = computed(() => 2.6 + (hashString(props.seed) % 10) / 10);
   border-radius: 9999px;
   display: block;
   background: var(--hof-star, rgba(226, 229, 255, 0.7));
-  opacity: 0.35;
-  animation: hof-twinkle 3s ease-in-out infinite;
+  opacity: 0.3;
+  animation-name: hof-twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
 }
 
 /* tone: ink (indigo points that sit on the light ground) */
@@ -128,9 +130,9 @@ const shootDuration = computed(() => 2.6 + (hashString(props.seed) % 10) / 10);
 }
 
 .hof-star.is-bright {
-  opacity: 0.85;
+  opacity: 0.75;
   animation-name: hof-twinkle-bright;
-  box-shadow: 0 0 6px var(--hof-star-glow, rgba(196, 200, 255, 0.8));
+  box-shadow: 0 0 4px var(--hof-star-glow, rgba(196, 200, 255, 0.45));
 }
 
 .hof-shooting-star {
@@ -147,7 +149,58 @@ const shootDuration = computed(() => 2.6 + (hashString(props.seed) % 10) / 10);
   );
   transform: rotate(-35deg);
   opacity: 0;
-  animation: hof-shoot 6s ease-in infinite;
+  animation-name: hof-shoot;
+  animation-timing-function: ease-in;
+  animation-iteration-count: infinite;
   will-change: transform, opacity;
+}
+
+@keyframes hof-twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes hof-twinkle-bright {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes hof-shoot {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(-35deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.9;
+  }
+  18% {
+    transform: translate3d(-52vw, 30vw, 0) rotate(-35deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(-52vw, 30vw, 0) rotate(-35deg);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hof-star,
+  .hof-shooting-star {
+    animation: none !important;
+  }
 }
 </style>
