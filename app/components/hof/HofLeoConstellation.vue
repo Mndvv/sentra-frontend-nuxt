@@ -1,192 +1,312 @@
 <template>
-  <div
-    class="relative w-full max-w-4xl mx-auto h-[380px] sm:h-[440px] md:h-[480px] select-none"
-  >
-    <!-- Constellation Legend / Title Badge -->
-    <div
-      class="absolute top-2 left-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-white/90 text-xs font-semibold shadow-xs"
-    >
-      <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-      <span>Konstelasi Leo · Peta Perjalanan Kepemimpinan</span>
-    </div>
+  <div class="relative w-full max-w-4xl mx-auto flex flex-col items-center">
+    <!-- ── Asterism Celestial Chart Area ──────────────────────────────── -->
+    <div class="relative w-full aspect-[1000/600] select-none">
+      <!-- Constellation Identification Badge -->
+      <div
+        class="absolute top-2 left-3 sm:top-3 sm:left-4 z-20 flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#0a0f1d]/85 border border-white/10 text-white/80 text-[0.62rem] sm:text-xs font-mono uppercase tracking-wider pointer-events-none"
+      >
+        <span class="w-1.5 h-1.5 rounded-full bg-amber-400" />
+        <span>Formasi Rasi Leo</span>
+      </div>
 
-    <!-- SVG Constellation Lines -->
-    <svg
-      class="absolute inset-0 w-full h-full pointer-events-none z-10"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      aria-hidden="true"
-    >
-      <defs>
-        <!-- Soft glow filter for constellation lines -->
-        <filter id="leo-glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="0.8" result="blur" />
-          <feComposite in="SourceGraphic" in2="blur" operator="over" />
-        </filter>
-        <!-- Super radiant glow filter for Alpha Star Regulus -->
-        <radialGradient id="regulus-halo" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.8" />
-          <stop offset="50%" stop-color="#6366f1" stop-opacity="0.3" />
-          <stop offset="100%" stop-color="#6366f1" stop-opacity="0" />
-        </radialGradient>
-      </defs>
+      <!-- Astronomical Telemetry Header -->
+      <div
+        class="hidden sm:flex absolute top-3 right-4 z-20 items-center gap-2 text-slate-400 text-[0.62rem] font-mono tracking-wider pointer-events-none"
+      >
+        <span>RA 10h-12h · DEC +10°-+25°</span>
+      </div>
 
-      <!-- Constellation Edges (Connecting the Stars of Leo) -->
-      <line
-        v-for="(edge, i) in edgesWithCoords"
-        :key="i"
-        :x1="edge.x1"
-        :y1="edge.y1"
-        :x2="edge.x2"
-        :y2="edge.y2"
-        stroke="rgba(165, 180, 252, 0.45)"
-        stroke-width="0.35"
-        stroke-dasharray="2 1"
-        filter="url(#leo-glow)"
-      />
-      <!-- Brighter core connecting lines -->
-      <line
-        v-for="(edge, i) in edgesWithCoords"
-        :key="`core-${i}`"
-        :x1="edge.x1"
-        :y1="edge.y1"
-        :x2="edge.x2"
-        :y2="edge.y2"
-        stroke="rgba(255, 255, 255, 0.6)"
-        stroke-width="0.2"
-      />
-    </svg>
+      <!-- SVG Constellation & Astronomical Grid Lines -->
+      <svg
+        class="absolute inset-0 w-full h-full pointer-events-none z-10"
+        viewBox="0 0 1000 600"
+        preserveAspectRatio="xMidYMid meet"
+        aria-hidden="true"
+      >
+        <defs>
+          <!-- Soft celestial glow filter -->
+          <filter id="celestial-glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="2.5" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+          <!-- Optical corona for Alpha star Regulus -->
+          <radialGradient id="regulus-corona" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.55" />
+            <stop offset="60%" stop-color="#fbbf24" stop-opacity="0.18" />
+            <stop offset="100%" stop-color="#fbbf24" stop-opacity="0" />
+          </radialGradient>
+          <!-- Optical corona for Major stars -->
+          <radialGradient id="major-corona" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#e0e7ff" stop-opacity="0.45" />
+            <stop offset="100%" stop-color="#e0e7ff" stop-opacity="0" />
+          </radialGradient>
+        </defs>
 
-    <!-- Star Nodes (Periods & Guiding Stars of Leo) -->
-    <div
-      v-for="star in mappedStars"
-      :key="star.id"
-      class="absolute -translate-x-1/2 -translate-y-1/2 z-20 group"
-      :style="{ left: star.x + '%', top: star.y + '%' }"
-    >
-      <!-- ── ALPHA STAR: REGULUS (Periode Sebelumnya - Paling Terang) ── -->
-      <template v-if="star.isAlpha && star.hasGeneration">
+        <!-- Celestial Coordinate Grid & Declination Lines -->
+        <g class="opacity-60">
+          <!-- Declination Arc -->
+          <ellipse
+            cx="500"
+            cy="300"
+            rx="390"
+            ry="230"
+            fill="none"
+            stroke="rgba(148, 163, 184, 0.08)"
+            stroke-width="1"
+            stroke-dasharray="4 8"
+          />
+          <!-- Coordinate Meridian & Parallel -->
+          <line
+            x1="100"
+            y1="300"
+            x2="900"
+            y2="300"
+            stroke="rgba(148, 163, 184, 0.07)"
+            stroke-width="1"
+            stroke-dasharray="3 6"
+          />
+          <line
+            x1="500"
+            y1="60"
+            x2="500"
+            y2="540"
+            stroke="rgba(148, 163, 184, 0.07)"
+            stroke-width="1"
+            stroke-dasharray="3 6"
+          />
+          <!-- Grid Telemetry Markers -->
+          <text
+            x="105"
+            y="295"
+            fill="rgba(148, 163, 184, 0.35)"
+            font-size="10"
+            font-family="monospace"
+          >
+            +10°
+          </text>
+          <text
+            x="865"
+            y="295"
+            fill="rgba(148, 163, 184, 0.35)"
+            font-size="10"
+            font-family="monospace"
+          >
+            +20°
+          </text>
+          <text
+            x="506"
+            y="75"
+            fill="rgba(148, 163, 184, 0.35)"
+            font-size="10"
+            font-family="monospace"
+          >
+            11h RA
+          </text>
+        </g>
+
+        <!-- Constellation Connector Lines (Faint Celestial Edges) -->
+        <line
+          v-for="edge in edgesWithCoords"
+          :key="edge.id"
+          :x1="edge.x1"
+          :y1="edge.y1"
+          :x2="edge.x2"
+          :y2="edge.y2"
+          stroke="rgba(165, 180, 252, 0.35)"
+          stroke-width="1.5"
+          stroke-dasharray="6 4"
+        />
+
+        <!-- Active Edges Connected to Selected Star -->
+        <line
+          v-for="edge in activeEdges"
+          :key="`active-${edge.id}`"
+          :x1="edge.x1"
+          :y1="edge.y1"
+          :x2="edge.x2"
+          :y2="edge.y2"
+          stroke="rgba(255, 255, 255, 0.75)"
+          stroke-width="2"
+          filter="url(#celestial-glow)"
+        />
+
+        <!-- Subtle Optical Coronas Behind Major Stars -->
+        <circle
+          cx="670"
+          cy="390"
+          r="26"
+          fill="url(#regulus-corona)"
+        />
+        <circle
+          cx="180"
+          cy="310"
+          r="16"
+          fill="url(#major-corona)"
+        />
+        <circle
+          cx="620"
+          cy="220"
+          r="16"
+          fill="url(#major-corona)"
+        />
+        <circle
+          cx="380"
+          cy="220"
+          r="16"
+          fill="url(#major-corona)"
+        />
+      </svg>
+
+      <!-- ── Star Nodes (Mapped Astronomical Buttons) ──────────────────── -->
+      <div
+        v-for="star in mappedStars"
+        :key="star.id"
+        class="absolute -translate-x-1/2 -translate-y-1/2 z-20 group"
+        :style="{ left: `${star.x / 10}%`, top: `${star.y / 6}%` }"
+      >
         <button
           type="button"
-          class="relative flex flex-col items-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full p-2"
+          class="relative min-w-[40px] min-h-[40px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-full cursor-pointer transition-transform duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#05070e]"
+          :class="[
+            selectedStarId === star.id ? 'z-30 scale-110' : 'hover:scale-105 z-20',
+          ]"
+          :aria-label="star.ariaLabel"
+          :aria-pressed="selectedStarId === star.id"
           @click="handleStarClick(star)"
+          @focus="selectStar(star)"
         >
-          <!-- Outer Pulsing Halo Aura -->
-          <span
-            class="absolute -inset-4 sm:-inset-6 rounded-full bg-amber-400/25 blur-md animate-ping pointer-events-none"
-            aria-hidden="true"
-          />
-          <span
-            class="absolute -inset-3 sm:-inset-4 rounded-full bg-amber-400/30 blur-sm pointer-events-none"
-            aria-hidden="true"
-          />
-
-          <!-- Star Center Orb -->
-          <div
-            class="relative w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-amber-400 border-2 border-white shadow-[0_0_20px_rgba(251,191,36,0.9)] flex items-center justify-center text-slate-950 font-black text-xs sm:text-sm tracking-tight transition-transform duration-200 group-hover:scale-115"
-          >
-            <span>{{ star.roman }}</span>
-            <span
-              class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-200 border-2 border-slate-900 flex items-center justify-center text-[0.5rem] font-black text-slate-900"
+          <!-- Regulus: Alpha Leonis -->
+          <template v-if="star.tier === 'alpha'">
+            <div
+              class="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-400 border-2 border-white text-slate-950 font-black text-xs flex items-center justify-center shadow-[0_0_14px_rgba(251,191,36,0.85)] transition-all"
+              :class="[
+                selectedStarId === star.id
+                  ? 'ring-2 ring-amber-300 ring-offset-2 ring-offset-[#05070e]'
+                  : 'group-hover:ring-2 group-hover:ring-amber-400/60 group-hover:ring-offset-1 group-hover:ring-offset-[#05070e]',
+              ]"
             >
-              ★
-            </span>
-          </div>
+              <span>{{ star.roman || 'α' }}</span>
+            </div>
+          </template>
 
-          <!-- Brightest Star Label Badge -->
-          <div
-            class="mt-2 flex flex-col items-center bg-slate-900/85 backdrop-blur-md border border-amber-400/40 rounded-xl px-2.5 py-1 text-center shadow-lg transition-all duration-200 group-hover:border-amber-400 group-hover:bg-slate-900"
-          >
-            <span
-              class="text-[0.62rem] sm:text-[0.68rem] font-black text-amber-300 tracking-wide uppercase flex items-center gap-1 whitespace-nowrap"
+          <!-- Major Stars (Denebola, Algieba, Zosma) -->
+          <template v-else-if="star.tier === 'major'">
+            <div
+              class="relative w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-white border border-indigo-200 text-slate-950 font-bold text-[0.62rem] sm:text-[0.68rem] flex items-center justify-center shadow-[0_0_10px_rgba(255,255,255,0.7)] transition-all"
+              :class="[
+                selectedStarId === star.id
+                  ? 'ring-2 ring-white ring-offset-2 ring-offset-[#05070e]'
+                  : 'group-hover:ring-2 group-hover:ring-white/50 group-hover:ring-offset-1 group-hover:ring-offset-[#05070e]',
+              ]"
             >
-              <Icon name="material-symbols:sparkles" class="text-xs" />
-              {{ star.name }} (Regulus)
-            </span>
-            <span
-              class="text-[0.58rem] sm:text-[0.64rem] font-bold text-white/90 whitespace-nowrap"
-            >
-              {{ star.title }} · Angkatan {{ star.angkatan }}
-            </span>
-            <span
-              v-if="star.years"
-              class="text-[0.52rem] text-white/60 font-medium whitespace-nowrap"
-            >
-              {{ star.years }}
-            </span>
-          </div>
-        </button>
-      </template>
+              <span v-if="star.hasGeneration">{{ star.roman }}</span>
+            </div>
+          </template>
 
-      <!-- ── STANDARD PERIOD STARS (Angkatan-angkatan Sebelumnya) ── -->
-      <template v-else-if="star.hasGeneration">
-        <button
-          type="button"
-          class="relative flex flex-col items-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded-full p-1"
-          @click="handleStarClick(star)"
-        >
-          <!-- Soft Star Halo -->
+          <!-- Guide Stars -->
+          <template v-else>
+            <div
+              class="rounded-full transition-all flex items-center justify-center"
+              :class="[
+                star.hasGeneration
+                  ? 'w-4 h-4 sm:w-5 sm:h-5 bg-indigo-100 border border-white text-slate-950 font-bold text-[0.55rem] shadow-[0_0_8px_rgba(255,255,255,0.6)]'
+                  : 'w-2.5 h-2.5 sm:w-3 sm:h-3 bg-white/90 border border-indigo-200/60 shadow-[0_0_5px_rgba(255,255,255,0.5)]',
+                selectedStarId === star.id
+                  ? 'ring-2 ring-indigo-300 ring-offset-2 ring-offset-[#05070e] scale-125'
+                  : 'group-hover:ring-2 group-hover:ring-white/50 group-hover:ring-offset-1 group-hover:ring-offset-[#05070e]',
+              ]"
+            >
+              <span v-if="star.hasGeneration">{{ star.roman }}</span>
+            </div>
+          </template>
+
+          <!-- Star Name Tag -->
           <span
-            class="absolute -inset-1.5 rounded-full bg-white/20 blur-xs group-hover:bg-white/40 pointer-events-none"
-            aria-hidden="true"
-          />
-
-          <!-- Star Orb -->
-          <div
-            class="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-900 border-2 border-white/80 shadow-[0_0_12px_rgba(255,255,255,0.7)] flex items-center justify-center text-white font-black text-[0.68rem] tracking-tight transition-transform duration-200 group-hover:scale-115 group-hover:bg-slate-800"
-          >
-            <span>{{ star.roman }}</span>
-          </div>
-
-          <!-- Star Label -->
-          <div
-            class="mt-1.5 flex flex-col items-center bg-slate-950/75 backdrop-blur-md border border-white/15 rounded-lg px-2 py-0.5 text-center transition-all duration-200 group-hover:border-indigo-400/50 group-hover:bg-slate-950/95"
-          >
-            <span
-              class="text-[0.58rem] sm:text-[0.64rem] font-bold text-white whitespace-nowrap"
-            >
-              {{ star.title }}
-            </span>
-            <span
-              class="text-[0.50rem] text-white/60 font-medium whitespace-nowrap"
-            >
-              Angkatan {{ star.angkatan }} · {{ star.years }}
-            </span>
-          </div>
-        </button>
-      </template>
-
-      <!-- ── BACKGROUND CONSTELLATION GUIDE STARS (Titik Pembentuk Rasi Leo) ── -->
-      <template v-else>
-        <div class="relative flex flex-col items-center pointer-events-none">
-          <span
-            class="rounded-full blur-[1px] animate-pulse"
-            :class="
-              star.isAlpha ? 'w-4 h-4 bg-amber-400/50' : 'w-3 h-3 bg-white/40'
-            "
-          />
-          <span
-            class="absolute inset-0 m-auto rounded-full border shadow-[0_0_6px_rgba(255,255,255,0.8)]"
-            :class="
-              star.isAlpha
-                ? 'w-3 h-3 bg-amber-300 border-amber-200'
-                : 'w-2 h-2 bg-white border-white/80'
-            "
-          />
-          <span
-            class="mt-1 text-[0.50rem] font-semibold tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity"
-            :class="star.isAlpha ? 'text-amber-300/70' : 'text-white/40'"
+            class="absolute -bottom-3 sm:-bottom-3.5 left-1/2 -translate-x-1/2 text-[0.52rem] sm:text-[0.6rem] font-mono tracking-wider whitespace-nowrap pointer-events-none transition-all duration-150"
+            :class="[
+              selectedStarId === star.id
+                ? 'text-amber-200 font-semibold opacity-100'
+                : 'text-slate-400 opacity-60 group-hover:opacity-100',
+            ]"
           >
             {{ star.leoName }}
           </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Celestial Inspection HUD Card ─────────────────────────────── -->
+    <div
+      v-if="selectedStar"
+      class="w-full max-w-xl mx-auto mt-2 sm:mt-4 px-3 sm:px-0"
+      role="region"
+      aria-live="polite"
+      aria-label="Inspeksi Bintang Terpilih"
+    >
+      <Transition name="fade-hud" mode="out-in">
+        <div
+          :key="selectedStar.id"
+          class="bg-[#0a0f1d] border border-white/12 rounded-xl p-3.5 sm:p-4 shadow-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+        >
+          <!-- Star Telemetry & Details -->
+          <div class="flex-1 min-w-0">
+            <!-- Astronomical Catalog Line -->
+            <div
+              class="flex items-center gap-1.5 text-[0.65rem] sm:text-xs font-mono text-indigo-300 uppercase tracking-wider"
+            >
+              <span
+                class="w-1.5 h-1.5 rounded-full shrink-0"
+                :class="selectedStar.isAlpha ? 'bg-amber-400' : 'bg-indigo-300'"
+              />
+              <span class="font-semibold">{{ selectedStar.leoName }} ({{ selectedStar.bayer }})</span>
+              <span class="text-white/30">·</span>
+              <span class="text-white/60 truncate">{{ selectedStar.catalog }}</span>
+            </div>
+
+            <!-- Cabinet Details or Guiding Star Description -->
+            <div v-if="selectedStar.hasGeneration" class="mt-1.5">
+              <div class="flex items-baseline gap-2">
+                <h3 class="text-sm sm:text-base font-bold text-white tracking-tight truncate m-0">
+                  {{ selectedStar.title }}
+                </h3>
+                <span class="text-[0.65rem] sm:text-xs font-mono text-amber-300 shrink-0">
+                  Angkatan {{ selectedStar.angkatan }}
+                </span>
+              </div>
+              <p v-if="selectedStar.years" class="text-xs text-slate-400 mt-0.5 m-0">
+                Masa Bakti: {{ selectedStar.years }}
+              </p>
+            </div>
+
+            <div v-else class="mt-1.5">
+              <h3 class="text-xs sm:text-sm font-semibold text-slate-200 m-0">
+                Bintang Pembimbing Rasi Leo
+              </h3>
+              <p class="text-[0.68rem] sm:text-xs text-slate-400 mt-0.5 m-0">
+                Titik koordinat astronomis penuntun formasi rasi Leo.
+              </p>
+            </div>
+          </div>
+
+          <!-- Action Button (only if star has generation) -->
+          <div v-if="selectedStar.hasGeneration" class="shrink-0 pt-1 sm:pt-0">
+            <button
+              type="button"
+              class="min-h-[44px] w-full sm:w-auto px-4 py-2 bg-white/10 hover:bg-white/20 active:bg-white/25 border border-white/20 text-white text-xs sm:text-sm font-semibold rounded-lg transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+              @click="emitSelect(selectedStar.generation)"
+            >
+              Buka Detail Kepengurusan
+            </button>
+          </div>
         </div>
-      </template>
+      </Transition>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import { romanNumeral } from "~/composables/useHof";
 
 const props = defineProps<{
@@ -200,37 +320,134 @@ const emit = defineEmits<{
 interface LeoStarLayout {
   id: string;
   leoName: string;
-  x: number; // percentage
-  y: number; // percentage
-  isAlpha?: boolean; // Regulus is Alpha (brightest star!)
+  bayer: string;
+  catalog: string;
+  x: number;
+  y: number;
+  magnitude: number;
+  tier: "alpha" | "major" | "guide";
+  isAlpha?: boolean;
+}
+
+interface MappedStar extends LeoStarLayout {
+  hasGeneration: boolean;
+  generation: any | null;
+  name: string;
+  title: string;
+  angkatan: string | number;
+  roman: string;
+  years: string;
+  ariaLabel: string;
 }
 
 /**
- * Astronomical skeleton of Constellation Leo (The Lion)
- * - Regulus (Alpha Leonis, Heart of the Lion): (67, 64) - The Brightest Star!
- * - Denebola (Beta Leonis, Tail): (18, 50)
- * - Zosma (Delta Leonis, Back): (38, 36)
- * - Chertan (Theta Leonis, Flank): (39, 64)
- * - Algieba (Gamma Leonis, Neck): (62, 35)
- * - Adhafera (Zeta Leonis, Mane): (64, 19)
- * - Al Jabbah (Mu Leonis, Head): (75, 14)
- * - Ras Elased (Epsilon Leonis, Snout): (82, 22)
- * - Subra (Omicron Leonis, Front Paw): (75, 80)
+ * Astronomical coordinates for constellation Leo (The Lion) mapped into 1000x600 space:
+ * - Denebola (Tail / Beta): x: 180, y: 310
+ * - Zosma (Delta): x: 380, y: 220
+ * - Chertan (Theta): x: 390, y: 390
+ * - Algieba (Neck / Gamma): x: 620, y: 220
+ * - Adhafera (Zeta): x: 640, y: 120
+ * - Al Jabbah (Mu): x: 750, y: 90
+ * - Ras Elased (Epsilon): x: 820, y: 140
+ * - Regulus (Heart / Alpha): x: 670, y: 390
+ * - Subra (Omicron): x: 750, y: 490
  */
 const LEO_STARS: LeoStarLayout[] = [
-  { id: "denebola", leoName: "Denebola", x: 18, y: 50 },
-  { id: "zosma", leoName: "Zosma", x: 38, y: 36 },
-  { id: "chertan", leoName: "Chertan", x: 39, y: 64 },
-  { id: "algieba", leoName: "Algieba", x: 62, y: 35 },
-  { id: "adhafera", leoName: "Adhafera", x: 64, y: 19 },
-  { id: "al_jabbah", leoName: "Al Jabbah", x: 75, y: 14 },
-  { id: "ras_elased", leoName: "Ras Elased", x: 82, y: 22 },
-  { id: "regulus", leoName: "Regulus (Alpha)", x: 67, y: 64, isAlpha: true },
-  { id: "subra", leoName: "Subra", x: 75, y: 80 },
+  {
+    id: "regulus",
+    leoName: "Regulus",
+    bayer: "Alpha Leonis",
+    catalog: "Jantung Rasi Leo",
+    x: 670,
+    y: 390,
+    magnitude: 1.35,
+    tier: "alpha",
+    isAlpha: true,
+  },
+  {
+    id: "denebola",
+    leoName: "Denebola",
+    bayer: "Beta Leonis",
+    catalog: "Ekor Rasi Leo",
+    x: 180,
+    y: 310,
+    magnitude: 2.14,
+    tier: "major",
+  },
+  {
+    id: "algieba",
+    leoName: "Algieba",
+    bayer: "Gamma Leonis",
+    catalog: "Surai dan Leher Rasi Leo",
+    x: 620,
+    y: 220,
+    magnitude: 2.01,
+    tier: "major",
+  },
+  {
+    id: "zosma",
+    leoName: "Zosma",
+    bayer: "Delta Leonis",
+    catalog: "Punggung Rasi Leo",
+    x: 380,
+    y: 220,
+    magnitude: 2.56,
+    tier: "major",
+  },
+  {
+    id: "chertan",
+    leoName: "Chertan",
+    bayer: "Theta Leonis",
+    catalog: "Pinggul Rasi Leo",
+    x: 390,
+    y: 390,
+    magnitude: 3.32,
+    tier: "guide",
+  },
+  {
+    id: "adhafera",
+    leoName: "Adhafera",
+    bayer: "Zeta Leonis",
+    catalog: "Lekukan Surai Rasi Leo",
+    x: 640,
+    y: 120,
+    magnitude: 3.44,
+    tier: "guide",
+  },
+  {
+    id: "al_jabbah",
+    leoName: "Al Jabbah",
+    bayer: "Mu Leonis",
+    catalog: "Dahi Rasi Leo",
+    x: 750,
+    y: 90,
+    magnitude: 3.88,
+    tier: "guide",
+  },
+  {
+    id: "ras_elased",
+    leoName: "Ras Elased",
+    bayer: "Epsilon Leonis",
+    catalog: "Moncong Utara Rasi Leo",
+    x: 820,
+    y: 140,
+    magnitude: 2.98,
+    tier: "guide",
+  },
+  {
+    id: "subra",
+    leoName: "Subra",
+    bayer: "Omicron Leonis",
+    catalog: "Pijakan Cakar Rasi Leo",
+    x: 750,
+    y: 490,
+    magnitude: 3.52,
+    tier: "guide",
+  },
 ];
 
 /**
- * Connecting edges of the Leo constellation stick figure
+ * Constellation connector lines in SVG (Edges of the Leo stick figure)
  */
 const LEO_EDGES: [string, string][] = [
   // The Sickle (Head & Mane of the Lion)
@@ -248,6 +465,8 @@ const LEO_EDGES: [string, string][] = [
   ["chertan", "denebola"],
 ];
 
+const selectedStarId = ref("regulus");
+
 const starCoordsMap = computed(() => {
   const map = new Map<string, { x: number; y: number }>();
   for (const s of LEO_STARS) {
@@ -261,6 +480,9 @@ const edgesWithCoords = computed(() => {
     const from = starCoordsMap.value.get(fromId) || { x: 0, y: 0 };
     const to = starCoordsMap.value.get(toId) || { x: 0, y: 0 };
     return {
+      id: `${fromId}-${toId}`,
+      fromId,
+      toId,
       x1: from.x,
       y1: from.y,
       x2: to.x,
@@ -269,75 +491,124 @@ const edgesWithCoords = computed(() => {
   });
 });
 
-/**
- * Map generations into the stars of Leo:
- * - Regulus (isAlpha: true) ALWAYS gets the most recent demisioner cabinet (generations[0])!
- * - Earlier generations (generations[1], [2], ...) map onto the path of Leo (denebola, zosma, chertan, etc.).
- */
-const mappedStars = computed(() => {
+const activeEdges = computed(() => {
+  const selectedId = selectedStarId.value;
+  return edgesWithCoords.value.filter(
+    (e) => e.fromId === selectedId || e.toId === selectedId,
+  );
+});
+
+const mappedStars = computed<MappedStar[]>(() => {
   const gens = props.generations || [];
   const latestGen = gens[0] || null;
   const olderGens = gens.slice(1);
 
-  // Remaining slots for older generations (excluding regulus)
-  const nonAlphaSlots = LEO_STARS.filter((s) => !s.isAlpha);
+  const alphaStar = LEO_STARS.find((s) => s.isAlpha)!;
+  const nonAlphaStars = LEO_STARS.filter((s) => !s.isAlpha);
 
-  return LEO_STARS.map((star) => {
-    if (star.isAlpha) {
-      // Regulus: The Alpha Star represents the latest demisioner cabinet!
-      const gen = latestGen;
-      if (!gen) {
-        return {
-          ...star,
-          hasGeneration: false,
-          generation: null,
-          name: "Regulus",
-          title: "",
-          angkatan: "",
-          roman: "α",
-          years: "",
-        };
-      }
+  const mappedAlpha: MappedStar = (() => {
+    if (!latestGen) {
       return {
-        ...star,
-        hasGeneration: true,
-        generation: gen,
-        name: "Periode Sebelumnya",
-        title: gen.osis?.nama ?? gen.mpk?.nama ?? `Periode ke-${gen.angkatan}`,
-        angkatan: String(gen.angkatan),
-        roman: romanNumeral(gen.angkatan),
-        years: gen.osis?.tahun ?? gen.mpk?.tahun ?? "",
+        ...alphaStar,
+        hasGeneration: false,
+        generation: null,
+        name: "Regulus",
+        title: "",
+        angkatan: "",
+        roman: "α",
+        years: "",
+        ariaLabel: `Bintang Regulus (${alphaStar.bayer})`,
       };
     }
+    const title =
+      latestGen.osis?.nama ??
+      latestGen.mpk?.nama ??
+      `Kepengurusan Angkatan ${latestGen.angkatan}`;
+    const years = latestGen.osis?.tahun ?? latestGen.mpk?.tahun ?? "";
+    const roman = romanNumeral(latestGen.angkatan);
+    return {
+      ...alphaStar,
+      hasGeneration: true,
+      generation: latestGen,
+      name: "Periode Sebelumnya",
+      title,
+      angkatan: String(latestGen.angkatan),
+      roman,
+      years,
+      ariaLabel: `Bintang Utama Regulus: ${title}, Angkatan ${latestGen.angkatan}`,
+    };
+  })();
 
-    // Older generation assignment
-    const slotIndex = nonAlphaSlots.findIndex((s) => s.id === star.id);
-    const gen = olderGens[slotIndex] || null;
-
+  const mappedNonAlpha: MappedStar[] = nonAlphaStars.map((star, idx) => {
+    const gen = olderGens[idx] || null;
     if (!gen) {
       return {
         ...star,
         hasGeneration: false,
         generation: null,
+        name: star.leoName,
+        title: "",
+        angkatan: "",
+        roman: "",
+        years: "",
+        ariaLabel: `Bintang Pembimbing ${star.leoName} (${star.bayer})`,
       };
     }
-
+    const title =
+      gen.osis?.nama ?? gen.mpk?.nama ?? `Kepengurusan Angkatan ${gen.angkatan}`;
+    const years = gen.osis?.tahun ?? gen.mpk?.tahun ?? "";
+    const roman = romanNumeral(gen.angkatan);
     return {
       ...star,
       hasGeneration: true,
       generation: gen,
       name: `Angkatan ${gen.angkatan}`,
-      title: gen.osis?.nama ?? gen.mpk?.nama ?? `Periode ke-${gen.angkatan}`,
+      title,
       angkatan: gen.angkatan,
-      roman: romanNumeral(gen.angkatan),
-      years: gen.osis?.tahun ?? gen.mpk?.tahun ?? "",
+      roman,
+      years,
+      ariaLabel: `Bintang ${star.leoName}: ${title}, Angkatan ${gen.angkatan}`,
     };
   });
+
+  return [mappedAlpha, ...mappedNonAlpha];
 });
 
-function handleStarClick(star: any) {
-  if (star.generation) {
-    emit("select", star.generation);
+const selectedStar = computed<MappedStar>(() => {
+  const found = mappedStars.value.find((s) => s.id === selectedStarId.value);
+  return (found ?? mappedStars.value[0]) as MappedStar;
+});
+
+function selectStar(star: { id: string }) {
+  selectedStarId.value = star.id;
+}
+
+function emitSelect(generation: any) {
+  if (generation) {
+    emit("select", generation);
+  }
+}
+
+function handleStarClick(star: { id: string; generation?: any }) {
+  if (selectedStarId.value === star.id && star.generation) {
+    emitSelect(star.generation);
+  } else {
+    selectStar(star);
   }
 }
 </script>
+
+<style scoped>
+.fade-hud-enter-active,
+.fade-hud-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.fade-hud-enter-from {
+  opacity: 0;
+  transform: translateY(3px);
+}
+.fade-hud-leave-to {
+  opacity: 0;
+  transform: translateY(-3px);
+}
+</style>
