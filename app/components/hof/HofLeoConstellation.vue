@@ -65,7 +65,7 @@
       :style="{ left: star.x + '%', top: star.y + '%' }"
     >
       <!-- ── ALPHA STAR: REGULUS (Periode Sebelumnya - Paling Terang) ── -->
-      <template v-if="star.isAlpha">
+      <template v-if="star.isAlpha && star.hasGeneration">
         <button
           type="button"
           class="relative flex flex-col items-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full p-2"
@@ -109,6 +109,7 @@
               {{ star.title }} · Angkatan {{ star.angkatan }}
             </span>
             <span
+              v-if="star.years"
               class="text-[0.52rem] text-white/60 font-medium whitespace-nowrap"
             >
               {{ star.years }}
@@ -159,13 +160,22 @@
       <template v-else>
         <div class="relative flex flex-col items-center pointer-events-none">
           <span
-            class="w-3 h-3 rounded-full bg-white/40 blur-[1px] animate-pulse"
+            class="rounded-full blur-[1px] animate-pulse"
+            :class="
+              star.isAlpha ? 'w-4 h-4 bg-amber-400/50' : 'w-3 h-3 bg-white/40'
+            "
           />
           <span
-            class="absolute inset-0 w-2 h-2 m-auto rounded-full bg-white border border-white/80 shadow-[0_0_6px_rgba(255,255,255,0.8)]"
+            class="absolute inset-0 m-auto rounded-full border shadow-[0_0_6px_rgba(255,255,255,0.8)]"
+            :class="
+              star.isAlpha
+                ? 'w-3 h-3 bg-amber-300 border-amber-200'
+                : 'w-2 h-2 bg-white border-white/80'
+            "
           />
           <span
-            class="mt-1 text-[0.50rem] font-semibold text-white/40 tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity"
+            class="mt-1 text-[0.50rem] font-semibold tracking-wider uppercase opacity-0 group-hover:opacity-100 transition-opacity"
+            :class="star.isAlpha ? 'text-amber-300/70' : 'text-white/40'"
           >
             {{ star.leoName }}
           </span>
@@ -276,15 +286,27 @@ const mappedStars = computed(() => {
     if (star.isAlpha) {
       // Regulus: The Alpha Star represents the latest demisioner cabinet!
       const gen = latestGen;
+      if (!gen) {
+        return {
+          ...star,
+          hasGeneration: false,
+          generation: null,
+          name: "Regulus",
+          title: "",
+          angkatan: "",
+          roman: "α",
+          years: "",
+        };
+      }
       return {
         ...star,
-        hasGeneration: !!gen,
+        hasGeneration: true,
         generation: gen,
         name: "Periode Sebelumnya",
-        title: gen?.osis?.nama ?? gen?.mpk?.nama ?? "Kabinet Sebelumnya",
-        angkatan: gen?.angkatan ?? "VII",
-        roman: gen ? romanNumeral(gen.angkatan) : "VII",
-        years: gen?.osis?.tahun ?? gen?.mpk?.tahun ?? "2025/2026",
+        title: gen.osis?.nama ?? gen.mpk?.nama ?? `Periode ke-${gen.angkatan}`,
+        angkatan: String(gen.angkatan),
+        roman: romanNumeral(gen.angkatan),
+        years: gen.osis?.tahun ?? gen.mpk?.tahun ?? "",
       };
     }
 

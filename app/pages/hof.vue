@@ -29,11 +29,12 @@
         <h2
           class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-text-main mb-2.5"
         >
-          Konstelasi Kepemimpinan
+          Jejak Kepengurusan
         </h2>
         <p class="text-sm sm:text-base text-text-muted leading-relaxed">
-          Dari masa ke masa, setiap kabinet meninggalkan jejak dedikasinya di
-          Nawasena. Pilih pengurus untuk mengenang kepemimpinan mereka.
+          Dari masa ke masa, setiap kabinet mengabdi dan meninggalkan jejak
+          dedikasinya di Nawasena. Pilih pengurus untuk mengenang kepemimpinan
+          mereka.
         </p>
       </div>
 
