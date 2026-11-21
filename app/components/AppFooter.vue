@@ -171,7 +171,7 @@ const socialLinks = [
     external: true,
   },
   {
-    href: "https://wa.me/6282299234269",
+    href: "https://wa.me/6281918401478",
     icon: "mdi:whatsapp",
     label: "WhatsApp Sekretariat",
     external: true,

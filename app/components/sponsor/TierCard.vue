@@ -21,12 +21,18 @@
     </span>
 
     <!-- Tier Header -->
-    <div class="flex items-center gap-3 mb-5">
+    <div class="flex items-center gap-3.5 mb-5">
       <span
-        class="w-11 h-11 rounded-xl flex items-center justify-center bg-accent-soft text-accent shrink-0"
+        class="w-12 h-12 rounded-xl flex items-center justify-center p-2.5 shrink-0 transition-transform duration-200"
+        :class="gemBadgeClass"
         aria-hidden="true"
       >
-        <Icon :name="icon" class="text-xl" />
+        <SponsorGemstoneIcon
+          v-if="isGemstone"
+          :gem="tierId || label"
+          class="w-full h-full"
+        />
+        <Icon v-else :name="icon" class="text-xl" />
       </span>
       <div class="min-w-0">
         <p
@@ -58,17 +64,18 @@
     <hr class="border-t border-border mb-5" />
 
     <!-- Perks List -->
-    <ul class="flex-1 flex flex-col gap-2.5 mb-6 list-none p-0 m-0">
+    <ul class="flex flex-col gap-2.5 list-none p-0 m-0 mb-8 flex-1">
       <li
         v-for="(perk, i) in perks"
         :key="i"
-        class="flex items-start gap-2.5 text-xs sm:text-sm text-text-muted leading-snug"
+        class="flex items-start gap-2.5 text-xs sm:text-sm text-text-muted leading-relaxed"
       >
-        <Icon
-          name="material-symbols:check-circle-rounded"
-          class="text-accent text-base shrink-0 mt-0.5"
+        <span
+          class="w-4 h-4 rounded-full bg-[var(--badge-done-bg)] text-[var(--badge-done-text)] flex items-center justify-center shrink-0 mt-0.5"
           aria-hidden="true"
-        />
+        >
+          <Icon name="material-symbols:check" class="text-xs" />
+        </span>
         <span>{{ perk }}</span>
       </li>
     </ul>
@@ -76,7 +83,7 @@
     <!-- Action Button -->
     <button
       type="button"
-      class="mt-auto w-full inline-flex items-center justify-center gap-2 rounded-xl py-3 px-5 font-semibold text-sm transition-all cursor-pointer no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent min-h-[44px]"
+      class="w-full min-h-[44px] py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       :class="
         featured
           ? 'bg-accent text-white hover:bg-accent-hover shadow-sm'
@@ -95,7 +102,9 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { computed } from "vue";
+
+const props = defineProps<{
   icon: string;
   label: string;
   title: string;
@@ -109,4 +118,28 @@ defineProps<{
 defineEmits<{
   (e: "select", tierId: string): void;
 }>();
+
+const isGemstone = computed(() => {
+  const id = (props.tierId || props.label || "").toLowerCase();
+  return ["amethyst", "topaz", "sapphire", "alexandrite"].some((g) =>
+    id.includes(g),
+  );
+});
+
+const gemBadgeClass = computed(() => {
+  const id = (props.tierId || props.label || "").toLowerCase();
+  if (id.includes("amethyst")) {
+    return "bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20";
+  }
+  if (id.includes("topaz")) {
+    return "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20";
+  }
+  if (id.includes("sapphire")) {
+    return "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20";
+  }
+  if (id.includes("alexandrite")) {
+    return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20";
+  }
+  return "bg-accent-soft text-accent border border-accent/20";
+});
 </script>
