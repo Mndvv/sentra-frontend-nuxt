@@ -1,11 +1,12 @@
 <template>
   <div class="min-h-screen">
-    <!-- Hero: night sky holding the latest demisioner cabinet as its brightest constellation -->
+    <!-- Hero: night sky with Leo Constellation Journey Map -->
     <HofHero
+      :generations="allGenerations"
       :generation="latestGeneration"
       :loading="loading"
       :lineage="lineageCaption"
-      @star-click="openMemberProfileModal"
+      @select="scrollToGeneration"
       @cta="scrollToLineage"
     />
 
@@ -151,6 +152,7 @@ const {
   loading,
   topGenerations,
   olderGenerations,
+  allGenerations,
   developers,
   latestGeneration,
   lineageLength,
@@ -173,6 +175,17 @@ const scrollToLineage = () => {
     document
       .getElementById("hof-lineage")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+};
+
+const scrollToGeneration = (gen: any) => {
+  if (import.meta.client) {
+    const el = document.getElementById(`generation-${gen?.angkatan}`);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      scrollToLineage();
+    }
   }
 };
 

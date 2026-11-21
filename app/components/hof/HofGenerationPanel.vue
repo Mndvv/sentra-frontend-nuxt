@@ -1,6 +1,7 @@
 <template>
   <section
-    class="relative bg-bg-card border rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm transition-all duration-200 overflow-hidden mb-8"
+    :id="`generation-${generation.angkatan}`"
+    class="relative bg-bg-card border rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm transition-all duration-200 overflow-hidden mb-8 scroll-mt-24"
     :class="
       isLatest
         ? 'border-accent/40 shadow-md ring-1 ring-accent/20'
@@ -245,8 +246,8 @@ const title = computed(
 const yearRange = computed(() => {
   const o = props.generation.osis?.tahun;
   const m = props.generation.mpk?.tahun;
-  if (o && m && o !== m) return `Tahun Ajaran ${o} / ${m}`;
-  return `Tahun Ajaran ${o ?? m ?? ""}`;
+  if (o && m && o !== m) return `Periode ${o} / ${m}`;
+  return `Periode ${o ?? m ?? ""}`;
 });
 
 const stars = computed(() => generationStars(props.generation));

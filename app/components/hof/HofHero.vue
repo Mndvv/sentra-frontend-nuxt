@@ -17,9 +17,9 @@
         <p
           class="text-white/80 text-sm sm:text-base leading-relaxed mt-4 mb-2 m-0"
         >
-          Sebuah langit untuk mengenang. Setiap pengurus adalah bintang yang
-          pernah menerangi Nawasena, dan jejak dedikasi mereka abadi sebagai
-          konstelasi kepemimpinan.
+          Peta perjalanan cahaya kepemimpinan Nawasena yang terukir di rasi Leo.
+          Bintang Regulus yang paling terang melambangkan kabinet sebelumnya,
+          membersamai jejak dedikasi dari masa ke masa.
         </p>
 
         <p
@@ -31,46 +31,36 @@
         </p>
       </div>
 
-      <!-- Brightest constellation in the sky: latest demisioner cabinet -->
+      <!-- Leo Constellation Journey Map -->
       <div class="w-full mt-6 max-w-4xl mx-auto">
-        <template v-if="hasStars">
-          <HofConstellationMap
-            :stars="latestStars"
-            :variant="'bright'"
-            :size="'lg'"
-            :show-labels="true"
-            :interactive="true"
-            @star-click="$emit('star-click', $event)"
-          />
-        </template>
-
-        <template v-else-if="loading">
+        <template v-if="loading">
           <div
-            class="py-12 flex flex-col items-center gap-3 text-white/70 text-sm"
+            class="py-16 flex flex-col items-center gap-3 text-white/70 text-sm"
             aria-live="polite"
           >
             <span
               class="w-8 h-8 rounded-full border-2 border-white/20 border-t-white animate-spin"
             />
-            <p class="m-0">Memetakan konstelasi bintang...</p>
+            <p class="m-0">Memetakan konstelasi Leo...</p>
           </div>
         </template>
 
         <template v-else>
-          <p class="py-12 text-white/60 text-sm m-0">
-            Langit masih menanti bintang pertamanya.
-          </p>
+          <HofLeoConstellation
+            :generations="generationsList"
+            @select="$emit('select', $event)"
+          />
         </template>
       </div>
 
       <!-- Scroll to lineage CTA -->
       <button
         type="button"
-        class="min-h-[44px] inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-full px-6 py-2.5 font-semibold text-xs sm:text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer mt-8"
+        class="min-h-[44px] inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white rounded-full px-6 py-2.5 font-semibold text-xs sm:text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer mt-6"
         aria-label="Gulir ke jejak kepengurusan"
         @click="$emit('cta')"
       >
-        <span>Telusuri jejak konstelasi</span>
+        <span>Jelajahi Angkatan Kepengurusan</span>
         <Icon
           name="material-symbols:keyboard-arrow-down-rounded"
           class="text-lg"
@@ -82,19 +72,26 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { generationStars } from "~/composables/useHof";
 
 const props = defineProps<{
+  generations?: any[];
   generation?: any;
   loading?: boolean;
   lineage?: string;
 }>();
 
 defineEmits<{
-  (e: "star-click", member: any): void;
+  (e: "select", generation: any): void;
   (e: "cta"): void;
 }>();
 
-const latestStars = computed(() => generationStars(props.generation));
-const hasStars = computed(() => !props.loading && latestStars.value.length > 0);
+const generationsList = computed(() => {
+  if (props.generations && props.generations.length) {
+    return props.generations;
+  }
+  if (props.generation) {
+    return [props.generation];
+  }
+  return [];
+});
 </script>
