@@ -160,7 +160,7 @@
         <template v-if="star.isAlpha && star.hasGeneration">
           <button
             type="button"
-            class="relative flex flex-col items-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full p-1 transition-transform duration-200 hover:scale-110"
+            class="relative flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full p-1 transition-transform duration-200 hover:scale-110"
             :class="{ 'scale-110': activeStarId === star.id }"
             :aria-label="`Periode Sebelumnya: ${star.title}, Angkatan ${star.angkatan}`"
             :title="`Periode Sebelumnya: ${star.title} (Angkatan ${star.angkatan}) · Klik untuk melihat kepengurusan`"
@@ -176,7 +176,9 @@
             </div>
 
             <!-- Crisp Astronomical Label -->
-            <div class="mt-1 flex items-center gap-1">
+            <div
+              class="absolute top-full left-1/2 -translate-x-1/2 mt-1 pointer-events-none whitespace-nowrap flex items-center gap-1"
+            >
               <span class="w-1.5 h-1.5 rounded-full bg-amber-400" />
               <span
                 class="text-[0.62rem] sm:text-[0.68rem] font-bold text-amber-300 uppercase tracking-wider drop-shadow-sm whitespace-nowrap"
@@ -191,7 +193,7 @@
         <template v-else-if="star.hasGeneration">
           <button
             type="button"
-            class="relative flex flex-col items-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded-full p-1 transition-transform duration-200 hover:scale-110"
+            class="relative flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded-full p-1 transition-transform duration-200 hover:scale-110"
             :class="{ 'scale-110': activeStarId === star.id }"
             :aria-label="`Kepengurusan Angkatan ${star.angkatan}: ${star.title}`"
             :title="`Angkatan ${star.angkatan}: ${star.title} · Klik untuk melihat kepengurusan`"
@@ -213,7 +215,7 @@
 
             <!-- Crisp Astronomical Label -->
             <span
-              class="mt-1 text-[0.58rem] sm:text-[0.62rem] font-medium text-slate-300/90 tracking-wide whitespace-nowrap drop-shadow-sm"
+              class="absolute top-full left-1/2 -translate-x-1/2 mt-1 pointer-events-none whitespace-nowrap text-[0.58rem] sm:text-[0.62rem] font-medium text-slate-300/90 tracking-wide drop-shadow-sm"
             >
               {{ star.leoName }} · {{ star.roman }}
             </span>
@@ -222,12 +224,12 @@
 
         <!-- GUIDE STARS OF LEO (Titik pembentuk rasi tanpa generasi) -->
         <template v-else>
-          <div class="relative flex flex-col items-center pointer-events-none">
+          <div class="relative flex items-center justify-center pointer-events-none">
             <span
               class="w-2 h-2 rounded-full bg-white/70 border border-white/90 shadow-[0_0_6px_rgba(255,255,255,0.7)]"
             />
             <span
-              class="mt-1 text-[0.5rem] font-mono tracking-wider text-white/40 uppercase whitespace-nowrap"
+              class="absolute top-full left-1/2 -translate-x-1/2 mt-1 pointer-events-none whitespace-nowrap text-[0.5rem] font-mono tracking-wider text-white/40 uppercase"
             >
               {{ star.leoName }}
             </span>
