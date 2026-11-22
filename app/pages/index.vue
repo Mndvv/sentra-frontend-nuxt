@@ -37,17 +37,47 @@
                 Rencana kegiatan yang telah diagendakan oleh kabinet.
               </p>
             </div>
-            <NuxtLink
-              to="/program"
-              class="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:text-accent-hover transition-colors no-underline shrink-0"
-            >
-              <span>Semua Agenda</span>
-              <Icon
-                name="material-symbols:arrow-forward-rounded"
-                class="text-sm"
-                aria-hidden="true"
-              />
-            </NuxtLink>
+
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+              <!-- Status badge -->
+              <span
+                v-if="agendas.length > 0"
+                class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-soft border border-accent/20 text-accent text-xs font-bold"
+              >
+                <span class="w-1.5 h-1.5 rounded-full bg-accent" />
+                {{ agendas.length }} Agenda Terjadwal
+              </span>
+
+              <!-- Navigation buttons -->
+              <div v-if="agendas.length > 0" class="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  aria-label="Geser agenda ke kiri"
+                  :disabled="!canScrollLeft"
+                  class="p-1.5 sm:p-2 rounded-lg border border-border bg-bg-card text-text-muted hover:text-text-main hover:border-accent/30 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                  @click="scrollAgenda('left')"
+                >
+                  <Icon
+                    name="material-symbols:arrow-back-rounded"
+                    class="text-base sm:text-lg block"
+                    aria-hidden="true"
+                  />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Geser agenda ke kanan"
+                  :disabled="!canScrollRight"
+                  class="p-1.5 sm:p-2 rounded-lg border border-border bg-bg-card text-text-muted hover:text-text-main hover:border-accent/30 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                  @click="scrollAgenda('right')"
+                >
+                  <Icon
+                    name="material-symbols:arrow-forward-rounded"
+                    class="text-base sm:text-lg block"
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
+            </div>
           </div>
 
           <!-- Loading State -->
@@ -82,17 +112,24 @@
             </div>
           </div>
 
-          <!-- Agenda 3-Card Grid -->
+          <!-- Agenda Scroll Track -->
           <div
             v-else
-            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+            ref="agendaTrackRef"
+            class="flex gap-4 sm:gap-5 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden"
+            style="scrollbar-width: none;"
+            @scroll="checkAgendaScroll"
           >
-            <BerandaAgendaCard
-              v-for="(ag, idx) in agendas.slice(0, 3)"
+            <div
+              v-for="(ag, idx) in agendas"
               :key="ag.id"
-              :agenda="ag"
-              :delay="idx * 80"
-            />
+              class="w-[280px] sm:w-[320px] md:w-[340px] shrink-0 snap-start"
+            >
+              <BerandaAgendaCard
+                :agenda="ag"
+                :delay="idx * 80"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -265,7 +302,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, watch, nextTick, onMounted, onBeforeUnmount } from "vue";
 import { useAgenda } from "~/composables/useAgenda";
 import { useProgram } from "~/composables/useProgram";
 import { useDokumentasi } from "~/composables/useDokumentasi";
@@ -277,6 +314,44 @@ const {
   dokumentasi,
   loadDokumentasiData,
 } = useDokumentasi();
+
+// Agenda Horizontal Scroll Carousel state & controls
+const agendaTrackRef = ref<HTMLElement | null>(null);
+const canScrollLeft = ref(false);
+const canScrollRight = ref(false);
+
+const checkAgendaScroll = () => {
+  const el = agendaTrackRef.value;
+  if (!el) {
+    canScrollLeft.value = false;
+    canScrollRight.value = false;
+    return;
+  }
+  const scrollLeft = el.scrollLeft;
+  const maxScrollLeft = el.scrollWidth - el.clientWidth;
+  canScrollLeft.value = scrollLeft > 2;
+  canScrollRight.value = scrollLeft < maxScrollLeft - 2;
+};
+
+const scrollAgenda = (direction: "left" | "right") => {
+  const el = agendaTrackRef.value;
+  if (!el) return;
+  const offset = direction === "left" ? -340 : 340;
+  el.scrollBy({ left: offset, behavior: "smooth" });
+};
+
+watch(
+  agendas,
+  async () => {
+    await nextTick();
+    checkAgendaScroll();
+  },
+  { deep: true }
+);
+
+const onWindowResize = () => {
+  checkAgendaScroll();
+};
 
 // Status filter for Proker
 const filterTabs = ["Semua", "Berjalan", "Direncanakan", "Selesai"] as const;
@@ -314,5 +389,11 @@ onMounted(() => {
   loadAgendas();
   loadPrograms();
   loadDokumentasiData();
+  window.addEventListener("resize", onWindowResize, { passive: true });
+  nextTick(() => checkAgendaScroll());
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", onWindowResize);
 });
 </script>

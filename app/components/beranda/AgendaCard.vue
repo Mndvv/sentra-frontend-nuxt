@@ -87,7 +87,7 @@ const parsedDateRange = computed(() => {
     props.agenda.end_date &&
     props.agenda.end_date !== props.agenda.start_date
   ) {
-    return `${formatDate(props.agenda.start_date)} – ${formatDate(props.agenda.end_date)}`;
+    return `${formatDate(props.agenda.start_date)} - ${formatDate(props.agenda.end_date)}`;
   }
   return formatDate(props.agenda.start_date);
 });
