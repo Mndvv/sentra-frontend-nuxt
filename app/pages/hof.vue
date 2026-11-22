@@ -70,6 +70,10 @@
             :key="g.angkatan"
             :generation="g"
             :is-latest="i === 0"
+            :is-highlighted="
+              highlightedAngkatan != null &&
+              String(highlightedAngkatan) === String(g.angkatan)
+            "
             @star-click="openMemberProfileModal"
             @members="openPeriodMembersModal"
           />
@@ -147,7 +151,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 
 const {
   loading,
@@ -163,6 +167,9 @@ const {
   openPeriodMembersModal,
   openOlderPeriodsModal,
 } = useHof();
+
+const highlightedAngkatan = ref<number | string | null>(null);
+let highlightTimer: ReturnType<typeof setTimeout> | null = null;
 
 const lineageCaption = computed(() => {
   if (loading.value || !lineageLength.value) return "";
@@ -181,6 +188,14 @@ const scrollToLineage = () => {
 
 const scrollToGeneration = (gen: any) => {
   if (import.meta.client) {
+    if (gen?.angkatan != null) {
+      highlightedAngkatan.value = gen.angkatan;
+      if (highlightTimer) clearTimeout(highlightTimer);
+      highlightTimer = setTimeout(() => {
+        highlightedAngkatan.value = null;
+      }, 2500);
+    }
+
     const el = document.getElementById(`generation-${gen?.angkatan}`);
     if (el) {
       el.scrollIntoView({ behavior: "smooth", block: "start" });

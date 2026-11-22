@@ -1,12 +1,14 @@
 <template>
   <section
     :id="`generation-${generation.angkatan}`"
-    class="relative bg-bg-card border rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm transition-all duration-200 overflow-hidden mb-8 scroll-mt-24"
-    :class="
-      isLatest
-        ? 'border-accent/40 shadow-md ring-1 ring-accent/20'
-        : 'border-border'
-    "
+    class="relative bg-bg-card border rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-sm transition-all duration-500 overflow-hidden mb-8 scroll-mt-24"
+    :class="[
+      isHighlighted
+        ? 'ring-2 ring-amber-400 border-amber-400/80 shadow-[0_0_30px_rgba(251,191,36,0.3)]'
+        : isLatest
+          ? 'border-accent/40 shadow-md ring-1 ring-accent/20'
+          : 'border-border',
+    ]"
   >
     <!-- Header -->
     <header
@@ -227,6 +229,7 @@ import { useImageUrl } from "~/composables/useImageUrl";
 const props = defineProps<{
   generation: any;
   isLatest?: boolean;
+  isHighlighted?: boolean;
 }>();
 
 defineEmits<{
