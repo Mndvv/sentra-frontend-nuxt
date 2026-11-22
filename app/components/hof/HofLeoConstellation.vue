@@ -163,6 +163,7 @@
             class="relative flex flex-col items-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-full p-1 transition-transform duration-200 hover:scale-110"
             :class="{ 'scale-110': activeStarId === star.id }"
             :aria-label="`Periode Sebelumnya: ${star.title}, Angkatan ${star.angkatan}`"
+            :title="`Periode Sebelumnya: ${star.title} (Angkatan ${star.angkatan}) · Klik untuk melihat kepengurusan`"
             @mouseenter="activeStarId = star.id"
             @focus="activeStarId = star.id"
             @click="handleStarClick(star)"
@@ -193,6 +194,7 @@
             class="relative flex flex-col items-center cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 rounded-full p-1 transition-transform duration-200 hover:scale-110"
             :class="{ 'scale-110': activeStarId === star.id }"
             :aria-label="`Kepengurusan Angkatan ${star.angkatan}: ${star.title}`"
+            :title="`Angkatan ${star.angkatan}: ${star.title} · Klik untuk melihat kepengurusan`"
             @mouseenter="activeStarId = star.id"
             @focus="activeStarId = star.id"
             @click="handleStarClick(star)"
@@ -231,58 +233,6 @@
             </span>
           </div>
         </template>
-      </div>
-
-      <!-- Interactive Focus Glass Card (Telemetry HUD) -->
-      <div
-        v-if="activeStar && activeStar.hasGeneration"
-        class="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 z-30 max-w-[270px] sm:max-w-xs bg-[#090e1f]/90 backdrop-blur-md border border-white/10 rounded-xl p-3 shadow-xl text-left cursor-pointer transition-all duration-200 hover:border-amber-400/40 hover:bg-[#0c132a]/95 group/hud"
-        role="button"
-        tabindex="0"
-        :aria-label="`Telusuri jejak ${activeStar.title}`"
-        @click="handleStarClick(activeStar)"
-        @keydown.enter="handleStarClick(activeStar)"
-      >
-        <div class="flex items-center gap-1.5 mb-1">
-          <span
-            class="w-1.5 h-1.5 rounded-full"
-            :class="activeStar.isAlpha ? 'bg-amber-400' : 'bg-indigo-400'"
-          />
-          <span
-            class="text-[0.62rem] sm:text-[0.68rem] font-bold tracking-wide uppercase"
-            :class="activeStar.isAlpha ? 'text-amber-300' : 'text-indigo-300'"
-          >
-            {{
-              activeStar.isAlpha
-                ? "Periode Sebelumnya (Regulus)"
-                : `Angkatan ${activeStar.angkatan} · ${activeStar.leoName}`
-            }}
-          </span>
-        </div>
-
-        <h3
-          class="text-xs sm:text-sm font-bold text-white m-0 leading-snug truncate group-hover/hud:text-amber-300 transition-colors"
-        >
-          {{ activeStar.title }}
-        </h3>
-
-        <p
-          v-if="activeStar.years"
-          class="text-[0.6rem] sm:text-[0.65rem] text-slate-400 font-medium m-0 mt-0.5"
-        >
-          Masa Bakti {{ activeStar.years }}
-        </p>
-
-        <div
-          class="mt-2 pt-2 border-t border-white/10 flex items-center justify-between text-[0.62rem] sm:text-[0.68rem] text-amber-300/90 font-medium"
-        >
-          <span>Klik untuk menelusuri kepengurusan ↓</span>
-          <Icon
-            name="material-symbols:arrow-downward-rounded"
-            class="text-xs shrink-0 group-hover/hud:translate-y-0.5 transition-transform"
-            aria-hidden="true"
-          />
-        </div>
       </div>
     </div>
   </div>
@@ -440,18 +390,6 @@ const mappedStars = computed(() => {
       years: gen.osis?.tahun ?? gen.mpk?.tahun ?? "",
     };
   });
-});
-
-const activeStar = computed(() => {
-  const found = mappedStars.value.find(
-    (s) => s.id === activeStarId.value && s.hasGeneration,
-  );
-  if (found) return found;
-  return (
-    mappedStars.value.find((s) => s.isAlpha && s.hasGeneration) ||
-    mappedStars.value.find((s) => s.hasGeneration) ||
-    null
-  );
 });
 
 function handleStarClick(star: any) {
