@@ -75,6 +75,35 @@
 
       <!-- Right Actions -->
       <div class="flex items-center gap-2">
+        <!-- Desktop Search Trigger -->
+        <button
+          type="button"
+          class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full border border-border/70 bg-bg-card-2/60 hover:bg-bg-card-2 text-text-muted hover:text-text-main text-xs transition-colors cursor-pointer"
+          @click="isCommandPaletteOpen = true"
+          aria-label="Buka pencarian cepat"
+        >
+          <Icon
+            name="material-symbols:search-rounded"
+            size="16"
+            aria-hidden="true"
+          />
+          <span>Cari...</span>
+          <kbd
+            class="px-1.5 py-0.5 rounded bg-bg-card border border-border text-[0.65rem] font-mono text-text-subtle font-semibold"
+            >⌘K</kbd
+          >
+        </button>
+
+        <!-- Mobile & Tablet Search Icon Button (< lg) -->
+        <button
+          type="button"
+          class="lg:hidden relative w-9 h-9 rounded-full flex items-center justify-center p-2 hover:bg-bg-card-2 text-text-muted hover:text-text-main transition-colors border border-border/60 bg-bg-card cursor-pointer"
+          @click="isCommandPaletteOpen = true"
+          aria-label="Buka pencarian"
+        >
+          <Icon name="material-symbols:search-rounded" size="18" />
+        </button>
+
         <!-- Theme Toggle -->
         <button
           type="button"
@@ -265,6 +294,22 @@
         <div
           class="p-4 border-t border-border flex flex-col gap-2.5 bg-bg-card-2/50 shrink-0"
         >
+          <!-- Search button in drawer -->
+          <button
+            type="button"
+            class="min-h-[44px] w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-text-muted hover:text-text-main hover:bg-bg-card border border-border/60 transition-colors cursor-pointer"
+            @click="isCommandPaletteOpen = true; closeMenu();"
+          >
+            <div class="flex items-center gap-2.5">
+              <Icon name="material-symbols:search-rounded" size="18" />
+              <span>Cari Cepat</span>
+            </div>
+            <kbd
+              class="px-1.5 py-0.5 rounded bg-bg-card border border-border text-[0.65rem] font-mono text-text-subtle font-semibold"
+              >⌘K</kbd
+            >
+          </button>
+
           <!-- Aspirasi button -->
           <button
             type="button"
@@ -318,6 +363,7 @@ const route = useRoute();
 
 const isMenuOpen = ref(false);
 const isAuroraOpen = useState("isAuroraOpen", () => false);
+const isCommandPaletteOpen = useState("isCommandPaletteOpen", () => false);
 
 const toggleTheme = () => {
   colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
@@ -332,8 +378,13 @@ const openAurora = () => {
   closeMenu();
 };
 
-// Close mobile menu on Escape key
+// Global hotkeys: Cmd+K / Ctrl+K and Escape
 const handleKeydown = (e: KeyboardEvent) => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+    e.preventDefault();
+    isCommandPaletteOpen.value = !isCommandPaletteOpen.value;
+    return;
+  }
   if (e.key === "Escape" && isMenuOpen.value) {
     closeMenu();
   }

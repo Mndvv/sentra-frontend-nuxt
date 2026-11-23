@@ -1,7 +1,7 @@
 <template>
   <!--
     Sticky-footer layout. The flex container fills at least the viewport so
-    the footer always sits at the bottom — even when the page slot is briefly
+    the footer always sits at the bottom - even when the page slot is briefly
     empty during route transitions (which previously caused the footer to
     jump up and the new page to render below it).
   -->
@@ -13,6 +13,7 @@
     <AppFooter />
     <AppMiniPlayer />
     <AppAuroraModal />
+    <AppCommandPalette />
   </div>
 </template>
 
