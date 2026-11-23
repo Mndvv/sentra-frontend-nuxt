@@ -26,6 +26,9 @@ useSeoMeta({
   ogLocale: "id_ID",
   ogUrl: () => canonicalUrl.value,
   ogImage: `${siteUrl}/og-default.png`,
+  ogImageWidth: 1200,
+  ogImageHeight: 630,
+  ogImageType: "image/png",
   twitterCard: "summary_large_image",
   twitterImage: `${siteUrl}/og-default.png`,
 });
