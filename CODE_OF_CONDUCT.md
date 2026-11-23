@@ -1,48 +1,42 @@
-# Contributor Covenant Code of Conduct
+# Pedoman Perilaku Komunitas SENTRA
 
-## Our Pledge
+## Komitmen Kami
 
-We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.
+Sebagai pengurus, kontributor, dan anggota komunitas SENTRA Nawasena SMAN 2 Jonggol, kami berkomitmen untuk menciptakan ruang belajar, berkolaborasi, dan berkarya yang terbuka, ramah, dan bebas dari segala bentuk intimidasi maupun pelecehan.
 
-We pledge to act and interact in ways that contribute to an open, welcoming, diverse, inclusive, and healthy community.
+Kami menyambut setiap kontribusi dari siswa, alumni, guru, serta kontributor umum tanpa memandang latar belakang, suku, agama, ras, tingkat kemahiran teknis, atau identitas pribadi lainnya.
 
-## Our Standards
+## Standar Perilaku
 
-Examples of behavior that contributes to a positive environment for our community include:
+Perilaku yang mendukung suasana komunitas yang sehat dan positif meliputi:
 
-* Demonstrating empathy and kindness toward other people
-* Being respectful of differing opinions, viewpoints, and experiences
-* Giving and gracefully accepting constructive feedback
-* Accepting responsibility and apologizing to those affected by our mistakes, and learning from the experience
-* Focusing on what is best not just for us as individuals, but for the overall community
+- Menunjukkan rasa hormat, empati, dan keramahan terhadap sesama kontributor.
+- Menggunakan bahasa yang santun dalam diskusi tiket issue, pull request, maupun ruang obrolan.
+- Memberikan masukan yang membangun dan menerima kritik teknis secara lapang dada.
+- Menghargai perbedaan sudut pandang dan pengalaman antarsesama siswa dan kontributor.
+- Berfokus pada solusi terbaik demi kemajuan portal organisasi dan kenyamanan warga sekolah.
 
-Examples of unacceptable behavior include:
+Perilaku yang tidak dapat ditoleransi meliputi:
 
-* The use of sexualized language or imagery, and sexual attention or advances of any kind
-* Trolling, insulting or derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or email address, without their explicit permission
-* Other conduct which could reasonably be considered inappropriate in a professional setting
+- Tindakan pelecehan, intimidasi, penghinaan, perundungan (bullying), atau ujaran kebencian dalam bentuk apa pun.
+- Komentar merendahkan yang menyerang kepribadian, keyakinan, atau latar belakang seseorang.
+- Menyebarkan data pribadi pihak lain (seperti nomor telepon, alamat rumah, atau identitas pribadi) tanpa izin resmi.
+- Penggunaan bahasa, gambar, atau lelucon bernuansa seksual dalam ranah proyek.
+- Tindakan lain yang mengganggu ketertiban komunitas atau mencoreng nama baik sekolah dan organisasi.
 
-## Enforcement Responsibilities
+## Tanggung Jawab Pengelola
 
-Community leaders are responsible for clarifying and enforcing our standards of acceptable behavior and will take appropriate and fair corrective action in response to any behavior that they deem inappropriate, threatening, offensive, or harmful.
+Pengurus OSIS dan MPK SMAN 2 Jonggol selaku pengelola proyek bertanggung jawab menegakkan standar perilaku ini. Tim pengelola berhak menghapus, menyunting, atau menolak komentar, pull request, commit, issue, atau kontribusi lain yang melanggar pedoman ini.
 
-Community leaders have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, and will communicate reasons for moderation decisions when appropriate.
+## Pelaporan dan Penanganan Pelanggaran
 
-## Scope
+Jika Anda mengalami, melihat, atau mencurigai adanya pelanggaran terhadap pedoman perilaku ini, silakan segera melapor secara privat melalui email resmi kami:
 
-This Code of Conduct applies within all community spaces, and also applies when an individual is officially representing the community in public spaces. Examples of representing our community include using an official e-mail address, posting via an official social media account, or acting as an appointed representative at an online or offline event.
+- Email: **osissmanduajonggol@gmail.com**
+- Subjek: `[Kode Etik SENTRA] Laporan Insiden`
 
-## Enforcement
+Sertakan kronologi kejadian, tangkapan layar, tautan percakapan, atau identitas pihak yang terlibat jika memungkinkan. Seluruh laporan akan ditangani secara adil, cepat, dan dijaga kerahasiaannya untuk melindungi pihak pelapor.
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at **conduct@sentracore.invalid**. All complaints will be reviewed and investigated promptly and fairly.
+## Ruang Lingkup
 
-All community leaders are obligated to respect the privacy and security of the reporter of any incident.
-
-## Attribution
-
-This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 2.1, available at [https://www.contributor-covenant.org/version/2/1/code_of_conduct.html][v2.1].
-
-[homepage]: https://www.contributor-covenant.org
-[v2.1]: https://www.contributor-covenant.org/version/2/1/code_of_conduct.html
+Pedoman perilaku ini berlaku di seluruh ruang digital proyek SENTRA, termasuk repositori GitHub, pelacak issue, pull request, serta komunikasi resmi yang mewakili proyek OSIS dan MPK Nawasena SMAN 2 Jonggol di ruang publik.

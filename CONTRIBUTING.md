@@ -1,46 +1,66 @@
-# Contributing to Sentra Frontend
+# Panduan Kontribusi SENTRA
 
-First off, thank you for considering contributing to the Sentra Frontend repository! It's people like you that make our engineering ecosystem such a great environment to build in. 
+Terima kasih telah meluangkan waktu untuk berkontribusi pada pengembangan SENTRA Nawasena. Platform ini dibangun dan dirawat oleh siswa SMAN 2 Jonggol sebagai wadah karya nyata, inovasi teknologi sekolah, dan pelayanan informasi digital.
 
-We follow a standardized workflow to ensure that the codebase remains stable, maintainable, and highly performant.
+## Alur Kerja Pengembangan
 
-## Development Process
+Kami menerapkan alur kerja berbasis Git yang teratur agar stabilitas kode portal tetap terjaga:
 
-1. **Find an Issue**: Look for open issues labeled `good first issue` or `help wanted` if you're not sure where to start. If you want to work on a new feature, please open an issue first to discuss it with the core team.
-2. **Fork and Branch**: 
-   - Fork the repository.
-   - Create a branch for your feature or bug fix: `git checkout -b feature/your-feature-name` or `fix/your-fix-name`.
-3. **Develop**: Write your code, ensuring it aligns with our architecture and guidelines.
-4. **Test**: Run all local tests and linters before committing.
-   ```bash
-   npm run lint
-   npm run test
-   ```
-5. **Commit**: Use [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for your commit messages.
-   - `feat: add new dashboard widget`
-   - `fix: resolve hydration mismatch on user profile`
-6. **Push and PR**: Push your branch to your fork and submit a Pull Request against the `main` branch.
+### 1. Percabangan (Branching)
 
-## Pull Request Guidelines
+1. Lakukan *fork* repositori ini ke akun GitHub Anda.
+2. Buat cabang baru dari `main` dengan format penamaan berikut:
+   - `feat/nama-fitur` untuk penambahan fitur baru.
+   - `fix/nama-perbaikan` untuk perbaikan kutu atau galat bug.
+   - `style/nama-perubahan` untuk pembaruan tampilan dan tata letak.
+   - `docs/nama-dokumentasi` untuk perbaikan atau penambahan dokumentasi.
 
-- **Title**: Ensure your PR title follows Conventional Commits format.
-- **Description**: Fill out the provided PR template entirely. Explain *why* you are making the change, not just *what* you changed.
-- **Reviews**: At least one core maintainer must review and approve your PR before it can be merged.
-- **CI/CD**: All automated checks (linting, tests, build verifications) must pass.
+Contoh perintah:
+```bash
+git checkout -b feat/agenda-filter
+```
 
-## Coding Standards
+### 2. Standar Penulisan Kode
 
-- **Vue & Nuxt Best Practices**: Follow the official Vue 3 Style Guide. Use the Composition API (`<script setup>`) for all new components.
-- **Formatting**: We enforce code formatting via Prettier. Your PR will fail CI if it is not formatted correctly.
-- **Types**: We strongly encourage the use of TypeScript for state, props, and API definitions to ensure type safety across the frontend.
+- **Nuxt 4 dan Vue 3:** Gunakan Composition API dengan sintaks `<script setup lang="ts">`.
+- **TypeScript:** Tulis tipe data yang jelas untuk props, emit, dan fungsi composable. Hindari penggunaan tipe `any`.
+- **Komponen Modular:** Pecah antarmuka menjadi komponen yang fokus pada satu tanggung jawab. Letakkan komponen bersama di folder `app/components/`.
 
-## Local Setup
+### 3. Pedoman Desain dan Anti-Slop
 
-Please refer to the `README.md` for detailed instructions on getting the development server up and running.
+Seluruh kontribusi antarmuka wajib menaati panduan desain pada berkas `DESIGN.md`:
 
-## Code of Conduct
+- **Token Warna:** Gunakan palet resmi (`ground`, `ground-dark`, `ink`, `muted`, `line`, `accent` indigo `#6366f1`). Jangan menggunakan sembarang warna hex atau gradien ungu generik.
+- **Bebas Em Dash:** Dilarang menggunakan tanda baca em dash (tanda pisah panjang) pada teks tampilan maupun komentar kode. Gunakan tanda hubung standar (` - `) atau tanda titik tengah (` · `).
+- **Tipografi:** Gunakan skala hierarki font yang konsisten. Hindari label huruf besar (all-caps) berjarak renggang di atas setiap judul heading.
+- **Aksesibilitas:** Pastikan kontras teks memenuhi standar keterbacaan (rasio kontras minimal 4.5:1 untuk teks utama).
 
-By participating in this project, you agree to abide by our [Code of Conduct](./CODE_OF_CONDUCT.md). Please report any unacceptable behavior to our team.
+### 4. Format Pesan Komit
 
----
-We appreciate your time and effort in making Sentra Frontend better!
+Kami menerapkan standar [Conventional Commits](https://www.conventionalcommits.org/id/v1.0.0/):
+
+- `feat: tambah penyaring kategori pada galeri dokumentasi`
+- `fix: atasi tata letak responsif pada carousel agenda`
+- `docs: perbarui instruksi variabel lingkungan lokal`
+- `style: selaraskan jarak padding pada kartu bento`
+
+### 5. Pengujian Lokal
+
+Sebelum mengirimkan pull request, pastikan kode berhasil dikompilasi tanpa galat:
+
+```bash
+npm run build
+```
+
+Pastikan proses build selesai dengan kode status keluar 0 (exit code 0).
+
+### 6. Pengajuan Pull Request (PR)
+
+1. Dorong cabang kerja Anda ke repositori *fork*.
+2. Buat Pull Request ke cabang `main` repositori utama.
+3. Jelaskan perubahan yang dilakukan, alasan perubahan tersebut, serta cara memverifikasinya.
+4. Tim pengembang akan meninjau perubahan Anda dan memberikan masukan jika diperlukan.
+
+## Bantuan dan Kontak
+
+Apabila Anda memiliki pertanyaan seputar arsitektur proyek, ide fitur baru, atau butuh panduan teknis, silakan hubungi Tim Pengembang OSIS & MPK SMAN 2 Jonggol melalui email: [osissmanduajonggol@gmail.com](mailto:osissmanduajonggol@gmail.com).
